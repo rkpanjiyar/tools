@@ -99,3 +99,5 @@ h2 {
   margin-right: 8px;
   opacity: 0.7;
 }
+.tableFixHead          { overflow: auto; height: 100px; }
+.tableFixHead thead th { position: sticky; top: 0; z-index: 1; }
