@@ -1,4 +1,4 @@
-Symbol,Price,Country,Earning_Date,RSI,P/S,IV_Rank,IV_Pctl,Options_Vol,Smart_Score,Anlayst_Census,Best_Anlayst_Census,Earning_Call_Score,ImpliedMove_Historic (%),Expected_Move (%)
+Symbol, Price, Country, Earning_Date,RSI, P/S, IV_Rank, IV Pctl, Options Vol, Smart Score, Anlayst Census, Best Anlayst Census, Earning Call Score, Imp. Move Hist.%, Expt. Move %
 OKTA,92.75,USA,2025-03-03,42.22,6.06,75.70%,90%,5837.0,6,4,4,80,12.638,13.253
 GTLB,64.12,USA,2025-03-03,38.79,13.91,,,,7,5,5,80,17.159,15.568
 ONON,48.44,Switzerland,2025-03-04,35.99,6.59,66.41%,85%,22365.0,10,5,5,80,11.981,11.333
