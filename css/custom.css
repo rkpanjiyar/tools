@@ -99,3 +99,8 @@ h2 {
   margin-right: 8px;
   opacity: 0.7;
 }
+.table-container {
+    overflow: auto;
+    max-height: 400px; /* Adjust height */
+    position: relative;
+}
