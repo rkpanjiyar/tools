@@ -16,7 +16,7 @@ CsvToHtmlTable = {
             customTemplates[colIdx] = func;
         });
 
-        var $table = $("<table style='border-collapse: collapse;width: 100%;table-layout: auto;' class='table-container' id='" + el + "-table'></table>");
+        var $table = $("<table style='border-collapse: collapse;width: 100%;table-layout: auto;' class='table-container table table-striped table-condensed' id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
 
