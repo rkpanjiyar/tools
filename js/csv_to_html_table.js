@@ -16,14 +16,14 @@ CsvToHtmlTable = {
             customTemplates[colIdx] = func;
         });
 
-        var $table = $("<table class='table table-striped table-condensed' id='" + el + "-table'></table>");
+        var $table = $("<table style='border-collapse: collapse;width: 100%;' class='table table-striped table-condensed' id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
 
         $.when($.get(csv_path)).then(
             function (data) {
                 var csvData = $.csv.toArrays(data, csv_options);
-                var $tableHead = $("<thead style='position: sticky; top: 0'></thead>");
+                var $tableHead = $("<thead style='position: sticky; top: 0;z-index: 10;'></thead>");
                 var csvHeaderRow = csvData[0];
                 var $tableHeadRow = $("<tr></tr>");
                 for (var headerIdx = 0; headerIdx < csvHeaderRow.length; headerIdx++) {
