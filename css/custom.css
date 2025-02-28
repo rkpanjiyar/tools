@@ -101,6 +101,6 @@ h2 {
 }
 .table-container {
     overflow: auto;
-    max-height: 400px; /* Adjust height */
+    max-height: auto; /* Adjust height */
     position: relative;
 }
