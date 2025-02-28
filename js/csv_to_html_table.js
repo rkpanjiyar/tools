@@ -16,18 +16,18 @@ CsvToHtmlTable = {
             customTemplates[colIdx] = func;
         });
 
-        var $table = $("<table style='border-collapse: collapse;width: 100%;' class='table table-container table-striped table-condensed' id='" + el + "-table'></table>");
+        var $table = $("<table style='border-collapse: collapse;width: 100%;table-layout: auto;' class='table table-container table-striped table-condensed' id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
 
         $.when($.get(csv_path)).then(
             function (data) {
                 var csvData = $.csv.toArrays(data, csv_options);
-                var $tableHead = $("<thead style='position: sticky; top: 0;z-index: 10;'></thead>");
+                var $tableHead = $("<thead style='position: sticky; left: 0;z-index: 10;background-color: cornflowerblue;'></thead>");
                 var csvHeaderRow = csvData[0];
                 var $tableHeadRow = $("<tr></tr>");
                 for (var headerIdx = 0; headerIdx < csvHeaderRow.length; headerIdx++) {
-                    $tableHeadRow.append($("<th style='position: sticky; top: 0;background-color: cornflowerblue; color: white'></th>").text(csvHeaderRow[headerIdx]));
+                    $tableHeadRow.append($("<th style='position: sticky; top: 0; color: white'></th>").text(csvHeaderRow[headerIdx]));
                 }
                 $tableHead.append($tableHeadRow);
 
