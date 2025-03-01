@@ -5,12 +5,19 @@ description: >-
   A collection of useful tools. # Replace with your site's description
 baseurl: "/tools" # The subpath of your site
 url: "https://rkpanjiyar.github.io" # The base hostname & protocol of your site
-markdown: kramdown
 
 # Build settings
-theme: minima # Choose a theme, or remove to use a custom one.
-plugins:
-  - jekyll-feed
+theme: minima # Or any theme you prefer
+markdown: kramdown # Explicitly specify kramdown, or GFM
+# Or, if you prefer GFM:
+# markdown: GFM
+
+# Optional Kramdown settings (if using kramdown)
+kramdown:
+  input: GFM # Use GitHub Flavored Markdown
+  syntax_highlighter: rouge # Use Rouge for syntax highlighting
+  # syntax_highlighter_opts:
+  #   default_lang: 'ruby' # Optional: set a default language for code blocks
 
 # Optional settings (Uncomment and customize as needed)
 # author: RK Panjiyar # Replace with your name
@@ -27,10 +34,6 @@ exclude:
    - Gemfile
    - Gemfile.lock
    - node_modules
-   - vendor/bundle/
-   - vendor/cache/
-   - vendor/gems/
-   - vendor/ruby/
 
 # Minima specific settings (if using Minima theme)
 minima:
