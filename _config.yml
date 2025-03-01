@@ -5,6 +5,7 @@ description: >-
   A collection of useful tools. # Replace with your site's description
 baseurl: "/tools" # The subpath of your site
 url: "https://rkpanjiyar.github.io" # The base hostname & protocol of your site
+markdown: kramdown
 
 # Build settings
 theme: minima # Choose a theme, or remove to use a custom one.
