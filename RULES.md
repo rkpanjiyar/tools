@@ -15,9 +15,6 @@ Below are rules we will always follow
  <summary>Advanced Rules</summary>
 </details>
 
-> [!TIP]
-> Some special notes
- 
 # Advanced Rules
 * Rule 1: Must reposition when already making 20%, Refer rule 2 for more details
 * Rule 2: we must know the next support resistance levels of stock(which updates daily and has to be updated in Excel every morning), so simulate straddle based on these.
