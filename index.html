@@ -9,10 +9,18 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <style>
+        .highlight-pink {
+            font-weight: 700;
+            background-color: pink !important;
+        }
+        .highlight-green {
+            background-color: green !important;
+        }
+    </style>
 </head>
 
 <body>
-    <a href="csv2html.html">CSVToTable</a>
     <div class="container-fluid">
         <main class="row">
             <div class="col">
@@ -45,7 +53,9 @@
         }
 
         CsvToHtmlTable.init({
-            csv_path: "data/output-2025-02-28.csv",
+            // Local testing of UI uncomment below to avoid CORS error
+            // csv_path: "https://rkpanjiyar.github.io/tools/data/output-2025-03-01.csv",
+            csv_path: "data/output-2025-03-01.csv",
             element: "table-container",
             allow_download: true,
             csv_options: {
@@ -60,6 +70,7 @@
                 [0, format_link]
             ]
         });
+
     </script>
 </body>
 

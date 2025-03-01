@@ -16,14 +16,19 @@ CsvToHtmlTable = {
             customTemplates[colIdx] = func;
         });
 
-        var $table = $("<table style='border-collapse: collapse;width: 100%;table-layout: auto;' class='table-container table table-striped table-condensed' id='" + el + "-table'></table>");
+        var $table = $("<table \
+            style='border-collapse: collapse;width: 100%;table-layout: auto;' \
+            class='table-container table table-striped table-condensed' \
+            id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
 
         $.when($.get(csv_path)).then(
             function (data) {
                 var csvData = $.csv.toArrays(data, csv_options);
-                var $tableHead = $("<thead style='left: 0;top: 0;z-index: 10;background-color: cornflowerblue;'></thead>");
+                var $tableHead = $("<thead \
+                    style='left: 0;top: 0;z-index: 10;background-color: cornflowerblue;'\
+                    ></thead>");
                 var csvHeaderRow = csvData[0];
                 var $tableHeadRow = $("<tr></tr>");
                 for (var headerIdx = 0; headerIdx < csvHeaderRow.length; headerIdx++) {
@@ -35,7 +40,9 @@ CsvToHtmlTable = {
                 var $tableBody = $("<tbody></tbody>");
 
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
-                    var $tableBodyRow = $("<tr></tr>");
+                    var $tableBodyRow = $("<tr class='"
+                        + rowStyle(csvData[rowIdx])
+                        + "'></tr>");
                     for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
                         var $tableBodyRowTd = $("<td></td>");
                         var cellTemplateFunc = customTemplates[colIdx];
@@ -53,8 +60,15 @@ CsvToHtmlTable = {
                 $table.DataTable(datatables_options);
 
                 if (allow_download) {
-                    $containerElement.append("<p><a class='btn btn-info' href='" + csv_path + "'><i class='glyphicon glyphicon-download'></i> Download as CSV</a></p>");
+                    $containerElement.append("<p>\
+                        <a class='btn btn-info' href='" + csv_path + "'>\
+                        <i class='glyphicon glyphicon-download'></i>\
+                        Download as CSV</a></p>");
                 }
             });
     }
 };
+
+function rowStyle(row) {
+    return parseFloat(row[3]) > 30 ? "" : "highlight-green" ;
+}
