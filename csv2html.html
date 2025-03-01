@@ -1,0 +1,59 @@
+<!-- 'https://rkpanjiyar.github.io/tools/data/output-2025-02-28.csv' -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DataTables CSV with ColReorder</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.7.0/css/colReorder.dataTables.min.css">
+</head>
+<body>
+
+<table id="myTable" class="display" style="width:100%">
+    <thead>
+        <tr></tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/colreorder/1.7.0/js/dataTables.colReorder.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $.ajax({
+        url: 'https://rkpanjiyar.github.io/tools/data/output-2025-02-28.csv',
+        dataType: 'text',
+        success: function(csvData) {
+            var lines = csvData.split('\n');
+            var headers = lines[0].split(',');
+            var data = [];
+
+            for (var i = 1; i < lines.length; i++) {
+                var currentLine = lines[i].split(',');
+                if (currentLine.length === headers.length) {
+                    var row = {};
+                    for (var j = 0; j < headers.length; j++) {
+                        row[headers[j].trim()] = currentLine[j].trim();
+                    }
+                    data.push(row);
+                }
+            }
+
+            $('#myTable').DataTable({
+                data: data,
+                columns: headers.map(function(header) {
+                    return { title: header.trim(), data: header.trim() };
+                }),
+                colReorder: true // Enable ColReorder
+            });
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Error loading CSV:', textStatus, errorThrown);
+        }
+    });
+});
+</script>
+
+</body>
+</html>
