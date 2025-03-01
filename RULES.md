@@ -1,14 +1,27 @@
 Below are rules we will always follow
 
-# Basic Rules 
-* Always buy stradel never single leg.
-* Expiry must be a minimum of N days after the nearest earning date. 
+<details open>
+ <summary>Basic Rules</summary>
+ 
+ # Basic Rules 
+ * Always buy stradel never single leg.
+ * Expiry must be a minimum of N days after the nearest earning date.
+ * Closing should be the based on earning call timings
+   * _AM_: day before between 3pm - 3:45pm
+   * _PM_: day before between 9:30AM - 10:00am
 
+</details>
+
+
+<details open>
+ <summary>Advanced Rules</summary>
+ 
 # Advanced Rules
-* Rule 1: Must reposition when already making 20%
+* Rule 1: Must reposition when already making 20%, Refer rule 2 for more details
 * Rule 2: we must know the next support resistance levels of stock(which updates daily and has to be updated in Excel every morning), so simulate straddle based on these.
   * if stock goes down(but we and the analysts are bullish) reposition.
   * if the stock hits the next resistance level, plan to take a profit. (so profit percentage will be different for each stock)
+</details>
  
 > [!NOTE]
 > Some special notes
