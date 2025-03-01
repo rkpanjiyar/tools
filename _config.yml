@@ -1,7 +1,55 @@
-title: "Rajiv Panjiyar Tools" 
+# Site settings
+title: Tools by RK Panjiyar # Or your preferred title
+email: rajiv.panjiyar@gmail.com # Replace with your email (optional)
+description: >-
+  A collection of useful tools. # Replace with your site's description
+baseurl: "/tools" # The subpath of your site
+url: "https://rkpanjiyar.github.io" # The base hostname & protocol of your site
 
-description: "A collection of thoughts and ideas."
+# Build settings
+theme: minima # Choose a theme, or remove to use a custom one.
+plugins:
+  - jekyll-feed
 
-theme: jekyll-theme-minimal 
+# Optional settings (Uncomment and customize as needed)
+# author: RK Panjiyar # Replace with your name
+# twitter_username: your_twitter_username
+github_username: rkpanjiyar
+# google_analytics: UA-XXXXXXXXX-X # Replace with your Google Analytics tracking ID
+# disqus:
+#   shortname: your-disqus-shortname # Replace with your Disqus shortname
 
-baseurl: "/"
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+exclude:
+   - Gemfile
+   - Gemfile.lock
+   - node_modules
+   - vendor/bundle/
+   - vendor/cache/
+   - vendor/gems/
+   - vendor/ruby/
+
+# Minima specific settings (if using Minima theme)
+minima:
+  # Minima date format.
+  # refer to http://shopify.github.io/liquid/filters/date/ if you want to customize this
+  date_format: "%b %-d, %Y"
+
+  # Generate social links in footer.
+  social_links:
+    github: rkpanjiyar
+
+# Collections (if you're using collections)
+# collections:
+#   posts:
+#     output: true
+#     permalink: /:collection/:year/:month/:day/:title/
+#   tools:
+#     output: true
+#     permalink: /tools/:path/
+
+# Pagination (if you want to implement pagination)
+# paginate: 5
+# paginate_path: "/page:num/"
