@@ -8,14 +8,14 @@ url: "https://rkpanjiyar.github.io" # The base hostname & protocol of your site
 
 # Build settings
 theme: minima # Or any theme you prefer
-markdown: kramdown # Explicitly specify kramdown, or GFM
+# markdown: kramdown # Explicitly specify kramdown, or GFM
 # Or, if you prefer GFM:
-# markdown: GFM
+markdown: GFM
 
 # Optional Kramdown settings (if using kramdown)
-kramdown:
-  input: GFM # Use GitHub Flavored Markdown
-  syntax_highlighter: rouge # Use Rouge for syntax highlighting
+# kramdown:
+#   input: GFM # Use GitHub Flavored Markdown
+#   syntax_highlighter: rouge # Use Rouge for syntax highlighting
   # syntax_highlighter_opts:
   #   default_lang: 'ruby' # Optional: set a default language for code blocks
 
