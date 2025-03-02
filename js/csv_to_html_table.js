@@ -58,7 +58,7 @@ CsvToHtmlTable = {
                 }
                 $table.append($tableBody);
 
-                $table.DataTable(datatables_options);
+                const table = $table.DataTable(datatables_options);
 
                 if (allow_download) {
                     $containerElement.append("<p>\
@@ -66,6 +66,16 @@ CsvToHtmlTable = {
                         <i class='glyphicon glyphicon-download'></i>\
                         Download as CSV</a></p>");
                 }
+
+                document.querySelectorAll('a.toggle-vis').forEach((el) => {
+                    el.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        let columnIdx = e.target.getAttribute('data-column');
+                        let column = table.columns(columnIdx);
+                        // Toggle the visibility
+                        column.visible(!column.visible()[0]);
+                    });
+                });
             });
     }
 };
