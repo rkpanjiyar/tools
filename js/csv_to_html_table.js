@@ -70,5 +70,5 @@ CsvToHtmlTable = {
 };
 
 function rowStyle(row) {
-    return parseFloat(row[7]) > parseFloat(row[6]) ? "" : "highlight-green" ;
+    return parseFloat(row[7]) == 0 || parseFloat(row[7]) > parseFloat(row[6]) ? "" : "highlight-green" ;
 }
