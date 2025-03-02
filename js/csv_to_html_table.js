@@ -34,15 +34,15 @@ CsvToHtmlTable = {
                 for (var headerIdx = 0; headerIdx < csvHeaderRow.length; headerIdx++) {
                     $tableHeadRow.append($("<th></th>").text(csvHeaderRow[headerIdx]));
                 }
+                $tableHeadRow.append($("<th></th>").text("[P]"));
                 $tableHead.append($tableHeadRow);
 
                 $table.append($tableHead);
                 var $tableBody = $("<tbody></tbody>");
 
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
-                    var $tableBodyRow = $("<tr class='"
-                        + rowStyle(csvData[rowIdx])
-                        + "'></tr>");
+                    var rStyle = rowStyle(csvData[rowIdx]);
+                    var $tableBodyRow = $("<tr class='" + rStyle + "'></tr>");
                     for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
                         var $tableBodyRowTd = $("<td></td>");
                         var cellTemplateFunc = customTemplates[colIdx];
@@ -52,8 +52,9 @@ CsvToHtmlTable = {
                             $tableBodyRowTd.text(csvData[rowIdx][colIdx]);
                         }
                         $tableBodyRow.append($tableBodyRowTd);
-                        $tableBody.append($tableBodyRow);
                     }
+                    $tableBodyRow.append($("<td></td>").text(rStyle === "" ? "" : "✅"));
+                    $tableBody.append($tableBodyRow);
                 }
                 $table.append($tableBody);
 
