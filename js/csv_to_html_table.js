@@ -67,17 +67,28 @@ CsvToHtmlTable = {
                         Download as CSV</a></p>");
                 }
 
-                document.querySelectorAll('a.toggle-vis').forEach((el) => {
-                    el.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        let columnIdx = e.target.getAttribute('data-column');
-                        let column = table.columns(columnIdx);
-                        // Toggle the visibility
-                        column.visible(!column.visible()[0]);
-                    });
+            document.querySelectorAll('a.toggle-vis-all').forEach((el) => {
+                el.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    let noCols = e.target.getAttribute('data-column');
+                    let vis = table.columns(0).visible()[0]
+                    for (let i=0;i<=noCols;i++) {
+                        table.columns(i).visible(!vis);
+                    }
                 });
             });
-    }
+
+            document.querySelectorAll('a.toggle-vis').forEach((el) => {
+                el.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    let columnIdx = e.target.getAttribute('data-column');
+                    let column = table.columns(columnIdx);
+                    // Toggle the visibility
+                    column.visible(!column.visible()[0]);
+                });
+            });
+        });
+}
 };
 
 function rowStyle(row) {
