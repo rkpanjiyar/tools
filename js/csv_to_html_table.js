@@ -42,7 +42,7 @@ CsvToHtmlTable = {
 
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
                     var rStyle = rowStyle(csvData[rowIdx]);
-                    var $tableBodyRow = $("<tr class='" + rStyle + "'></tr>");
+                    var $tableBodyRow = $("<tr class='" + rStyle.style + "'></tr>");
                     for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
                         var $tableBodyRowTd = $("<td></td>");
                         var cellTemplateFunc = customTemplates[colIdx];
@@ -53,7 +53,7 @@ CsvToHtmlTable = {
                         }
                         $tableBodyRow.append($tableBodyRowTd);
                     }
-                    $tableBodyRow.append($("<td></td>").text(rStyle === "" ? "" : "✅"));
+                    $tableBodyRow.append($("<td></td>").text(rStyle.rank));
                     $tableBody.append($tableBodyRow);
                 }
                 $table.append($tableBody);
@@ -71,5 +71,14 @@ CsvToHtmlTable = {
 };
 
 function rowStyle(row) {
-    return parseInt(row[7]) == 0 || parseFloat(row[7]) > parseFloat(row[6]) ? "" : "highlight-green" ;
+    rs = {}
+    if (parseInt(row[7]) == 0) {
+        rs.rank = "0.0%";
+    } else {
+        rs.rank = ((((parseFloat(row[6]) - parseFloat(row[7])) / parseFloat(row[6])) * 100).toFixed(2))+"%";
+    }
+    // alert(parseFloat(rs.rank));
+    // alert((parseFloat(rs.rank) / 5));
+    rs.style = parseInt(row[7]) == 0 || parseFloat(row[7]) > parseFloat(row[6]) ? "" : "highlight-green";
+    return rs;
 }
