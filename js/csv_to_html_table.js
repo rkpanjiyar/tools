@@ -77,8 +77,9 @@ function rowStyle(row) {
     } else {
         rs.rank = ((((parseFloat(row[6]) - parseFloat(row[7])) / parseFloat(row[6])) * 100).toFixed(2))+"%";
     }
-    // alert(parseFloat(rs.rank));
-    // alert((parseFloat(rs.rank) / 5));
-    rs.style = parseInt(row[7]) == 0 || parseFloat(row[7]) > parseFloat(row[6]) ? "" : "highlight-green";
+    suf = parseInt((parseFloat(rs.rank) / 4));
+    rs.style = parseInt(row[7]) == 0 || parseFloat(row[7]) > parseFloat(row[6])
+        ? ""
+        : "highlight-green-" + suf;
     return rs;
 }
