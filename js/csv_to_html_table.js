@@ -84,7 +84,7 @@ CsvToHtmlTable = {
                     let columnIdx = e.target.getAttribute('data-column');
                     let column = table.columns(columnIdx);
                     // Toggle the visibility
-                    e.target.setAttribute('class', 'a.toggle-vis' + !column.visible()[0])
+                    e.target.stuyle.backgroundColor = 'red'
                     column.visible(!column.visible()[0]);
                 });
             });
