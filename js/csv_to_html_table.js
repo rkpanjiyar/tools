@@ -93,13 +93,13 @@ CsvToHtmlTable = {
 
 function rowStyle(row) {
     rs = {}
-    if (parseInt(row[7]) == 0) {
+    if (parseInt(row[8]) == 0) {
         rs.rank = "0.0%";
     } else {
-        rs.rank = ((((parseFloat(row[6]) - parseFloat(row[7])) / parseFloat(row[6])) * 100).toFixed(2))+"%";
+        rs.rank = ((((parseFloat(row[7]) - parseFloat(row[8])) / parseFloat(row[7])) * 100).toFixed(2))+"%";
     }
     suf = parseInt((parseFloat(rs.rank) / 4));
-    rs.style = parseInt(row[7]) == 0 || parseFloat(row[7]) > parseFloat(row[6])
+    rs.style = parseInt(row[8]) == 0 || parseFloat(row[8]) > parseFloat(row[7])
         ? ""
         : "highlight-green-" + suf;
     return rs;
