@@ -1,4 +1,5 @@
 var CsvToHtmlTable = CsvToHtmlTable || {};
+var hiddenColumns = ["Country", "$$"];
 
 CsvToHtmlTable = {
     init: function (options) {
@@ -67,30 +68,45 @@ CsvToHtmlTable = {
                         Download as CSV</a></p>");
                 }
 
-            document.querySelectorAll('a.toggle-vis-all').forEach((el) => {
-                el.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    let noCols = e.target.getAttribute('data-column');
-                    let vis = table.columns(0).visible()[0]
-                    for (let i=0;i<=noCols;i++) {
-                        table.columns(i).visible(!vis);
+                document.querySelectorAll('a.toggle-vis-all').forEach((el) => {
+                    el.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        let noCols = e.target.getAttribute('data-column');
+                        let vis = table.columns(0).visible()[0]
+                        e.target.style.backgroundColor = vis ? "#ff0000" : "#9bd79d"
+                        for (let i = 0; i <= noCols; i++) {
+                            table.columns(i).visible(!vis);
+                        }
+                    });
+                });
+
+                document.querySelectorAll('a.toggle-vis').forEach((el) => {
+                    el.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        let columnIdx = e.target.getAttribute('data-column');
+                        let column = table.columns(columnIdx);
+                        // Toggle the visibility
+                        e.target.style.backgroundColor = column.visible()[0] ? "#ff0000" : "#9bd79d"
+                        column.visible(!column.visible()[0]);
+                    });
+                });
+
+                document.querySelectorAll('a.toggle-vis').forEach((el) => {
+                    if (hiddenColumns.includes(el.text)) {
+                        el.click();
                     }
                 });
             });
-
-            document.querySelectorAll('a.toggle-vis').forEach((el) => {
-                el.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    let columnIdx = e.target.getAttribute('data-column');
-                    let column = table.columns(columnIdx);
-                    // Toggle the visibility
-                    e.target.style.backgroundColor = 'red'
-                    column.visible(!column.visible()[0]);
-                });
-            });
-        });
-}
+    }
 };
+
+
+// Function to Add days to current date
+function noZoneDate() {
+    const date = new Date();
+    date.setDate(date.getDate() + 5 /* no zone, earning too close*/);
+    return date.toISOString().substring(0, 10);
+}
 
 function rowStyle(row) {
     rs = {}
@@ -103,5 +119,8 @@ function rowStyle(row) {
     rs.style = parseInt(row[8]) == 0 || parseFloat(row[8]) > parseFloat(row[7])
         ? ""
         : "highlight-green-" + suf;
+    if (row[3] < noZoneDate()) {
+        rs.style += " font-red";
+    }
     return rs;
 }

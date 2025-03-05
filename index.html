@@ -17,6 +17,10 @@
             background-color: white;
             z-index: 1;
         }
+        .font-red {
+            color: #ff0000;
+            font-style: italic;
+        }
         .highlight-green-0 {
             background-color: rgba(0, 255, 0, 0.4) !important;
         }
@@ -110,6 +114,8 @@
     <script src="js/csv_to_html_table.js"></script>
 
     <script>
+        date_str = new Date().toISOString().substring(0,10);
+
         function format_link(link) {
             if (link)
                 return "<a href='https://finviz.com/quote.ashx?t=" + link + "' target='_blank'>" + link + "</a>";
@@ -119,7 +125,7 @@
         CsvToHtmlTable.init({
             // Local testing of UI uncomment below to avoid CORS error
             // csv_path: "https://rkpanjiyar.github.io/tools/data/output-2025-03-04.csv",
-            csv_path: "data/output-" + new Date().toISOString().substring(0,10) + ".csv",
+            csv_path: "data/output-" + date_str + ".csv",
             element: "table-container",
             allow_download: true,
             csv_options: {
