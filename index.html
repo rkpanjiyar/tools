@@ -114,7 +114,13 @@
     <script src="js/csv_to_html_table.js"></script>
 
     <script>
-        date_str = new Date().toISOString().substring(0,10);
+        const now = new Date();
+        // Get the timezone offset in minutes
+        const offset = now.getTimezoneOffset();
+        // Create a new date object with the offset applied
+        const localDate = new Date(now.getTime() - (offset * 60 * 1000));
+        // Convert the local date to an ISO string
+        const date_str = localDate.toISOString().substring(0,10);
 
         function format_link(link) {
             if (link)
