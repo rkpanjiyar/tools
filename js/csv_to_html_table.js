@@ -73,7 +73,7 @@ CsvToHtmlTable = {
                         e.preventDefault();
                         let noCols = e.target.getAttribute('data-column');
                         let vis = table.columns(0).visible()[0]
-                        e.target.style.backgroundColor = vis ? "#ff0000" : "#9bd79d"
+                        e.target.style.backgroundColor = vis ? "#FD7E14" : "#28A745"
                         for (let i = 0; i <= noCols; i++) {
                             table.columns(i).visible(!vis);
                         }
