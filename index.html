@@ -9,7 +9,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="css/custom.css">
+    <link id="themeLink" rel="stylesheet" href="css/dark.css">
 </head>
 
 <body>
@@ -17,8 +17,11 @@
         <main class="row">
             <div class="col">
                 <h1>Todays Trade</h1>
-                <p>Pretty HTML table searchable, filterable & Here's CSV file <a href="https://github.com/rkpanjiyar/TradingNew/blob/main/report/output-2025-02-28.csv">Tool Suggestions</a>.
+                <p>
+                    Pretty HTML table searchable, filterable & Here's CSV file
+                    <a href="https://github.com/rkpanjiyar/TradingNew/blob/main/report/output-2025-02-28.csv">Tool Suggestions</a>.
                 </p>
+                <p>Toggle Theme <button onclick="switchTheme()">Theme Toggle</button></p>
                 <p>
                     Toggle Visibility:
                     <a class="toggle-vis-all" data-column="18">All</a> -
@@ -61,24 +64,9 @@
     <script src="js/csv_to_html_table.js"></script>
 
     <script>
-        const now = new Date();
-        // Get the timezone offset in minutes
-        const offset = now.getTimezoneOffset();
-        // Create a new date object with the offset applied
-        const localDate = new Date(now.getTime() - (offset * 60 * 1000));
-        // Convert the local date to an ISO string
-        const date_str = localDate.toISOString().substring(0,10);
-
-        function format_link(link) {
-            if (link)
-                return "<a href='https://finviz.com/quote.ashx?t=" + link + "' target='_blank'>" + link + "</a>";
-            else return "";
-        }
-
         CsvToHtmlTable.init({
-            // Local testing of UI uncomment below to avoid CORS error
-            // csv_path: "https://rkpanjiyar.github.io/tools/data/output-2025-03-05.csv",
-            csv_path: "data/output-" + date_str + ".csv",
+            // Local run without checkin pass false to avoid CORS error
+            csv_path: getCsvPath(),
             element: "table-container",
             allow_download: true,
             csv_options: {

@@ -100,8 +100,19 @@ CsvToHtmlTable = {
     }
 };
 
+function getCsvPath(relative = true) {
+    now = new Date();
+    localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60 * 1000));
+    csv_path = "data/output-" + localDate.toISOString().substring(0,10) + ".csv";
+    return relative ?  csv_path : "https://rkpanjiyar.github.io/tools/" + csv_path;
+}
 
-// Function to Add days to current date
+function format_link(link) {
+    if (link)
+        return "<a href='https://finviz.com/quote.ashx?t=" + link + "' target='_blank'>" + link + "</a>";
+    else return "";
+}
+
 function noZoneDate() {
     const date = new Date();
     date.setDate(date.getDate() + 5 /* no zone, earning too close*/);
@@ -123,4 +134,13 @@ function rowStyle(row) {
         rs.style += " font-red";
     }
     return rs;
+}
+
+function switchTheme() {
+    const link = document.getElementById("themeLink");
+    if (link.href.includes("light")) {
+        link.href = "css/dark.css";
+    } else {
+        link.href = "css/light.css";
+    }
 }
