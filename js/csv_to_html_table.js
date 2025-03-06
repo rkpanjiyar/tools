@@ -48,7 +48,6 @@ CsvToHtmlTable = {
                         var $tableBodyRowTd = $("<td></td>");
                         var cellTemplateFunc = customTemplates[colIdx];
                         if (cellTemplateFunc) {
-                            $tableBodyRowTd = $("<td style="background: #121212"></td>");
                             $tableBodyRowTd.html(cellTemplateFunc(csvData[rowIdx][colIdx]));
                         } else {
                             $tableBodyRowTd.text(csvData[rowIdx][colIdx]);
