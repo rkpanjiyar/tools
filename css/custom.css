@@ -1,11 +1,4 @@
 /* Custom styles */
-html {
-  filter: invert(100%);
-}
-
-img {
-  filter: invert(100%); /*in some cases you will need to add this, in order to revert the image back to normal*/
-}
 
 @font-face {
     font-family: 'GibsonSemiBold';
