@@ -1,4 +1,5 @@
 /* Custom styles */
+
 @font-face {
   font-family: 'GibsonSemiBold';
   src: url('/css/fonts/gibson-semibold-webfont.eot');
@@ -55,7 +56,6 @@
   font-style: normal;
 }
 
-
 body {
   font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
 }
@@ -76,9 +76,7 @@ h2 {
   margin-top: 20px;
 }
 
-#logo img {
-  width: 170px;
-}
+#logo img { width: 170px; }
 
 .info {
   padding: 6px 8px;
@@ -115,31 +113,40 @@ h2 {
     background-color: white;
     z-index: 1;
 }
+
 .font-red {
     color: #ff0000;
     font-style: italic;
 }
+
 .highlight-green-0 {
     background-color: rgba(0, 255, 0, 0.4) !important;
 }
+
 .highlight-green-1 {
     background-color: rgba(0, 255, 0, 0.5) !important;
 }
+
 .highlight-green-2 {
     background-color: rgba(0, 255, 0, 0.6) !important;
 }
+
 .highlight-green-3 {
     background-color: rgba(0, 255, 0, 0.7) !important;
 }
+
 .highlight-green-4 {
     background-color: rgba(0, 255, 0, 0.8) !important;
 }
+
 .highlight-green-5 {
     background-color: rgba(0, 255, 0, 0.9) !important;
 }
+
 .highlight-green-6 {
     background-color: rgba(0, 255, 0, 1) !important;
 }
+
 .toggle-vis-all {
     display: inline-block; /* Allows setting width and height */
     padding: 5px 10px; /* Adjust padding as needed */
@@ -147,9 +154,10 @@ h2 {
     color: white; /* White text color */
     text-decoration: none; /* Remove underline */
     border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 10px; /* Rounded corners */
     cursor: pointer; /* Change cursor on hover */
 }
+
 .toggle-vis {
     display: inline-block; /* Allows setting width and height */
     padding: 5px 10px; /* Adjust padding as needed */
@@ -157,6 +165,6 @@ h2 {
     color: white; /* White text color */
     text-decoration: none; /* Remove underline */
     border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
+    border-radius: 10px; /* Rounded corners */
     cursor: pointer; /* Change cursor on hover */
 }

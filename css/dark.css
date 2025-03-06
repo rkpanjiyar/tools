@@ -10,6 +10,7 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: 'GibsonBold';
     src: url('/css/fonts/gibson-bold-webfont.eot');
@@ -20,6 +21,7 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: 'ColaborateThinRegular';
     src: url('/css/fonts/ColabThi-webfont.eot');
@@ -30,6 +32,7 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
     font-family: 'ColaborateRegRegular';
     src: url('http://www.housingstudies.org/static/css/fonts/ColabReg-webfont.eot');
@@ -41,6 +44,7 @@
     font-style: normal;
 
 }
+
 @font-face {
     font-family: 'AlegreyaBold';
     src: url('http://www.housingstudies.org/static/css/fonts/Alegreya-Bold-webfont.eot');
@@ -51,7 +55,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
     
 body { 
   font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
@@ -151,6 +154,11 @@ hr {
   z-index: 1;
 }
 
+.font-red {
+  color: #FF0000 !important;
+  font-style: italic !important;
+}
+
 .highlight-green-0 {
   background-color: rgba(0, 255, 0, 0.4) !important;
 }
@@ -179,45 +187,24 @@ hr {
   background-color: rgba(0, 255, 0, 1) !important;
 }
 
-.font-red {
-  color: #FF0000 !important;
-  font-style: italic !important;
-}
-
 .toggle-vis-all {
-  display: inline-block;
-  /* Allows setting width and height */
-  padding: 5px 10px;
-  /* Adjust padding as needed */
-  background-color: #2563EB;
-  /* Green background color */
-  color: white;
-  /* White text color */
-  text-decoration: none;
-  /* Remove underline */
-  border: none;
-  /* Remove default border */
-  border-radius: 10px;
-  /* Rounded corners */
-  cursor: pointer;
-  /* Change cursor on hover */
+  display: inline-block; /* Allows setting width and height */
+  padding: 5px 10px; /* Adjust padding as needed */
+  background-color: #2563EB; /* Green background color */
+  color: white; /* White text color */
+  text-decoration: none; /* Remove underline */
+  border: none; /* Remove default border */
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer; /* Change cursor on hover */
 }
 
 .toggle-vis {
-  display: inline-block;
-  /* Allows setting width and height */
-  padding: 5px 10px;
-  /* Adjust padding as needed */
-  background-color: #2563EB;
-  /* Green background color */
-  color: white;
-  /* White text color */
-  text-decoration: wavy;
-  /* Remove underline */
-  border: none;
-  /* Remove default border */
-  border-radius: 10px;
-  /* Rounded corners */
-  cursor: pointer;
-  /* Change cursor on hover */
+  display: inline-block; /* Allows setting width and height */
+  padding: 5px 10px; /* Adjust padding as needed */
+  background-color: #2563EB; /* Green background color */
+  color: white; /* White text color */
+  text-decoration: none; /* Remove underline */
+  border: none; /* Remove default border */
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer; /* Change cursor on hover */
 }
