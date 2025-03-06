@@ -73,7 +73,7 @@ CsvToHtmlTable = {
                         e.preventDefault();
                         let noCols = e.target.getAttribute('data-column');
                         let vis = table.columns(0).visible()[0]
-                        e.target.style.backgroundColor = vis ? "#FD7E14" : "#28A745"
+                        e.target.style.backgroundColor = vis ? "#FD7E14" : "#007BFF"
                         for (let i = 0; i <= noCols; i++) {
                             table.columns(i).visible(!vis);
                         }
@@ -86,7 +86,7 @@ CsvToHtmlTable = {
                         let columnIdx = e.target.getAttribute('data-column');
                         let column = table.columns(columnIdx);
                         // Toggle the visibility
-                        e.target.style.backgroundColor = column.visible()[0] ? "#FD7E14" : "#28A745"
+                        e.target.style.backgroundColor = column.visible()[0] ? "#FD7E14" : "#007BFF"
                         column.visible(!column.visible()[0]);
                     });
                 });
