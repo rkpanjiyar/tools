@@ -83,6 +83,7 @@ h2 {
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
   border-radius: 5px;
 }
+
 .info h4 {
   margin: 0 0 5px;
   color: #777;
@@ -93,6 +94,7 @@ h2 {
   line-height: 18px;
   color: #555;
 }
+
 .legend i {
   width: 18px;
   height: 18px;
@@ -100,10 +102,122 @@ h2 {
   margin-right: 8px;
   opacity: 0.7;
 }
+
 .table-container {
     width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling */
     overflow-y: hidden; /* Prevent vertical scrolling */
     max-height: 100%; /* Ensures vertical scrolling does not happen */
     position: relative;
+}
+
+body {
+  background-color: #121212;
+  color: #F0F0F0;
+}
+
+body, div, section, article, aside, nav, footer, header, p, span, li, /*td,
+th,*/ address, pre, blockquote, form, fieldset, ul, ol, dl, dt, dd {
+  background-color: #212121;
+  border-color: #555;
+}
+
+a {
+  color: #ADD8E6;
+}
+
+a:hover,
+a:focus {
+  color: #87CEFA;
+}
+
+input,
+textarea,
+select {
+  background-color: #4b5563 !important;
+  color: #F0F0F0 !important;
+  border-color: #555;
+}
+
+hr {
+  border-color: #555;
+}
+
+#table-container-table th:first-child,
+#table-container-table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #121212;
+  z-index: 1;
+}
+
+.highlight-green-0 {
+  background-color: rgba(0, 255, 0, 0.4) !important;
+}
+
+.highlight-green-1 {
+  background-color: rgba(0, 255, 0, 0.5) !important;
+}
+
+.highlight-green-2 {
+  background-color: rgba(0, 255, 0, 0.6) !important;
+}
+
+.highlight-green-3 {
+  background-color: rgba(0, 255, 0, 0.7) !important;
+}
+
+.highlight-green-4 {
+  background-color: rgba(0, 255, 0, 0.8) !important;
+}
+
+.highlight-green-5 {
+  background-color: rgba(0, 255, 0, 0.9) !important;
+}
+
+.highlight-green-6 {
+  background-color: rgba(0, 255, 0, 1) !important;
+}
+
+.font-red {
+  color: #FF0000 !important;
+  font-style: italic !important;
+}
+
+.toggle-vis-all {
+  display: inline-block;
+  /* Allows setting width and height */
+  padding: 5px 10px;
+  /* Adjust padding as needed */
+  background-color: #2563EB;
+  /* Green background color */
+  color: white;
+  /* White text color */
+  text-decoration: none;
+  /* Remove underline */
+  border: none;
+  /* Remove default border */
+  border-radius: 10px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Change cursor on hover */
+}
+
+.toggle-vis {
+  display: inline-block;
+  /* Allows setting width and height */
+  padding: 5px 10px;
+  /* Adjust padding as needed */
+  background-color: #2563EB;
+  /* Green background color */
+  color: white;
+  /* White text color */
+  text-decoration: wavy;
+  /* Remove underline */
+  border: none;
+  /* Remove default border */
+  border-radius: 10px;
+  /* Rounded corners */
+  cursor: pointer;
+  /* Change cursor on hover */
 }

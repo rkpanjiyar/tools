@@ -9,90 +9,7 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
-    <style>
-body {
-    background-color: #121212;
-    color: #F0F0F0;
-}
-
-body, div, section, article, aside, nav, footer, header,
-p, span, li, td, th, address, pre, blockquote, form, fieldset,
-ul, ol, dl, dt, dd {
-    background-color: #212121;
-    border-color: #555;
-}
-
-a {
-    color: #ADD8E6;
-}
-
-a:hover, a:focus {
-    color: #87CEFA;
-}
-
-input, textarea, select {
-    background-color: #4b5563 !important;
-    color: #F0F0F0 !important;
-    border-color: #555;
-}
-
-hr {
-    border-color: #555;
-}
-    
-        #table-container-table th:first-child,
-        #table-container-table td:first-child {
-            position: sticky;
-            left: 0;
-            background-color: #121212;
-            z-index: 1;
-        }
-        .font-red {
-            color: #ff0000 !important;
-            font-style: italic;
-        }
-        .highlight-green-0 {
-            color: rgba(0, 255, 0, 0.4) !important;
-        }
-        .highlight-green-1 {
-            color: rgba(0, 255, 0, 0.5) !important;
-        }
-        .highlight-green-2 {
-            color: rgba(0, 255, 0, 0.6) !important;
-        }
-        .highlight-green-3 {
-            color: rgba(0, 255, 0, 0.7) !important;
-        }
-        .highlight-green-4 {
-            color: rgba(0, 255, 0, 0.8) !important;
-        }
-        .highlight-green-5 {
-            color: rgba(0, 255, 0, 0.9) !important;
-        }
-        .highlight-green-6 {
-            color: rgba(0, 255, 0, 1) !important;
-        }
-        .toggle-vis-all {
-            display: inline-block; /* Allows setting width and height */
-            padding: 5px 10px; /* Adjust padding as needed */
-            background-color: #2563EB; /* Green background color */
-            color: white; /* White text color */
-            text-decoration: none; /* Remove underline */
-            border: none; /* Remove default border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Change cursor on hover */
-        }
-        .toggle-vis {
-            display: inline-block; /* Allows setting width and height */
-            padding: 5px 10px; /* Adjust padding as needed */
-            background-color: #2563EB; /* Green background color */
-            color: white; /* White text color */
-            text-decoration: none; /* Remove underline */
-            border: none; /* Remove default border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Change cursor on hover */
-        }
-    </style>
+    <link rel="stylesheet" href="css/custom.css">
 </head>
 
 <body>
@@ -160,8 +77,8 @@ hr {
 
         CsvToHtmlTable.init({
             // Local testing of UI uncomment below to avoid CORS error
-            // csv_path: "https://rkpanjiyar.github.io/tools/data/output-2025-03-04.csv",
-            csv_path: "data/output-" + date_str + ".csv",
+            csv_path: "https://rkpanjiyar.github.io/tools/data/output-2025-03-05.csv",
+            // csv_path: "data/output-" + date_str + ".csv",
             element: "table-container",
             allow_download: true,
             csv_options: {
