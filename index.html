@@ -66,7 +66,7 @@
     <script>
         CsvToHtmlTable.init({
             // Local run without checkin pass false to avoid CORS error
-            csv_path: getCsvPath(),
+            csv_path: getCsvPath(false),
             element: "table-container",
             allow_download: true,
             csv_options: {
