@@ -113,7 +113,11 @@ h2 {
     background-color: white;
     z-index: 1;
 }
-
+.flex-height {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 .font-red {
     color: #ff0000;
     font-style: italic;
