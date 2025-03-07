@@ -154,6 +154,12 @@ hr {
   z-index: 1;
 }
 
+.flex-height {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .font-red {
   color: #FF0000 !important;
   font-style: italic !important;
