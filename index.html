@@ -16,7 +16,7 @@
     <div class="container-fluid flex-height">
         <main class="row">
             <div class="col">
-                <div style="padding:10px;align:left"><h1>Todays Trade</h1></div>
+                <div style="padding:10px;text-align:left"><h1>Todays Trade</h1></div>
                 <div style="text-align:right">Toggle Theme <button onclick="switchTheme()">Theme Toggle</button></div>
                 <p>
                     Toggle Visibility:
@@ -63,7 +63,8 @@
 
     <script>
         CsvToHtmlTable.init({
-            // Local run without checkin pass false to avoid CORS error
+            // Local run without checkin use below
+            // getCsvPath(false) to avoid CORS error.
             csv_path: getCsvPath(),
             element: "table-container",
             allow_download: true,
