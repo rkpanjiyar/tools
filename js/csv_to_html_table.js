@@ -48,7 +48,7 @@ CsvToHtmlTable = {
                         var $tableBodyRowTd = $("<td></td>");
                         var cellTemplateFunc = customTemplates[colIdx];
                         if (cellTemplateFunc) {
-                            $tableBodyRowTd.html(cellTemplateFunc(csvData[rowIdx][colIdx]));
+                            $tableBodyRowTd.html(cellTemplateFunc(csvData[rowIdx][colIdx], csvData[rowIdx][0]));
                         } else {
                             $tableBodyRowTd.text(csvData[rowIdx][colIdx]);
                         }
@@ -109,9 +109,29 @@ function getCsvPath(relative = true) {
     return relative ?  csv_path : "https://rkpanjiyar.github.io/tools/" + csv_path;
 }
 
-function format_link(link) {
+function format_finviz(text, symb) {
+    return format_link(`https://finviz.com/quote.ashx?t=${symb}`, text);
+}
+
+function format_unusualwhales(text, symb) {
+    return format_link(`https://unusualwhales.com/stock/${symb}/earnings`, text);
+}
+
+function format_barcharts(text, symb) {
+    return format_link(`https://www.barchart.com/stocks/quotes/${symb}/overview`, text);
+}
+
+function format_tipranks(text, symb) {
+    return format_link(`https://www.tipranks.com/stocks/${symb}`, text);
+}
+
+function format_marketchameleon(text, symb) {
+    return format_link(`https://marketchameleon.com/Overview/${symb}/`, text);
+}
+
+function format_link(url, link) {
     if (link)
-        return "<a href='https://finviz.com/quote.ashx?t=" + link + "' target='_blank'>" + link + "</a>";
+        return "<a href='" + url + "' target='_blank'>" + link + "</a>";
     else return "";
 }
 
@@ -124,7 +144,9 @@ function noZoneDate() {
 function rowStyle(row) {
     rs = {}
     if (parseInt(row[8]) == 0) {
-        rs.rank = "0.0%";
+        rs.rank = "-1000.00%";
+    } else if (row[8] == "") {
+        rs.rank = "100.00%";
     } else {
         rs.rank = ((((parseFloat(row[7]) - parseFloat(row[8])) / parseFloat(row[7])) * 100).toFixed(2))+"%";
     }

@@ -66,7 +66,7 @@
     <script>
         CsvToHtmlTable.init({
             // Local run without checkin pass false to avoid CORS error
-            csv_path: getCsvPath(false),
+            csv_path: getCsvPath(),
             element: "table-container",
             allow_download: true,
             csv_options: {
@@ -79,7 +79,16 @@
                 scrollY: 580,
             },
             custom_formatting: [
-                [0, format_link]
+                // https://finviz.com/quote.ashx?t=NVDA
+                [0, format_finviz],
+                // https://unusualwhales.com/stock/NVDA/earnings
+                [8, format_unusualwhales],
+                // https://www.barchart.com/stocks/quotes/NVDA/overview
+                [9, format_barcharts],
+                // https://marketchameleon.com/Overview/NVDA/
+                [11, format_marketchameleon],
+                // https://www.tipranks.com/stocks/NVDA
+                [14, format_tipranks]
             ]
         });
     </script>
