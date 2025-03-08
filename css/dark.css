@@ -84,10 +84,12 @@ h2 {
 .left-text {
     position: absolute;
     left: 0;
+    padding-bottom: 20px;
 }
 .right-text {
     position: absolute;
     right: 0;
+    padding-bottom: 20px;
 }
 .info {
   padding: 6px 8px;
