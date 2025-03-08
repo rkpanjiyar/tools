@@ -77,7 +77,12 @@ h2 {
 }
 
 #logo img { width: 170px; }
-
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: lightgray;
+}
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
