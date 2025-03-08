@@ -77,7 +77,18 @@ h2 {
 }
 
 #logo img { width: 170px; }
-
+.container {
+    position: relative;
+    padding: 5px;
+}
+.left-text {
+    position: absolute;
+    left: 0;
+}
+.right-text {
+    position: absolute;
+    right: 0;
+}
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
