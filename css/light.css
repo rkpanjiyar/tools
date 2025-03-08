@@ -55,7 +55,36 @@
   font-weight: normal;
   font-style: normal;
 }
-
+html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Header alignment */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 2px solid #ddd;
+        }
+        /* Spacing for visibility toggle links */
+        .toggle-links {
+            padding: 15px;
+        }
+        /* Ensuring footer stays at bottom */
+        footer {
+            background-color: #f8f9fa;
+            padding: 10px;
+            text-align: right;
+            border-top: 2px solid #ddd;
+        }
 body {
   font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
 }
