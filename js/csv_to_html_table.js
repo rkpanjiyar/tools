@@ -144,10 +144,10 @@ function noZoneDate() {
 
 function rowStyle(row) {
     rs = {}
-    if (parseInt(row[8]) == 0) {
-        rs.rank = "-1000.00%";
-    } else if (row[8] == "") {
+    if (row[1] == "") {
         rs.rank = "100.00%";
+    } else if (row[8] == "" || parseInt(row[8]) == 0) {
+        rs.rank = "-1000.00%";
     } else {
         rs.rank = ((((parseFloat(row[7]) - parseFloat(row[8])) / parseFloat(row[7])) * 100).toFixed(2))+"%";
     }
