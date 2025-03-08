@@ -78,10 +78,17 @@ h2 {
 
 #logo img { width: 170px; }
 .container {
-    display: flex;
-    justify-content: space-between;
+    position: relative;
     padding: 10px;
     background-color: lightgray;
+}
+.left-text {
+    position: absolute;
+    left: 0;
+}
+.right-text {
+    position: absolute;
+    right: 0;
 }
 .info {
   padding: 6px 8px;
