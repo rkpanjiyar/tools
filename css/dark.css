@@ -55,8 +55,6 @@
     font-weight: normal;
     font-style: normal;
 }
-
-html, body {
             height: 100%;
             margin: 0;
             display: flex;
@@ -86,7 +84,6 @@ html, body {
             text-align: right;
             border-top: 2px solid #ddd;
         }
-
 body { 
   font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
 }
@@ -151,13 +148,12 @@ h2 {
 }
 
 .table-container {
-    width: 100%;
+   width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling */
     overflow-y: hidden; /* Prevent vertical scrolling */
     max-height: 100%; /* Ensures vertical scrolling does not happen */
     position: relative;
 }
-
 body {
   background-color: #121212;
   color: #F0F0F0;

@@ -17,14 +17,13 @@
         <main class="flex-grow-1">
             <!-- Header -->
             <div class="header">
-                <h1>Todays Trade</h1>
-                <button class="btn btn-primary" onclick="switchTheme()">Theme Toggle</button>
+                <h3>Todays Trade</h3>
+                <button class="btn btn-primary" onclick="switchTheme()">Theme</button>
             </div>
 
             <!-- Visibility Toggle Section -->
             <div class="toggle-links">
                 <p>
-                    <strong>Toggle Visibility:</strong>
                     <a class="toggle-vis-all" data-column="18">All</a> -
                     <a class="toggle-vis" data-column="0">SMBL</a> -
                     <a class="toggle-vis" data-column="1">Country</a> -
@@ -52,12 +51,12 @@
             <div id="table-container"></div>
         </main>
 
-        <!-- Footer -->
+        <!-- Footer
         <footer>
             <div class="container">
                 Trade Table by Rajiv Panjiyar & Aman Bindal
             </div>
-        </footer>
+        </footer> -->
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -81,7 +80,7 @@
             datatables_options: {
                 paging: false,
                 scrollX: true,
-                scrollY: 450,
+                scrollY: 455
             },
             custom_formatting: [
                 // https://finviz.com/quote.ashx?t=NVDA
