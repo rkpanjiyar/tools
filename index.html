@@ -13,14 +13,18 @@
 </head>
 
 <body>
-    <div class="container-fluid flex-height">
-        <main class="row">
-            <div class="container">
-                <div class="left-text"><h1>Todays Trade</h1></div>
-                <div class="right-text"><button onclick="switchTheme()">Theme Toggle</button></div>
+    <div class="container-fluid">
+        <main class="flex-grow-1">
+            <!-- Header -->
+            <div class="header">
+                <h1>Todays Trade</h1>
+                <button class="btn btn-primary">Theme Toggle</button>
             </div>
+
+            <!-- Visibility Toggle Section -->
+            <div class="toggle-links">
                 <p>
-                    Toggle Visibility:
+                    <strong>Toggle Visibility:</strong>
                     <a class="toggle-vis-all" data-column="18">All</a> -
                     <a class="toggle-vis" data-column="0">SMBL</a> -
                     <a class="toggle-vis" data-column="1">Country</a> -
@@ -42,13 +46,17 @@
                     <a class="toggle-vis" data-column="17">Er #</a> -
                     <a class="toggle-vis" data-column="18">[P]</a>
                 </p>
-                <div id="table-container"></div>
             </div>
+
+            <!-- Table Container -->
+            <div id="table-container" class="container"></div>
         </main>
-        <footer class="row" style="flex: 1;">
-            <div class="col">
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
                 <hr>
-                <div class="text-right">Trade Table by Rajiv Panjiyar</div>
+                <p>Trade Table by Rajiv Panjiyar</p>
             </div>
         </footer>
     </div>
