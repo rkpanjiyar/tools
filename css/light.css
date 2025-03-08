@@ -159,8 +159,12 @@ h2 {
     flex-direction: column;
 }
 .font-red {
-    color: #ff0000;
-    font-style: italic;
+  color: #ff0000;
+  font-style: italic;
+}
+
+.font-black {
+  color: #121212;
 }
 
 .highlight-green-0 {

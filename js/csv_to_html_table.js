@@ -154,7 +154,9 @@ function rowStyle(row) {
     rs.style = row[8] == "" || parseInt(row[8]) == 0 || parseFloat(row[8]) > parseFloat(row[7])
         ? ""
         : "highlight-green-" + suf;
-    if (row[3] < noZoneDate()) {
+    if (row[3] == "") {
+        rs.style += " font-black";
+    } else if (row[3] < noZoneDate()) {
         rs.style += " font-red";
     }
     return rs;
