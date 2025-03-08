@@ -151,17 +151,11 @@ h2 {
 }
 
 .table-container {
-    width: 100%:
-padding:0px;
-    border-spacing: 0px;
+   width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling */
-    overflow-y: auto; /* Prevent vertical scrolling */
+    overflow-y: hidden; /* Prevent vertical scrolling */
     max-height: 100%; /* Ensures vertical scrolling does not happen */
-    max-width: 100%; /* Prevent the div from exceeding the page width */
-}
-/* Ensure table responsiveness */
-#table-container table {
-    width: 100%;
+    position: relative;
 }
 body {
   background-color: #121212;
