@@ -151,7 +151,7 @@ function rowStyle(row) {
         rs.rank = ((((parseFloat(row[7]) - parseFloat(row[8])) / parseFloat(row[7])) * 100).toFixed(2))+"%";
     }
     suf = parseInt((parseFloat(rs.rank) / 4));
-    rs.style = parseInt(row[8]) == 0 || parseFloat(row[8]) > parseFloat(row[7])
+    rs.style = row[8] == "" || parseInt(row[8]) == 0 || parseFloat(row[8]) > parseFloat(row[7])
         ? ""
         : "highlight-green-" + suf;
     if (row[3] < noZoneDate()) {
