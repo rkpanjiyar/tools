@@ -19,7 +19,7 @@ CsvToHtmlTable = {
         });
 
         var $table = $("<table \
-            style='border-collapse: collapse;width: 97%;table-layout: auto;' \
+            style='border-collapse: collapse;width: 100%;table-layout: auto;' \
             class='table-container table table-striped table-condensed' \
             id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
@@ -29,7 +29,7 @@ CsvToHtmlTable = {
             function (data) {
                 var csvData = $.csv.toArrays(data, csv_options);
                 var $tableHead = $("<thead \
-                    style='width: 97%;left: 0;top: 0;z-index: 10;background-color: cornflowerblue;'\
+                    style='width: 100%;left: 0;top: 0;z-index: 10;background-color: cornflowerblue;'\
                     ></thead>");
                 var csvHeaderRow = csvData[0];
                 var $tableHeadRow = $("<tr></tr>");
@@ -40,7 +40,7 @@ CsvToHtmlTable = {
                 $tableHead.append($tableHeadRow);
 
                 $table.append($tableHead);
-                var $tableBody = $("<tbody style='width: 97%;'></tbody>");
+                var $tableBody = $("<tbody style='width: 100%;'></tbody>");
 
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
                     var rStyle = rowStyle(csvData[rowIdx]);
