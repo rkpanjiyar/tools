@@ -151,8 +151,10 @@ h2 {
 }
 
 .table-container {
-    width: 100%;
-    overflow-x: hidden; /* Enable horizontal scrolling */
+    width: 100%:
+padding:0px;
+    border-spacing: 0px;
+    overflow-x: auto; /* Enable horizontal scrolling */
     overflow-y: auto; /* Prevent vertical scrolling */
     max-height: 100%; /* Ensures vertical scrolling does not happen */
     max-width: 100%; /* Prevent the div from exceeding the page width */
@@ -160,7 +162,6 @@ h2 {
 /* Ensure table responsiveness */
 #table-container table {
     width: 100%;
-    table-layout: fixed;
 }
 body {
   background-color: #121212;
