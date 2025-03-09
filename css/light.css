@@ -69,9 +69,10 @@ html, body {
         /* Header alignment */
         .header {
             display: flex;
+			color:gray;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 5px 0px 0px 10px;
             border-bottom: 2px solid #ddd;
         }
         /* Spacing for visibility toggle links */
@@ -216,3 +217,12 @@ h2 {
     border-radius: 10px; /* Rounded corners */
     cursor: pointer; /* Change cursor on hover */
 }
+.toggle-btn {
+            position: fixed;
+            top: 10px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+        }
