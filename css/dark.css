@@ -1,76 +1,5 @@
 /* Dark styles */
 
-html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.container-fluid {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Header alignment */
-.header {
-  display: flex;
-  color: gray;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 0px 0px 10px;
-  border-bottom: 2px solid #ddd;
-}
-
-/* Spacing for visibility toggle links */
-.toggle-links {
-  padding: 15px 15px 0px 15px;
-}
-
-/* Ensuring footer stays at bottom */
-footer {
-  background-color: #f8f9fa;
-  padding: 10px;
-  text-align: right;
-  border-top: 2px solid #ddd;
-}
-
-body { 
-  font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
-}
-
-h1 {
-  font: 32px/1em 'GibsonBold', serif;
-  text-transform: uppercase;
-  color: #827E7E;
-}
-
-h2 {
-  font: 22px/1em 'GibsonBold', serif;
-  text-transform: uppercase;
-  color: #827E7E;
-}
-
-#logo {
-  margin-top: 20px;
-}
-
-#logo img { width: 170px; }
-.container {
-    position: relative;
-    padding: 5px;
-}
-.left-text {
-    position: absolute;
-    left: 0;
-    padding-bottom: 20px;
-}
-.right-text {
-    position: absolute;
-    right: 0;
-    padding-bottom: 20px;
-}
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
@@ -80,108 +9,35 @@ h2 {
   border-radius: 5px;
 }
 
-.info h4 {
-  margin: 0 0 5px;
-  color: #777;
-}
-
-.legend {
-  text-align: left;
-  line-height: 18px;
-  color: #555;
-}
-
-.legend i {
-  width: 18px;
-  height: 18px;
-  float: left;
-  margin-right: 8px;
-  opacity: 0.7;
-}
-
-.table-container {
-padding: 0px !important;	
-    width: 100%;
-    overflow-x: auto; /* Enable horizontal scrolling */
-    overflow-y: hidden; /* Prevent vertical scrolling */
-    max-height: 100%; /* Ensures vertical scrolling does not happen */
-    position: relative;
-}
-body {
-  background-color: #121212;
-  color: #F0F0F0;
-}
-
-body, div, section, article, aside, nav, footer, header, p, span, li, /*td,
-th,*/ address, pre, blockquote, form, fieldset, ul, ol, dl, dt, dd {
-  background-color: #212121;
-  border-color: #555;
-}
-
-a {
-  color: #ADD8E6;
-}
-
-a:hover,
-a:focus {
-  color: #87CEFA;
-}
-
-input,
-textarea,
-select {
-    background-color: #4b5563 !important;
-    color: #F0F0F0 !important;
-    border-color: #555;
-}
-
-hr {
-    border-color: #555;
-}
 
 #table-container-table th:first-child,
 #table-container-table td:first-child {
-    padding: 0px !important;
-    position: sticky;
-    left: 0;
-    background-color: #121212;
-    z-index: 1;
+	padding: 0px !important;
+  position: sticky;
+  left: 0;
+  background-color: #121212;
+  z-index: 1;
 }
 
-.flex-height {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
 
 .toggle-vis-all {
-    display: inline-block; /* Allows setting width and height */
-    padding: 5px 5px; /* Adjust padding as needed */
-    background-color: #2563EB; /* Green background color */
-    color: white; /* White text color */
-    text-decoration: none; /* Remove underline */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Change cursor on hover */
+  display: inline-block; /* Allows setting width and height */
+  padding: 5px 5px; /* Adjust padding as needed */
+  background-color: #2563EB; /* Green background color */
+  color: white; /* White text color */
+  text-decoration: none; /* Remove underline */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Change cursor on hover */
 }
 
 .toggle-vis {
-    display: inline-block; /* Allows setting width and height */
-    padding: 5px 5px; /* Adjust padding as needed */
-    background-color: #2563EB; /* Green background color */
-    color: white; /* White text color */
-    text-decoration: none; /* Remove underline */
-    border: none; /* Remove default border */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Change cursor on hover */
-}
-
-.toggle-btn {
-    position: fixed;
-    top: 10px;
-    right: 20px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 24px;
+  display: inline-block; /* Allows setting width and height */
+  padding: 5px 5px; /* Adjust padding as needed */
+  background-color: #2563EB; /* Green background color */
+  color: white; /* White text color */
+  text-decoration: none; /* Remove underline */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Change cursor on hover */
 }
