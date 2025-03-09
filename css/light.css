@@ -1,36 +1,41 @@
 /* Light styles */
 
 html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        .container-fluid {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-        /* Header alignment */
-        .header {
-            display: flex;
-			color:gray;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 0px 0px 10px;
-            border-bottom: 2px solid #ddd;
-        }
-        /* Spacing for visibility toggle links */
-        .toggle-links {
-            padding: 15px 15px 0px 15px;
-        }
-        /* Ensuring footer stays at bottom */
-        footer {
-            background-color: #f8f9fa;
-            padding: 10px;
-            text-align: right;
-            border-top: 2px solid #ddd;
-        }
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.container-fluid {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header alignment */
+.header {
+  display: flex;
+  color: gray;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0px 0px 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Spacing for visibility toggle links */
+.toggle-links {
+  padding: 15px 15px 0px 15px;
+}
+
+/* Ensuring footer stays at bottom */
+footer {
+  background-color: #f8f9fa;
+  padding: 10px;
+  text-align: right;
+  border-top: 2px solid #ddd;
+}
+
 body {
   font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
 }
@@ -59,10 +64,12 @@ h2 {
 .left-text {
     position: absolute;
     left: 0;
+    padding-bottom: 20px;
 }
 .right-text {
     position: absolute;
     right: 0;
+    padding-bottom: 20px;
 }
 .info {
   padding: 6px 8px;
@@ -94,7 +101,7 @@ h2 {
 
 .table-container {
 padding: 0px !important;	
-   width: 100%;
+    width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling */
     overflow-y: hidden; /* Prevent vertical scrolling */
     max-height: 100%; /* Ensures vertical scrolling does not happen */
@@ -135,7 +142,7 @@ hr {
 
 #table-container-table th:first-child,
 #table-container-table td:first-child {
-	padding: 0 !important;
+	  padding: 0 !important;
     position: sticky;
     left: 0;
     background-color: white;
@@ -149,31 +156,32 @@ hr {
 
 .toggle-vis-all {
     display: inline-block; /* Allows setting width and height */
-    padding: 5px 10px; /* Adjust padding as needed */
+    padding: 5px 5px; /* Adjust padding as needed */
     background-color: #9bd79d; /* Green background color */
     color: white; /* White text color */
     text-decoration: none; /* Remove underline */
     border: none; /* Remove default border */
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Change cursor on hover */
 }
 
 .toggle-vis {
     display: inline-block; /* Allows setting width and height */
-    padding: 5px 10px; /* Adjust padding as needed */
+    padding: 5px 5px; /* Adjust padding as needed */
     background-color: #9bd79d; /* Green background color */
     color: white; /* White text color */
     text-decoration: none; /* Remove underline */
     border: none; /* Remove default border */
-    border-radius: 10px; /* Rounded corners */
+    border-radius: 5px; /* Rounded corners */
     cursor: pointer; /* Change cursor on hover */
 }
+
 .toggle-btn {
-            position: fixed;
-            top: 10px;
-            right: 20px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 24px;
-        }
+    position: fixed;
+    top: 10px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+}
