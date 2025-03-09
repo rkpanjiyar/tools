@@ -149,6 +149,7 @@ h2 {
 }
 
 .table-container {
+padding: 0px !important;	
    width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling */
     overflow-y: hidden; /* Prevent vertical scrolling */
@@ -189,6 +190,7 @@ hr {
 
 #table-container-table th:first-child,
 #table-container-table td:first-child {
+	padding: 0px !important;
   position: sticky;
   left: 0;
   background-color: #121212;
