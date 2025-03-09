@@ -58,42 +58,7 @@ padding: 0px !important;
     max-height: 100%; /* Ensures vertical scrolling does not happen */
     position: relative;
 }
-body {
-  background-color: #121212;
-  color: #F0F0F0;
-}
 
-body, div, section, article, aside, nav, footer, header, p, span, li, /*td,
-th,*/ address, pre, blockquote, form, fieldset, ul, ol, dl, dt, dd {
-  background-color: #212121;
-  border-color: #555;
-}
-
-a {
-  color: #ADD8E6;
-}
-
-a:hover,
-a:focus {
-  color: #87CEFA;
-}
-
-input,
-textarea,
-select {
-  background-color: #4b5563 !important;
-  color: #F0F0F0 !important;
-  border-color: #555;
-}
-
-.flex-height {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-hr {
-  border-color: #555;
-}
 body { 
   font: 18px/1.3em 'ColaborateThinRegular', sans-serif;
 }
