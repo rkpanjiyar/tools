@@ -18,7 +18,7 @@
             <!-- Header -->
             <div class="header">
                 <h3>Todays Trade</h3>
-                <button class="btn btn-primary" onclick="switchTheme()">Theme</button>
+                <button id="theme-toggle" class="toggle-btn" onclick="switchTheme()">🌙</button>
             </div>
 
             <!-- Visibility Toggle Section -->
@@ -67,6 +67,20 @@
     <script src="js/csv_to_html_table.js"></script>
 
     <script>
+	const toggleBtn = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
+        
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleBtn.textContent = '☀️';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            toggleBtn.textContent = isDarkMode ? '☀️' : '🌙';
+        });
         CsvToHtmlTable.init({
             // Local run without checkin use below
             // getCsvPath(false) to avoid CORS error.
@@ -80,7 +94,7 @@
             datatables_options: {
                 paging: false,
                 scrollX: true,
-                scrollY: 455
+                scrollY: 535
             },
             custom_formatting: [
                 // https://finviz.com/quote.ashx?t=NVDA
