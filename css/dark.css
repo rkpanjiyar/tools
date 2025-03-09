@@ -203,55 +203,6 @@ hr {
     flex-direction: column;
 }
 
-.font-red {
-  color: #FF0000 !important;
-  font-style: italic !important;
-}
-
-.font-black {
-  color: #121212;
-}
-
-.highlight-green-0 {
-  background-color: rgba(0, 255, 0, 0.4) !important;
-}
-
-.highlight-green-1 {
-  background-color: rgba(0, 255, 0, 0.2) !important;
-}
-
-.highlight-green-2 {
-  background-color: rgba(0, 255, 0, 0.3) !important;
-}
-
-.highlight-green-3 {
-  background-color: rgba(0, 255, 0, 0.4) !important;
-}
-
-.highlight-green-4 {
-  background-color: rgba(0, 255, 0, 0.5) !important;
-}
-
-.highlight-green-5 {
-  background-color: rgba(0, 255, 0, 0.6) !important;
-}
-
-.highlight-green-6 {
-  background-color: rgba(0, 255, 0, 0.7) !important;
-}
-
-.highlight-green-7 {
-  background-color: rgba(0, 255, 0, 0.8) !important;
-}
-
-.highlight-green-8 {
-  background-color: rgba(0, 255, 0, 0.9) !important;
-}
-
-.highlight-green-9 {
-  background-color: rgba(0, 255, 0, 1) !important;
-}
-
 .toggle-vis-all {
   display: inline-block; /* Allows setting width and height */
   padding: 5px 5px; /* Adjust padding as needed */
