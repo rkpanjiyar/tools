@@ -51,12 +51,11 @@ hr {
 #table-container-table th:first-child,
 #table-container-table td:first-child {
 	padding: 0px !important;
-    position: sticky;
-    left: 0;
-    background-color: white;
-    z-index: 1;
+  position: sticky;
+  left: 0;
+  background-color: white;
+  z-index: 1;
 }
-
 
 .toggle-vis-all {
     display: inline-block; /* Allows setting width and height */
