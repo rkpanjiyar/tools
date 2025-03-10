@@ -187,6 +187,6 @@ function toggleRecent() {
 function toggleFuture() {
     hideFuture = !hideFuture;
     const toggleBtn = document.getElementById("future-toggle");
-    toggleBtn.textContent = hideFuture ? "⌚" : "🌈";
+    toggleBtn.textContent = hideFuture ? "⦾" : "🌈";
     loadCsv();
 }
