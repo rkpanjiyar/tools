@@ -1,5 +1,42 @@
 /* Light styles */
 
+body {
+  background-color: white;
+  color: #F0F0F0;
+}
+
+body, div, section, article, aside, nav, footer, header, p, span, li, /*td,
+th,*/ address, pre, blockquote, form, fieldset, ul, ol, dl, dt, dd {
+  background-color: white;
+  border-color: #555;
+}
+
+a {
+  color: #ADD8E6;
+}
+
+a:hover,
+a:focus {
+  color: #87CEFA;
+}
+
+input,
+textarea,
+select {
+  background-color: #4b5563 !important;
+  color: #F0F0F0 !important;
+  border-color: #555;
+}
+
+.flex-height {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+hr {
+  border-color: #555;
+}
+
 .info {
   padding: 6px 8px;
   font: 14px/16px Arial, Helvetica, sans-serif;
@@ -8,7 +45,9 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
-
+.table-container {
+	color:black;
+}
 #table-container-table th:first-child,
 #table-container-table td:first-child {
 	padding: 0px !important;
