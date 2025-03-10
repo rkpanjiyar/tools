@@ -1,6 +1,7 @@
 var CsvToHtmlTable = CsvToHtmlTable || {};
 var hiddenColumns = ["Country", "$$"];
 var hideRecent = false;
+var hideFuture = false;
 
 CsvToHtmlTable = {
     init: function (options) {
@@ -45,19 +46,21 @@ CsvToHtmlTable = {
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
                     var rStyle = rowStyle(csvData[rowIdx]);
                     if (!hideRecent || !rStyle.style.includes("font-red")) {
-                        var $tableBodyRow = $("<tr class='" + rStyle.style + "'></tr>");
-                        for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
-                            var $tableBodyRowTd = $("<td></td>");
-                            var cellTemplateFunc = customTemplates[colIdx];
-                            if (cellTemplateFunc) {
-                                $tableBodyRowTd.html(cellTemplateFunc(csvData[rowIdx][colIdx], csvData[rowIdx][0]));
-                            } else {
-                                $tableBodyRowTd.text(csvData[rowIdx][colIdx]);
+                        if (!hideFuture || parseInt(csvData[rowIdx][8]) != 0) {
+                            var $tableBodyRow = $("<tr class='" + rStyle.style + "'></tr>");
+                            for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
+                                var $tableBodyRowTd = $("<td></td>");
+                                var cellTemplateFunc = customTemplates[colIdx];
+                                if (cellTemplateFunc) {
+                                    $tableBodyRowTd.html(cellTemplateFunc(csvData[rowIdx][colIdx], csvData[rowIdx][0]));
+                                } else {
+                                    $tableBodyRowTd.text(csvData[rowIdx][colIdx]);
+                                }
+                                $tableBodyRow.append($tableBodyRowTd);
                             }
-                            $tableBodyRow.append($tableBodyRowTd);
+                            $tableBodyRow.append($("<td></td>").text(rStyle.rank));
+                            $tableBody.append($tableBodyRow);
                         }
-                        $tableBodyRow.append($("<td></td>").text(rStyle.rank));
-                        $tableBody.append($tableBodyRow);
                     }
                 }
                 $table.append($tableBody);
@@ -178,5 +181,12 @@ function toggleRecent() {
     hideRecent = !hideRecent;
     const toggleBtn = document.getElementById("recent-toggle");
     toggleBtn.textContent = hideRecent ? "⌚" : "⏳";
+    loadCsv();
+}
+
+function toggleFuture() {
+    hideFuture = !hideFuture;
+    const toggleBtn = document.getElementById("future-toggle");
+    toggleBtn.textContent = hideFuture ? "⌚" : "🌈";
     loadCsv();
 }
