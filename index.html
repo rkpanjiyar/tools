@@ -19,7 +19,12 @@
             <!-- Header -->
             <div class="header">
                 <h3>Todays Trade</h3>
-                <button id="theme-toggle" class="toggle-btn" onclick="switchTheme()">🌙</button>                
+                <table>
+                  <tr>
+                    <td><button id="theme-toggle" class="toggle-btn" onclick="switchTheme()">🌙</button></td>
+                    <td><button id="recent-toggle" class="toggle-btn" onclick="toggleRecent()">⏳</button></td>
+                  </tr>
+                </table>            
             </div>
 
             <!-- Visibility Toggle Section -->
@@ -68,7 +73,7 @@
     <script src="js/csv_to_html_table.js"></script>
 
     <script>
-	const toggleBtn = document.getElementById('theme-toggle');
+	    const toggleBtn = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme');
         
         if (currentTheme === 'dark') {
@@ -82,7 +87,9 @@
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
             toggleBtn.textContent = isDarkMode ? '🌙' : '☀️';
         });
-        CsvToHtmlTable.init({
+
+        function loadCsv() {
+            CsvToHtmlTable.init({
             // Local run without checkin use below
             // getCsvPath(false) to avoid CORS error.
             csv_path: getCsvPath(false),
@@ -109,7 +116,10 @@
                 // https://www.tipranks.com/stocks/NVDA
                 [14, format_tipranks]
             ]
-        });
+            });
+        }
+
+        loadCsv();
     </script>
 </body>
 
