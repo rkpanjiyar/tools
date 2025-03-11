@@ -112,7 +112,7 @@ h2 {
 }
 
 .tooltip .tooltiptext {
-  visibility: hidden;
+  visibility: hidden !important;
   width: 120px;
   background-color: black;
   color: #fff;
@@ -126,7 +126,7 @@ h2 {
 }
 
 .tooltip:hover .tooltiptext {
-  visibility: visible;
+  visibility: visible !important;
 }
 
 @font-face {
