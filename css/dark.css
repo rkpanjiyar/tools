@@ -54,6 +54,7 @@ hr {
 	position: sticky;
   left: 0;
   background-color: black;
+  vertical-align: middle;
   z-index: 1;
 }
 
