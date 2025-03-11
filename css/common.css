@@ -111,7 +111,7 @@ h2 {
   border-bottom: 1px dotted black;
 }
 
-.tooltip .tooltiptext {
+.tooltiptext {
   visibility: hidden !important;
   width: 120px;
   background-color: black;
