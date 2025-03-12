@@ -119,6 +119,10 @@ function format_finviz(text, symb) {
     return format_link(`https://finviz.com/quote.ashx?t=${symb}`, text);
 }
 
+function format_robinHood(text, symb) {
+    return format_link(`https://robinhood.com/stocks/${symb}`, text);
+}
+
 function format_unusualwhales(text, symb) {
     return format_link(`https://unusualwhales.com/stock/${symb}/earnings`, text);
 }
