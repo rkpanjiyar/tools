@@ -142,7 +142,7 @@ function format_marketchameleon(text, symb) {
 function format_link(url, link) {
     if (link)
         return "<a class='att' href='" + url + "' target='_blank'>" + link +
-        "<span class='bttt'>" + url.substring(8, url.indexOf('.com') + 4) + "<span></a>";
+        "<span class='bttt'>🌎:" + url.substring(8, url.indexOf('.com') + 4) + "<span></a>";
     else
         return "";
 }
