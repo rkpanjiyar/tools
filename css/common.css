@@ -101,6 +101,10 @@ h2 {
     cursor: pointer;
 }
 
+/* div.dataTables_filter input {
+    background-color: #FF0000 !important;
+} */
+
 .bttt {
   visibility: hidden !important;
   /* width: 90px; */
