@@ -19,17 +19,20 @@
             <!-- Header -->
             <div class="header">
                 <h3>Todays Trade</h3>
-                <table>
-                  <tr>
-                    <td><button title="Change theme dark or light" id="theme-toggle" class="toggle-btn" onclick="switchTheme()">🌙</button></td>
-                    <td><button title="Toogle rows with earning date too close (next 2d)" id="recent-toggle" class="toggle-btn" onclick="toggleRecent()">⏳</button></td>
-                    <td><button title="Toggle rows with earning date too far (beyond 30d)" id="future-toggle" class="toggle-btn" onclick="toggleFuture()">🌈</button></td>
-                  </tr>
-                </table>            
+                <table class="rkp">
+                    <tr>
+                        <td><button title="Change theme dark or light" id="theme-toggle" class="toggle-btn"
+                                onclick="switchTheme()">🌙</button></td>
+                        <td><button title="Toogle rows with earning date too close (next 2d)" id="recent-toggle"
+                                class="toggle-btn" onclick="toggleRecent()">⏳</button></td>
+                        <td><button title="Toggle rows with earning date too far (beyond 30d)" id="future-toggle"
+                                class="toggle-btn" onclick="toggleFuture()">🌈</button></td>
+                    </tr>
+                </table>
             </div>
             <!-- Table Container -->
             <div id="table-container"></div>
-		<!-- Visibility Toggle Section -->
+		    <!-- Visibility Toggle Section -->
             <div class="toggle-links">
                 <p>
                     <a class="toggle-vis-all" data-column="18">All</a> -
@@ -53,7 +56,7 @@
                     <a class="toggle-vis" data-column="17">Er #</a> -
                     <a class="toggle-vis" data-column="18">[P]</a>
                 </p>
-	    </div>
+            </div>
             <div class="font-red">Table refreshes every 30m in market hours, every 2hrs off market hours, and once a day during weekend</div>
         </main>
 
@@ -106,8 +109,8 @@
             custom_formatting: [
                 // https://finviz.com/quote.ashx?t=NVDA
                 [0, format_finviz],
-	    	// https://robinhood.com/stocks/NVDA
-		[4, format_robinHood],
+	    	    // https://robinhood.com/stocks/NVDA
+		        [4, format_robinhood],
                 // https://unusualwhales.com/stock/NVDA/earnings
                 [8, format_unusualwhales],
                 // https://www.barchart.com/stocks/quotes/NVDA/overview
