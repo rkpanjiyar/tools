@@ -101,41 +101,20 @@ h2 {
     cursor: pointer;
 }
 
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-.abc {
-    background-color: #FF0000;
-}
-
-/* .xyz {
-    background-color: blue;
-    visibility: hidden;
-    position: absolute;
-}
-
-.abc:hover td:hover {
-    visibility: visible !important;
-} */
-
-.tooltiptext {
+.bttt {
   visibility: hidden !important;
-  width: 120px;
+  /* width: 90px; */
   background-color: black;
-  color: #fff;
+  color: #ff0000;
   text-align: center;
   border-radius: 6px;
-  padding: 5px 0;
-
+  /* padding: 10px 0; */
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
 }
 
-.tooltip:hover .tooltiptext {
+.att:hover .bttt {
   visibility: visible !important;
 }
 
@@ -195,9 +174,9 @@ h2 {
     font-style: normal;
 }
 
-/* .highlightable tr:hover {
+.highlightable tr:hover {
     background-color: rgba(255, 255, 0, 0.559) !important;
-} */
+}
 
 .font-red {
     color: #FF0000 !important;
