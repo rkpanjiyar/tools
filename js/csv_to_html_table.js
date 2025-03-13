@@ -41,7 +41,7 @@ CsvToHtmlTable = {
                 $tableHead.append($tableHeadRow);
 
                 $table.append($tableHead);
-                var $tableBody = $("<tbody></tbody>");
+                var $tableBody = $("<tbody class='highlightable'></tbody>");
 
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
                     var rStyle = rowStyle(csvData[rowIdx]);
