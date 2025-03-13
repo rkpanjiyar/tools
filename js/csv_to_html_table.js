@@ -141,8 +141,10 @@ function format_marketchameleon(text, symb) {
 
 function format_link(url, link) {
     if (link)
-        return "<a class='abc' href='" + url + "' target='_blank'>" + link + "<span class='xyz'>abc<span></a>";
-    else return "";
+        return "<a class='tooltip' href='" + url + "' target='_blank'>" + link +
+        "<span class='tooltiptext'>abc<span></a>";
+    else
+        return "";
 }
 
 function noZoneDate() {
