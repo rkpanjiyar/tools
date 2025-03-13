@@ -107,6 +107,15 @@ h2 {
   border-bottom: 1px dotted black;
 }
 
+.abc {
+    background-color: #FF0000;
+}
+
+.xyz {
+    background-color: blue;
+    visibility: hidden;
+}
+
 .tooltiptext {
   visibility: hidden !important;
   width: 120px;
