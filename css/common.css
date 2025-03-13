@@ -104,11 +104,11 @@ h2 {
 .bttt {
   visibility: hidden !important;
   /* width: 90px; */
-  background-color: black;
-  color: #ff0000;
+  background-color: transparent;
+  color: #fa3ffd;
   text-align: center;
   border-radius: 6px;
-  /* padding: 10px 0; */
+  padding: 3px 0;
   /* Position the tooltip */
   position: absolute;
   z-index: 1;
