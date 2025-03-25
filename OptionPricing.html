@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Option Pricing Calculator</title>
+    <script>
+        async function calculateOptionPrice() {
+            const ticker = document.getElementById("ticker").value;
+            const strike_price = document.getElementById("strike_price").value;
+            const iv = document.getElementById("iv").value;
+            const expiry_date = document.getElementById("expiry_date").value;
+            const target_date = document.getElementById("target_date").value;
+            const future_stock_price = document.getElementById("future_stock_price").value;
+            const option_type = document.querySelector('input[name="option_type"]:checked').value;
+
+            const requestData = {
+                ticker,
+                strike_price,
+                iv,
+                expiry_date,
+                target_date,
+                future_stock_price,
+                option_type
+            };
+
+            const response = await fetch("https://optionsimulator.onrender.com/calculate_option", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            const result = await response.json();
+            document.getElementById("result").innerHTML = `
+                <h3>Black-Scholes Price: $${result.bs_price}</h3>
+                <h3>Black-Scholes-Merton Price: $${result.bsm_price}</h3>
+                <h3>Binomial-Tree Price: $${result.binomial_price}</h3>
+                <p>Time to Expiry: ${result.time_to_expiry} years</p>
+                <p>Stock Price: ${result.stock_price}</p>
+                <p>Strike Price: ${result.strike_price}</p>
+            `;
+        }
+    </script>
+</head>
+<body>
+    <h1>Option Pricing Calculator</h1>
+    
+    <label>Stock Ticker:</label>
+    <input type="text" id="ticker" placeholder="AAPL"><br><br>
+
+    <label>Strike Price:</label>
+    <input type="number" id="strike_price"><br><br>
+
+    <label>Implied Volatility (IV as decimal):</label>
+    <input type="number" step="0.01" id="iv"><br><br>
+
+    <label>Expiry Date:</label>
+    <input type="date" id="expiry_date"><br><br>
+
+    <label>Target Date:</label>
+    <input type="date" id="target_date"><br><br>
+
+    <label>Expected Future Stock Price:</label>
+    <input type="number" id="future_stock_price"><br><br>
+
+    <label>Option Type:</label>
+    <input type="radio" name="option_type" value="c" checked> Call
+    <input type="radio" name="option_type" value="p"> Put <br><br>
+
+    <button onclick="calculateOptionPrice()">Calculate</button>
+
+    <div id="result"></div>
+</body>
+</html>
