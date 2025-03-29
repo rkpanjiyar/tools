@@ -1,0 +1,93 @@
+.nav {
+  /* Big main button */
+  /* Small buttons */
+  /* When checked */
+}
+.nav--checkbox {
+  display: none;
+}
+.nav--button {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  height: 70px;
+  width: 70px;
+  background-color: crimson;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  z-index: 666;
+}
+.nav--button span {
+  position: relative;
+  display: inline-block;
+  top: 35px;
+  left: 50%;
+  height: 3px;
+  width: 25px;
+  transform: translateX(-50%);
+}
+.nav--button span::after, .nav--button span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  display: inherit;
+  height: inherit;
+  width: inherit;
+  background-color: #fff;
+}
+.nav--button span::before {
+  top: -5px;
+}
+.nav--button span::after {
+  top: 5px;
+}
+.nav--small {
+  position: absolute;
+  bottom: 65px;
+  right: 65px;
+  height: 40px;
+  width: 40px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  transition: all 500ms cubic-bezier(0.6, -0.5, 0.4, 1.5);
+  z-index: 1;
+}
+.nav--small a {
+  position: relative;
+  display: block;
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+  text-decoration: none;
+  color: white;
+}
+.nav--small a i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 19px;
+}
+.nav--btn-1 {
+  background-color: #b649d2;
+}
+.nav--btn-2 {
+  background-color: #5e50c3;
+  transition-delay: 50ms;
+}
+.nav--btn-3 {
+  background-color: #741077;
+  transition-delay: 100ms;
+}
+.nav--checkbox:checked ~ .nav--btn-1 {
+  bottom: 135px;
+}
+.nav--checkbox:checked ~ .nav--btn-2 {
+  bottom: 118px;
+  right: 118px;
+}
+.nav--checkbox:checked ~ .nav--btn-3 {
+  right: 135px;
+}
+
+/*# sourceMappingURL=menu.css.map */
