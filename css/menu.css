@@ -79,6 +79,10 @@
   background-color: #741077;
   transition-delay: 100ms;
 }
+.nav--btn-4 {
+  background-color: #771045;
+  transition-delay: 100ms;
+}
 .nav--checkbox:checked ~ .nav--btn-1 {
   bottom: 135px;
 }
@@ -88,6 +92,9 @@
 }
 .nav--checkbox:checked ~ .nav--btn-3 {
   right: 135px;
+}
+.nav--checkbox:checked ~ .nav--btn-4 {
+  right: 0px;
 }
 
 /*# sourceMappingURL=menu.css.map */
