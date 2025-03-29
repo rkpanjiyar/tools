@@ -87,16 +87,27 @@
     &--btn {
         &-1 {
             background-color: #b649d2;
+            transition-delay: 100ms
         }
 
         &-2 {
             background-color: #5e50c3;
-            transition-delay: 50ms
+            transition-delay: 150ms
         }
 
         &-3 {
             background-color: #741077;
-            transition-delay: 100ms
+            transition-delay: 200ms
+        }
+
+        &-4 {
+            background-color: #771039;
+            transition-delay: 50ms
+        }
+
+        &-5 {
+            background-color: #105177;
+            transition-delay: 0ms
         }
     }
 
@@ -117,5 +128,14 @@
 
     &--checkbox:checked~&--btn-3 {
         right: $btn-3-active;
+    }
+
+    &--checkbox:checked~&--btn-4 {
+        bottom: 118px;
+        right: 18px;
+    }
+
+    &--checkbox:checked~&--btn-5 {
+        right: 0px;
     }
 }
