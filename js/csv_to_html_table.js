@@ -171,8 +171,10 @@ function rowStyle(row) {
     } else if (row[3] < noZoneDate()) {
         rs.style += " font-red";
     }
-    if(getFirstDecimalNumber(row[11]) <= getFirstDecimalNumber(row[10])) //highlight if current IV is lower than historic IV
+    // highlight if current IV is lower than historic IV
+    if(getFirstDecimalNumber(row[11]) <= getFirstDecimalNumber(row[10])) {
 		rs.style += " row-underline";
+    }
     return rs;
 }
 
