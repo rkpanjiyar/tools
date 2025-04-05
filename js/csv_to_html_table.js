@@ -38,6 +38,7 @@ CsvToHtmlTable = {
                     $tableHeadRow.append($("<th></th>").text(csvHeaderRow[headerIdx]));
                 }
                 $tableHeadRow.append($("<th></th>").text("[P]"));
+                $tableHeadRow.append($("<th></th>").text("[p200]"));
                 $tableHead.append($tableHeadRow);
 
                 $table.append($tableHead);
@@ -59,6 +60,7 @@ CsvToHtmlTable = {
                                 $tableBodyRow.append($tableBodyRowTd);
                             }
                             $tableBodyRow.append($("<td></td>").text(rStyle.rank));
+                            $tableBodyRow.append($("<td></td>").text(rStyle.rank200));
                             $tableBody.append($tableBodyRow);
                         }
                     }
@@ -157,13 +159,14 @@ function rowStyle(row) {
     rs = {}
     if (row[1] == "") {
         rs.rank = "100.00%";
-    } else if (row[8] == "" || parseInt(row[8]) == 0) {
+    } else if (row[9] == "" || parseInt(row[9]) == 0) {
         rs.rank = "-1000.00%";
     } else {
-        rs.rank = ((((parseFloat(row[7]) - parseFloat(row[8])) / parseFloat(row[7])) * 100).toFixed(2))+"%";
+        rs.rank = ((((parseFloat(row[8]) - parseFloat(row[9])) / parseFloat(row[8])) * 100).toFixed(2))+"%";
+        rs.rank200 =  ((parseFloat(row[6].replace("%","")) * parseFloat(row[2]))/(parseFloat(row[5]) * 100)).toFixed(2);
     }
     suf = parseInt((parseFloat(rs.rank) / 4));
-    rs.style = row[8] == "" || parseInt(row[8]) == 0 || parseFloat(row[8]) > parseFloat(row[7])
+    rs.style = row[9] == "" || parseInt(row[9]) == 0 || parseFloat(row[9]) > parseFloat(row[8])
         ? ""
         : "highlight-green-" + suf;
     if (row[3] == "") {
@@ -172,7 +175,7 @@ function rowStyle(row) {
         rs.style += " font-red";
     }
     // highlight if current IV is lower than historic IV
-    if(getFirstDecimalNumber(row[11]) <= getFirstDecimalNumber(row[10])) {
+    if(getFirstDecimalNumber(row[12]) <= getFirstDecimalNumber(row[11])) {
 		rs.style += " row-underline";
     }
     return rs;
