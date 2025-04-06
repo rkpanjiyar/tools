@@ -157,25 +157,33 @@ function noZoneDate() {
 
 function rowStyle(row) {
     rs = {}
-    if (row[1] == "") {
+    const country = row[1], price = row[2], erDate = row[3],
+        atr = row[5], sma200 = row[6], histMove = row[8],
+        exptMove = row[9];
+    if (country == "" && price == "") {
         rs.rank = "100.00%";
-    } else if (row[9] == "" || parseInt(row[9]) == 0) {
-        rs.rank = "-1000.00%";
+        rs.rank200 = "100.00%";
     } else {
-        rs.rank = ((((parseFloat(row[8]) - parseFloat(row[9])) / parseFloat(row[8])) * 100).toFixed(2))+"%";
-        rs.rank200 =  ((parseFloat(row[6].replace("%","")) * parseFloat(row[2]))/(parseFloat(row[5]) * 100)).toFixed(2);
+        if (exptMove == "" || parseInt(exptMove) == 0) {
+            rs.rank = "-1000.00%";
+        } else {
+            rs.rank = ((((parseFloat(histMove) - parseFloat(exptMove)) / parseFloat(histMove)) * 100).toFixed(2)) + "%";
+        }
+        rs.rank200 = ((parseFloat(sma200.replace("%", "")) * parseFloat(price)) / (parseFloat(atr) * 100)).toFixed(2);
     }
     suf = parseInt((parseFloat(rs.rank) / 4));
-    rs.style = row[9] == "" || parseInt(row[9]) == 0 || parseFloat(row[9]) > parseFloat(row[8])
+    rs.style = exptMove == "" || parseInt(exptMove) == 0 || parseFloat(exptMove) > parseFloat(histMove)
         ? ""
         : "highlight-green-" + suf;
-    if (row[3] == "") {
+    if (erDate == "") {
         rs.style += " font-black";
-    } else if (row[3] < noZoneDate()) {
+    } else if (erDate < noZoneDate()) {
         rs.style += " font-red";
     }
+    const iv = row[12];
+    const histIV = row[11];
     // highlight if current IV is lower than historic IV
-    if(getFirstDecimalNumber(row[12]) <= getFirstDecimalNumber(row[11])) {
+    if(getFirstDecimalNumber(iv) <= getFirstDecimalNumber(histIV)) {
 		rs.style += " row-underline";
     }
     return rs;
