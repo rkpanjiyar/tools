@@ -169,7 +169,7 @@ function rowStyle(row) {
         } else {
             rs.rank = ((((parseFloat(histMove) - parseFloat(exptMove)) / parseFloat(histMove)) * 100).toFixed(2)) + "%";
         }
-        rs.rank200 = ((parseFloat(sma200.replace("%", "")) * parseFloat(price)) / (parseFloat(atr) * 100)).toFixed(2);
+        rs.rank200 = ((parseFloat(sma200.replace("%", "").replace("-","")) * parseFloat(price)) / (parseFloat(atr) * 100)).toFixed(2);
     }
     suf = parseInt((parseFloat(rs.rank) / 4));
     rs.style = exptMove == "" || parseInt(exptMove) == 0 || parseFloat(exptMove) > parseFloat(histMove)
