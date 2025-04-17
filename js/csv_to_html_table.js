@@ -1,5 +1,5 @@
 var CsvToHtmlTable = CsvToHtmlTable || {};
-var hiddenColumns = ["Country", "$$","Scr","Rank","Rank+","Er #"];
+var hiddenColumns = ["Country", "$$","RSI","ATR","SMA 200","P/S","Optn Vol","HIV","OI","Scr","Rank","Rank+","Er #"];
 var hideRecent = false;
 var hideFuture = false;
 
