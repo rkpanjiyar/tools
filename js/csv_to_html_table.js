@@ -25,7 +25,7 @@ CsvToHtmlTable = {
             id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
-        var $toggleColumn = $("#toggle-links");
+        var $toggleColumn = $(".toggle-links");
 
         $.when($.get(csv_path)).then(
             function (data) {
@@ -35,12 +35,30 @@ CsvToHtmlTable = {
                     ></thead>");
                 var csvHeaderRow = csvData[0];
                 var $tableHeadRow = $("<tr></tr>");
+                var $toggleColumnP = $("<p></p>");
+                $toggleColumnP.append(
+                    $("<a class=\"toggle-vis-all\" "
+                        + "data-column=\"" + csvHeaderRow.length
+                        + "\">All</a>")).append(" - ");
                 for (var headerIdx = 0; headerIdx < csvHeaderRow.length; headerIdx++) {
                     $tableHeadRow.append($("<th></th>").text(csvHeaderRow[headerIdx]));
+                    $toggleColumnP.append(
+                        $("<a class=\"toggle-vis\" data-column=\""
+                        + headerIdx + "\">" + csvHeaderRow[headerIdx]
+                        + "</a>")).append(" - ");
                 }
                 $tableHeadRow.append($("<th></th>").text("[P]"));
                 $tableHeadRow.append($("<th></th>").text("[p200]"));
                 $tableHead.append($tableHeadRow);
+                $toggleColumnP.append(
+                    $("<a class=\"toggle-vis\" "
+                        + "data-column=\"" + (csvHeaderRow.length)
+                        + "\">[p]</a>")).append(" - ");
+                $toggleColumnP.append(
+                    $("<a class=\"toggle-vis\" "
+                        + "data-column=\"" + (csvHeaderRow.length+1)
+                        + "\">[p200]</a>"));
+                $toggleColumn.append($toggleColumnP);
 
                 $table.append($tableHead);
                 var $tableBody = $("<tbody class='highlightable'></tbody>");
