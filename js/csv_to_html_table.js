@@ -170,6 +170,26 @@ function format_link(url, link) {
         return "";
 }
 
+function format_all_links(text, symb) {
+    var l1 = `https://finviz.com/quote.ashx?t=${symb}`;
+    var l2 = `https://robinhood.com/stocks/${symb}`;
+    var l3 = `https://unusualwhales.com/stock/${symb}/earnings`;
+    var l4 = `https://www.barchart.com/stocks/quotes/${symb}/overview`;
+    var l5 = `https://www.tipranks.com/stocks/${symb}`;
+    var l6 = `https://marketchameleon.com/Overview/${symb}/`;
+    return `<div class="dropdown">
+              <button class="dropbtn">${symb} &#9662;</button>
+              <div class="dropdown-content">
+                <a href="${l1}">finviz</a>
+                <a href="${l2}">robinhood</a>
+                <a href="${l3}">unusualwhales</a>
+                <a href="${l4}">barchart</a>
+                <a href="${l5}">tipranks</a>
+                <a href="${l6}">marketchameleon</a>
+              </div>
+            </div>`;
+}
+
 function noZoneDate() {
     const date = new Date();
     date.setDate(date.getDate() + 5 /* no zone, earning too close*/);
