@@ -25,6 +25,7 @@ CsvToHtmlTable = {
             id='" + el + "-table'></table>");
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
+        var $toggleColumn = $("#toggle-links");
 
         $.when($.get(csv_path)).then(
             function (data) {
@@ -80,10 +81,10 @@ CsvToHtmlTable = {
                     el.addEventListener('click', function (e) {
                         e.preventDefault();
                         let noCols = e.target.getAttribute('data-column');
-                        let vis = table.columns(0).visible()[0]
+                        let vis = table.columns(1).visible()[0]
                         e.target.style.backgroundColor = vis ? "#B91C1C" : "#007BFF"
                         buttons = document.querySelectorAll('a.toggle-vis');
-                        for (let i = 0; i <= noCols; i++) {
+                        for (let i = 1; i <= noCols; i++) {
                             table.columns(i).visible(!vis);
                             buttons[i].style.backgroundColor = vis ? "#B91C1C" : "#007BFF";
                         }
