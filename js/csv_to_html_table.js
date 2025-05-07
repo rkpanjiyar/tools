@@ -35,9 +35,8 @@ CsvToHtmlTable = {
                     ></thead>");
                 var csvHeaderRow = csvData[0];
                 var $tableHeadRow = $("<tr></tr>");
-                var $toggleColumnP = $("<p></p>");
-                $toggleColumnP.append(
-                    $("<a class=\"toggle-vis-all\" "
+                var $toggleColumnP = $("<p></p>")
+                    .append($("<a class=\"toggle-vis-all\" "
                         + "data-column=\"" + csvHeaderRow.length
                         + "\">All</a>")).append(" - ");
                 for (var headerIdx = 0; headerIdx < csvHeaderRow.length; headerIdx++) {
