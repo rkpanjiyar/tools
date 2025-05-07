@@ -177,7 +177,7 @@ function format_all_links(text, symb) {
     var l5 = `https://www.tipranks.com/stocks/${symb}`;
     var l6 = `https://marketchameleon.com/Overview/${symb}/`;
     return `<div class="dropdown">
-              <button class="dropbtn">${symb} &#9662;</button>
+              <span class="dropbtn">${symb} &#9662;</span>
               <div class="dropdown-content">
                 <a href="${l1}">finviz</a>
                 <a href="${l2}">robinhood</a>
