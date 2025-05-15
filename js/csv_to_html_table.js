@@ -204,7 +204,7 @@ function rowStyle(row) {
         rs.rank = "100.00%";
         rs.rank200 = "100.00%";
     } else {
-        if (exptMove == "" || parseInt(exptMove) == 0) {
+        if (exptMove == "" || parseInt(exptMove) == 0 || parseFloat(histMove) == 0) {
             rs.rank = "-1000.00%";
         } else {
             rs.rank = ((((parseFloat(histMove) - parseFloat(exptMove)) / parseFloat(histMove)) * 100).toFixed(2)) + "%";
