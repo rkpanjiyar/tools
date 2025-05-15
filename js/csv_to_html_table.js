@@ -68,7 +68,7 @@ CsvToHtmlTable = {
                         if (!hideFuture || parseInt(csvData[rowIdx][8]) != 0) {
                             var $tableBodyRow = $("<tr class='" + rStyle.style + "'></tr>");
                             for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
-                                var $tableBodyRowTd = $("<td></td>");
+                                var $tableBodyRowTd = $("<td style='white-space: pre-wrap;'></td>");
                                 var cellTemplateFunc = customTemplates[colIdx];
                                 if (cellTemplateFunc) {
                                     $tableBodyRowTd.html(cellTemplateFunc(csvData[rowIdx][colIdx], csvData[rowIdx][0]));
