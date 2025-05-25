@@ -2,6 +2,7 @@ var CsvToHtmlTable = CsvToHtmlTable || {};
 var hiddenColumns = ["Country", "$$","RSI","ATR","SMA 200","P/S","Optn Vol","HIV","OI","Scr","Rank","Rank+","Er #"];
 var hideRecent = false;
 var hideFuture = false;
+var noOfDayForTooClose = 5;
 
 CsvToHtmlTable = {
     init: function (options) {
@@ -26,6 +27,7 @@ CsvToHtmlTable = {
         var $containerElement = $("#" + el);
         $containerElement.empty().append($table);
         var $toggleColumn = $(".toggle-links");
+        $toggleColumn.empty();
 
         $.when($.get(csv_path)).then(
             function (data) {
@@ -191,7 +193,7 @@ function format_all_links(text, symb) {
 
 function noZoneDate() {
     const date = new Date();
-    date.setDate(date.getDate() + 5 /* no zone, earning too close*/);
+    date.setDate(date.getDate() + noOfDayForTooClose /* no zone, earning too close*/);
     return date.toISOString().substring(0, 10);
 }
 
