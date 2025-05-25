@@ -3,6 +3,7 @@ var hiddenColumns = ["Country", "$$","RSI","ATR","SMA 200","P/S","Optn Vol","HIV
 var hideRecent = false;
 var hideFuture = false;
 var noOfDayForTooClose = 5;
+var noOfDayForTooFar = 30;
 
 CsvToHtmlTable = {
     init: function (options) {
@@ -67,7 +68,7 @@ CsvToHtmlTable = {
                 for (var rowIdx = 1; rowIdx < csvData.length; rowIdx++) {
                     var rStyle = rowStyle(csvData[rowIdx]);
                     if (!hideRecent || !rStyle.style.includes("font-red")) {
-                        if (!hideFuture || parseInt(csvData[rowIdx][8]) != 0) {
+                        if (!hideFuture || !rStyle.style.includes("font-grey")) {
                             var $tableBodyRow = $("<tr class='" + rStyle.style + "'></tr>");
                             for (var colIdx = 0; colIdx < csvData[rowIdx].length; colIdx++) {
                                 var $tableBodyRowTd = $("<td" + (csvHeaderRow[colIdx] == 'Correlated' ? " style='white-space: pre-wrap;'" : "") + "></td>");
@@ -191,9 +192,15 @@ function format_all_links(text, symb) {
             </div>`;
 }
 
-function noZoneDate() {
+function tooClose() {
     const date = new Date();
     date.setDate(date.getDate() + noOfDayForTooClose /* no zone, earning too close*/);
+    return date.toISOString().substring(0, 10);
+}
+
+function tooFar() {
+    const date = new Date();
+    date.setDate(date.getDate() + noOfDayForTooFar /* no zone, earning too far*/);
     return date.toISOString().substring(0, 10);
 }
 
@@ -219,8 +226,10 @@ function rowStyle(row) {
         : "highlight-green-" + suf;
     if (erDate == "") {
         rs.style += " font-black";
-    } else if (erDate < noZoneDate()) {
+    } else if (erDate < tooClose()) {
         rs.style += " font-red";
+    } else if (erDate > tooFar()) {
+        rs.style += " font-grey";
     }
     const iv = row[12];
     const histIV = row[11];

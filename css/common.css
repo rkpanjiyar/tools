@@ -237,6 +237,11 @@ h2 {
     font-style: italic !important;
 }
 
+.font-grey {
+    color: #898989 !important;
+    font-style: italic !important;
+}
+
 .font-black {
     color: #121212;
 }
