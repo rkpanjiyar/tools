@@ -247,7 +247,7 @@ h2 {
 }
 
 .highlight-green-0 {
-    background-color: rgba(0, 255, 0, 0.4) !important;
+    background-color: rgba(0, 255, 0, 0.1) !important;
 }
 
 .highlight-green-1 {
@@ -283,9 +283,5 @@ h2 {
 }
 
 .highlight-green-9 {
-    background-color: rgba(0, 255, 0, 1) !important;
-}
-
-.highlight-green-15 {
     background-color: rgba(0, 255, 0, 1) !important;
 }

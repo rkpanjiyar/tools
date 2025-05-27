@@ -220,7 +220,7 @@ function rowStyle(row) {
         }
         rs.rank200 = ((parseFloat(sma200.replace("%", "").replace("-","")) * parseFloat(price)) / (parseFloat(atr) * 100)).toFixed(2);
     }
-    suf = parseInt((parseFloat(rs.rank) / 4));
+    suf = parseInt((parseFloat(rs.rank) / 10));
     rs.style = exptMove == "" || parseInt(exptMove) == 0 || parseFloat(exptMove) > parseFloat(histMove)
         ? ""
         : "highlight-green-" + suf;
