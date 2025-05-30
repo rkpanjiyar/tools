@@ -93,8 +93,8 @@
 		var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
 		const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${data.ticker}</td>
-		  <td>${data.er_date}</td>
+          <td><a href='https://unusualwhales.com/stock/${data.ticker}/earnings/' target='_blank'>${data.ticker}</a></td>
+		  <td><a href='https://marketchameleon.com/Overview/${data.ticker}/' target='_blank'>${data.er_date}</a></td>
           <td>${data.report_date}</td>
           <td>${expMoveCalulated}</td>
           <td>${data.post_earnings_move_1d}</td>
