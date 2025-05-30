@@ -32,11 +32,10 @@
     <thead>
       <tr>
         <th onclick="sortTable(0)">Ticker</th>
-        <th onclick="sortTable(1)">Price</th>
-        <th onclick="sortTable(2)">Er Date</th>
-        <th onclick="sortTable(3)">Expected Move (%)</th>
-        <th onclick="sortTable(4)">Post-Er Move(1D) (%)</th>
-		<th onclick="sortTable(5)">P(%)</th>
+        <th onclick="sortTable(1)">Er Date</th>
+        <th onclick="sortTable(2)">Expected Move (%)</th>
+        <th onclick="sortTable(3)">Post-Er Move(1D) (%)</th>
+		<th onclick="sortTable(4)">P(%)</th>
       </tr>
     </thead>
     <tbody>
@@ -65,7 +64,6 @@
 		latest= json.data[json.data.length-2];
         return {
           ticker: ticker,
-          price: latest.price || 'N/A',
           report_date: latest.report_date || 'N/A',
           expected_move_perc: toPercent(latest.expected_move_perc) || 'N/A',
           post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 'N/A'
@@ -92,7 +90,6 @@
 		const row = document.createElement('tr');
         row.innerHTML = `
           <td>${data.ticker}</td>
-          <td>${data.price}</td>
           <td>${data.report_date}</td>
           <td>${expMoveCalulated}</td>
           <td>${data.post_earnings_move_1d}</td>
@@ -107,7 +104,7 @@ function sortTable(columnIndex, descending = false) {
       const table = document.getElementById("earningsTable");
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
-      const isNumeric = columnIndex !== 0 && columnIndex !== 2;
+      const isNumeric = columnIndex !== 0 && columnIndex !== 1;
 
       const sortedRows = rows.sort((a, b) => {
         const valA = a.cells[columnIndex].textContent.replace('%','');
