@@ -1,5 +1,5 @@
 var CsvToHtmlTable = CsvToHtmlTable || {};
-var hiddenColumns = ["Country", "$$","RSI","ATR","SMA 200","P/S","Optn Vol","HIV","IV","IvRank","OI","Scr","Rank","Rank+","Er #"];
+var hiddenColumns = ["Country", "$$","RSI","ATR","SMA 200","P/S","Optn Vol","HIV","IV","IvRank","OI","Scr","Rank","Rank+","Er #","Correlated"];
 var hideRecent = false;
 var hideFuture = false;
 var noOfDayForTooClose = 5;
