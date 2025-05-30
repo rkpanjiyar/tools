@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <h2>Russell 1000 Earnings Dashboard <span style="color: #6495ED;">BD</span>, <span style="color: #2AAA8A;">BU</span>, <span style="color: #FFAC1C;">TU</span>, <span style="color: #DE3163;">TD</span></h2>
+  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #6495ED;">BD</span>, <span style="color: #2AAA8A;">BU</span>, <span style="color: #FFAC1C;">TU</span>, <span style="color: #DE3163;">TD</span></h2>
    <style>
     body {
       font-family: Arial, sans-serif;
@@ -67,12 +67,14 @@
         <th onclick="sortTable(0)">Ticker</th>
 		<th onclick="sortTable(1)">Er Date(Next)</th>
 		<th onclick="sortTable(2)">Price</th>
-		<th onclick="sortTable(3)">MA5</th>
-		<th onclick="sortTable(4)">MA13</th>
-        <th onclick="sortTable(5)">Er Date(Prev)</th>
-        <th onclick="sortTable(6)">Expected Move (%)</th>
-        <th onclick="sortTable(7)">Post-Er Move(1D) (%)</th>
-		<th onclick="sortTable(8)">P(%)</th>
+		<th onclick="sortTable(3)">Pre Er Price</th>
+		<th onclick="sortTable(4)">Price Change%</th>
+		<th onclick="sortTable(5)">MA5</th>
+		<th onclick="sortTable(6)">MA13</th>
+        <th onclick="sortTable(7)">Er Date(Prev)</th>
+        <th onclick="sortTable(8)">Expected Move (%)</th>
+        <th onclick="sortTable(9)">Post-Er Move(1D) (%)</th>
+		<th onclick="sortTable(10)">P(%)</th>
       </tr>
     </thead>
     <tbody>
@@ -166,10 +168,11 @@
 			
         return {
           ticker: ticker,
+		  price: latest.price || 0,
 		  er_date: next.report_date || 'N/A',
           report_date: latest.report_date || 'N/A',
-          expected_move_perc: toPercent(latest.expected_move_perc) || 'N/A',
-          post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 'N/A'
+          expected_move_perc: toPercent(latest.expected_move_perc) || 0,
+          post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0
         };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
@@ -177,14 +180,14 @@
       }
     }
 	
-  
-   function updatePriceCells(ticker, priceData, postErMove1d) {
+   function updatePriceCells(ticker, priceData, PreErPrice, postErMove1d) {
     const row = document.getElementById(`row-${ticker}`);
     if (!row || !priceData || !priceData.price) return;
 	
-	var BD, BU, TU, TD = false;
+	var priceDiff = Math.abs(priceData.price - PreErPrice);
 	
     row.querySelector('.price').textContent = priceData.price.toFixed(2);
+	row.querySelector('.priceChange').textContent = (priceDiff/PreErPrice*100).toFixed(2);
     row.querySelector('.ma5').textContent = priceData.ma5.toFixed(2);
     row.querySelector('.ma13').textContent = priceData.ma13.toFixed(2);
 
@@ -243,12 +246,14 @@ function updateEarningsCells(ticker, earnings) {
 		var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
 		
 		const row = `<tr id="row-${ticker}">
-          <td><a href='https://unusualwhales.com/stock/${data.ticker}/earnings/' target='_blank'>${data.ticker}</a></td>
+          <td><a href='https://finviz.com/quote.ashx?t=${data.ticker}' target='_blank'>${data.ticker}</a></td>
 		  <td><a href='https://marketchameleon.com/Overview/${data.ticker}/' target='_blank'>${data.er_date}</a></td>
 		  <td class="price">-</td>
+		  <td><a href='https://robinhood.com/stocks/${data.ticker}/' target='_blank'>${data.price}</a></td>
+		  <td class="priceChange"></td>
 		  <td class="ma5">-</td>
 		  <td class="ma13">-</td>
-          <td>${data.report_date}</td>
+          <td><a href='https://unusualwhales.com/stock/${data.ticker}/earnings/' target='_blank'>${data.report_date}</a></td>
           <td>${expMoveCalulated}</td>
           <td>${data.post_earnings_move_1d}</td>
 		  <td>${diff}</td>
@@ -256,7 +261,7 @@ function updateEarningsCells(ticker, earnings) {
 		tableBody.innerHTML += row;
 		
 		getPrices(ticker)
-        .then(priceData => updatePriceCells(ticker, priceData, data.post_earnings_move_1d))
+        .then(priceData => updatePriceCells(ticker, priceData, data.price, data.post_earnings_move_1d))
         .catch(err => console.error(`Price error for ${ticker}:`, err));
       }
 	  // Automatically sort by report date (column index 5)
@@ -266,7 +271,7 @@ function sortTable(columnIndex, descending = false) {
       const table = document.getElementById("earningsTable");
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
-      const isNumeric = columnIndex !== 0 && columnIndex !== 1 && columnIndex !== 5;
+      const isNumeric = columnIndex !== 0 && columnIndex !== 1 && columnIndex !== 6;
 
       const sortedRows = rows.sort((a, b) => {
         const valA = a.cells[columnIndex].textContent.replace('%','');
