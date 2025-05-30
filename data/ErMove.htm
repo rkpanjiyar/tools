@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <h2>Russell 1000 Earnings Dashboard <span style="color: #6495ED;">BD</span>, <span style="color: #2AAA8A;">BU</span>, <span style="color: #FFAC1C;">TU</span>, <span style="color: #DE3163;">TD</span></h2>
+   <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      // background-color: #121212;
+      // color: #ffffff;
+	  background-color: #ffffff;
+      color: #000000;
+    }
+    .light-theme {
+      background-color: #ffffff;
+      color: #000000;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background-color: #333;
+      color: white;
+    }
+    .light-theme th {
+      background-color: #eee;
+      color: black;
+    }
+    .toggle-btn {
+      padding: 10px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: #444;
+      color: white;
+    }
+    .light-theme .toggle-btn {
+      background-color: #ccc;
+      color: black;
+    }
+	.highlight-green {
+      background-color: #2AAA8A !important;
+    }
+    .highlight-orange {
+      background-color: #FFAC1C !important;
+    }
+	.highlight-red {
+      background-color: #DE3163 !important;
+    }
+    .highlight-blue {
+      background-color: #6495ED !important;
+    }
+  </style>
+</head>
+<body>
+  <table id="earningsTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Ticker</th>
+		<th onclick="sortTable(1)">Er Date(Next)</th>
+		<th onclick="sortTable(2)">Price</th>
+		<th onclick="sortTable(3)">MA5</th>
+		<th onclick="sortTable(4)">MA13</th>
+        <th onclick="sortTable(5)">Er Date(Prev)</th>
+        <th onclick="sortTable(6)">Expected Move (%)</th>
+        <th onclick="sortTable(7)">Post-Er Move(1D) (%)</th>
+		<th onclick="sortTable(8)">P(%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Data will be injected here -->
+    </tbody>
+  </table>
+
+
+  <script>
+  const tickers = ['AOS', 'AAON', 'ABT', 'ABBV', 'ACHC', 'ACN', 'AYI', 'ADBE', 'ADT', 'AAP', 'WMS', 'AMD', 'ACM', 'AES', 'AMG', 'AFRM', 'AFL', 'AGCO', 'A', 'ADC', 'AGNC', 'AL', 'APD', 'ABNB', 'AKAM', 'ALK', 'ALB', 'ACI', 'AA', 'ARE', 'ALGN', 'ALLE', 'ALGM', 'LNT', 'ALSN', 'ALL', 'ALLY', 'ALNY', 'GOOGL', 'GOOG', 'MO', 'AMZN', 'AMCR', 'DOX', 'AMED', 'AMTM', 'AS', 'AEE', 'AAL', 'AEP', 'AXP', 'AFG', 'AMH', 'AIG', 'AMT', 'AWK', 'COLD', 'AMP', 'AME', 'AMGN', 'AMKR', 'APH', 'ADI', 'ANGI', 'NLY', 'ANSS', 'AM', 'AR', 'AON', 'APA', 'APG', 'APLS', 'APO', 'APPF', 'AAPL', 'AMAT', 'APP', 'ATR', 'APTV', 'ARMK', 'ACGL', 'ADM', 'ARES', 'ANET', 'AWI', 'ARW', 'AJG', 'ASH', 'AIZ', 'AGO', 'ALAB', 'T', 'ATI', 'TEAM', 'ATO', 'ADSK', 'ADP', 'AN', 'AZO', 'AVB', 'AVTR', 'AVY', 'CAR', 'AVT', 'AXTA', 'AXS', 'AXON', 'AZEK', 'AZTA', 'BKR', 'BALL', 'BAC', 'OZK', 'BBWI', 'BAX', 'BDX', 'BRBR', 'BSY', 'BBY', 'BILL', 'BIO', 'TECH', 'BIIB', 'BMRN', 'BIRK', 'BJ', 'BLK', 'BX', 'HRB', 'XYZ', 'OWL', 'BK', 'BA', 'BOKF', 'BKNG', 'BAH', 'BWA', 'SAM', 'BSX', 'BYD', 'BFAM', 'BHF', 'BMY', 'BRX', 'AVGO', 'BR', 'BEPC', 'BRO', 'BRKR', 'BC', 'BLDR', 'BG', 'BURL', 'BWXT', 'BXP', 'CHRW', 'CACI', 'CDNS', 'CZR', 'CPT', 'CPB', 'COF', 'CPRI', 'CAH', 'CSL', 'CG', 'KMX', 'CCL', 'CARR', 'CRI', 'CVNA', 'CASY', 'CAT', 'CAVA', 'CBOE', 'CBRE', 'CCCS', 'CDW', 'CE', 'CELH', 'COR', 'CNC', 'CNP', 'CERT', 'CF', 'CRL', 'SCHW', 'CHTR', 'CHE', 'CC', 'LNG', 'CVX', 'CMG', 'CHH', 'CHRD', 'CB', 'CHD', 'CHDN', 'CIEN', 'CI', 'CINF', 'CTAS', 'CRUS', 'CSCO', 'C', 'CFG', 'CIVI', 'CLVT', 'CLH', 'CWEN', 'CLF', 'CLX', 'NET', 'CME', 'CMS', 'CNA', 'CNH', 'KO', 'CGNX', 'CTSH', 'COHR', 'COIN', 'CL', 'COLB', 'COLM', 'CMCSA', 'CMA', 'FIX', 'CBSH', 'CAG', 'CNXC', 'CFLT', 'COP', 'ED', 'STZ', 'CEG', 'COO', 'CPRT', 'CNM', 'GLW', 'CPAY', 'CTVA', 'CSGP', 'COST', 'CTRA', 'COTY', 'CPNG', 'CUZ', 'CR', 'CXT', 'CACC', 'CRH', 'CROX', 'CRWD', 'CCI', 'CCK', 'CSX', 'CUBE', 'CMI', 'CW', 'CVS', 'DHI', 'DHR', 'DRI', 'DAR', 'DDOG', 'DVA', 'DAY', 'DECK', 'DE', 'DAL', 'DELL', 'XRAY', 'DVN', 'DXCM', 'FANG', 'DKS', 'DLR', 'DOCU', 'DLB', 'DG', 'DLTR', 'D', 'DPZ', 'DCI', 'DASH', 'DV', 'DOV', 'DOW', 'DOCS', 'DKNG', 'DBX', 'DTM', 'DTE', 'DUK', 'DNB', 'DUOL', 'DD', 'BROS', 'DXC', 'DT', 'ELF', 'EXP', 'EWBC', 'EGP', 'EMN', 'ETN', 'EBAY', 'ECL', 'EIX', 'EW', 'ELAN', 'ESTC', 'EA', 'ESI', 'ELV', 'EME', 'EMR', 'EHC', 'ENOV', 'ENPH', 'ENTG', 'ETR', 'NVST', 'EOG', 'EPAM', 'EPR', 'EQT', 'EFX', 'EQIX', 'EQH', 'ELS', 'EQR', 'ESAB', 'WTRG', 'ESS', 'EL', 'ETSY', 'EEFT', 'EVR', 'EG', 'EVRG', 'ES', 'EXAS', 'EXEL', 'EXC', 'EXE', 'EXPE', 'EXPD', 'EXR', 'XOM', 'FFIV', 'FDS', 'FICO', 'FAST', 'FRT', 'FDX', 'FERG', 'FNF', 'FIS', 'FITB', 'FAF', 'FCNCA', 'FHB', 'FHN', 'FR', 'FSLR', 'FE', 'FI', 'FIVE', 'FIVN', 'FND', 'FLO', 'FLS', 'FMC', 'FNB', 'F', 'FTNT', 'FTV', 'FTRE', 'FBIN', 'FOXA', 'FOX', 'BEN', 'FCX', 'FRPT', 'FYBR', 'CFR', 'FCN', 'GME', 'GLPI', 'GAP', 'GRMN', 'IT', 'GTES', 'GE', 'GEHC', 'GEV', 'GEN', 'GNRC', 'GD', 'GIS', 'GM', 'G', 'GNTX', 'GPC', 'GILD', 'GTLB', 'GPN', 'GFS', 'GLOB', 'GL', 'GMED', 'GDDY', 'GS', 'GGG', 'GRAL', 'LOPE', 'GPK', 'GO', 'GWRE', 'GXO', 'HAL', 'THG', 'HOG', 'HIG', 'HAS', 'HAYW', 'HCA', 'HR', 'DOC', 'HEI', 'JKHY', 'HSY', 'HES', 'HPE', 'HXL', 'DINO', 'HIW', 'HLT', 'HOLX', 'HD', 'HON', 'HRL', 'HST', 'HLI', 'HHH', 'HWM', 'HPQ', 'HUBB', 'HUBS', 'HUM', 'HBAN', 'HII', 'HUN', 'H', 'IAC', 'IBM', 'IDA', 'IEX', 'IDXX', 'ITW', 'ILMN', 'INCY', 'INFA', 'IR', 'INGM', 'INGR', 'INSP', 'PODD', 'INTC', 'IBKR', 'ICE', 'IFF', 'IP', 'IPG', 'INTU', 'ISRG', 'IVZ', 'INVH', 'IONS', 'IPGP', 'IQV', 'IRDM', 'IRM', 'ITT', 'JBL', 'J', 'JHG', 'JAZZ', 'JBHT', 'JEF', 'JNJ', 'JCI', 'JLL', 'JPM', 'JNPR', 'KBR', 'K', 'KMPR', 'KVUE', 'KDP', 'KEY', 'KEYS', 'KRC', 'KMB', 'KIM', 'KMI', 'KNSL', 'KEX', 'KKR', 'KLAC', 'KNX', 'KSS', 'KHC', 'KR', 'KD', 'LHX', 'LH', 'LRCX', 'LAMR', 'LW', 'LSTR', 'LVS', 'LSCC', 'LAZ', 'LEA', 'LEG', 'LDOS', 'LEN', 'LII', 'LBRDA', 'LBRDK', 'LBTYA', 'LBTYK', 'FWONA', 'FWONK', 'LLYVA', 'LLYVK', 'LNW', 'LLY', 'LECO', 'LNC', 'LIN', 'LINE', 'LAD', 'LFUS', 'LYV', 'LKQ', 'LOAR', 'LMT', 'L', 'LPX', 'LOW', 'LPLA', 'LCID', 'LULU', 'LITE', 'LYFT', 'LYB', 'MTB', 'MTSI', 'M', 'MMM', 'MSGS', 'MANH', 'MAN', 'CART', 'MPC', 'MKL', 'MKTX', 'MAR', 'VAC', 'MMC', 'MLM', 'MRVL', 'MAS', 'MASI', 'MTZ', 'MA', 'MTDR', 'MTCH', 'MAT', 'MKC', 'MCD', 'MCK', 'MDU', 'MPW', 'MEDP', 'MDT', 'MRK', 'META', 'MET', 'MTD', 'MTG', 'MGM', 'MCHP', 'MU', 'MSFT', 'MSTR', 'MAA', 'MIDD', 'MRP', 'MKSI', 'MRNA', 'MHK', 'MOH', 'TAP', 'MDLZ', 'MDB', 'MPWR', 'MNST', 'MCO', 'MS', 'MORN', 'MOS', 'MSI', 'MP', 'MSA', 'MSM', 'MSCI', 'MUSA', 'NDAQ', 'NTRA', 'NFG', 'NSA', 'NCNO', 'NTAP', 'NFLX', 'NBIX', 'NFE', 'NYT', 'NWL', 'NEU', 'NEM', 'NWSA', 'NWS', 'NXST', 'NEE', 'NKE', 'NI', 'NNN', 'NDSN', 'NSC', 'NTRS', 'NOC', 'NCLH', 'NOV', 'NRG', 'NU', 'NUE', 'NTNX', 'NVT', 'NVDA', 'ORLY', 'OXY', 'OGE', 'OKTA', 'ODFL', 'ORI', 'OLN', 'OLLI', 'OHI', 'OMC', 'ON', 'OMF', 'OKE', 'ONTO', 'ORCL', 'OGN', 'OSK', 'OTIS', 'OVV', 'OC', 'PCAR', 'PKG', 'PLTR', 'PANW', 'PARAA', 'PARA', 'PK', 'PH', 'PSN', 'PAYX', 'PAYC', 'PCTY', 'PYPL', 'PEGA', 'PENN', 'PAG', 'PNR', 'PEN', 'PEP', 'PFGC', 'PR', 'PRGO', 'PFE', 'PCG', 'PM', 'PSX', 'PPC', 'PNFP', 'PNW', 'PINS', 'PLNT', 'PLTK', 'PNC', 'PII', 'POOL', 'BPOP', 'POST', 'PPG', 'PPL', 'PINC', 'TROW', 'PRI', 'PFG', 'PCOR', 'PG', 'PGR', 'PLD', 'PB', 'PRU', 'PTC', 'PSA', 'PEG', 'PHM', 'PSTG', 'PVH', 'QGEN', 'QRVO', 'QCOM', 'PWR', 'QS', 'DGX', 'QDEL', 'RL', 'RRC', 'RJF', 'RYN', 'RBA', 'RBC', 'O', 'RRX', 'REG', 'REGN', 'RF', 'RGA', 'RS', 'RNR', 'RGEN', 'RSG', 'RMD', 'RVTY', 'REXR', 'REYN', 'RH', 'RNG', 'RITM', 'RIVN', 'RLI', 'RHI', 'HOOD', 'RBLX', 'RKT', 'ROK', 'ROIV', 'ROKU', 'ROL', 'ROP', 'ROST', 'RCL', 'RGLD', 'RPRX', 'RPM', 'RTX', 'RYAN', 'R', 'SPGI', 'SAIA', 'SAIC', 'CRM', 'SLM', 'SNDK', 'SRPT', 'SBAC', 'HSIC', 'SLB', 'SNDR', 'SMG', 'SEE', 'SEIC', 'SRE', 'ST', 'S', 'SCI', 'NOW', 'SN', 'SHW', 'FOUR', 'SLGN', 'SPG', 'SSD', 'SIRI', 'SITE', 'SKX', 'SWKS', 'SJM', 'SW', 'SNA', 'SNOW', 'SOFI', 'SOLV', 'SGI', 'SON', 'SHC', 'SO', 'SCCO', 'LUV', 'SPB', 'SPR', 'SPOT', 'SSNC', 'STAG', 'SARO', 'SWK', 'SBUX', 'STWD', 'STT', 'STLD', 'STE', 'SF', 'SYK', 'SUI', 'SMCI', 'SYF', 'SNPS', 'SNV', 'SYY', 'TMUS', 'TTWO', 'TPR', 'TRGP', 'TGT', 'SNX', 'FTI', 'TDY', 'TFX', 'THC', 'TDC', 'TER', 'TSLA', 'TTEK', 'TXN', 'TPL', 'TXRH', 'TXT', 'TMO', 'TFSL', 'THO', 'TKR', 'TJX', 'TKO', 'TOST', 'TOL', 'BLD', 'TTC', 'TPG', 'TSCO', 'TTD', 'TW', 'TT', 'TDG', 'TRU', 'TNL', 'TRV', 'TREX', 'TRMB', 'TRIP', 'TFC', 'DJT', 'TWLO', 'TYL', 'TSN','TXG', 'UHAL', 'USB', 'X', 'UBER', 'UDR', 'UGI', 'PATH', 'ULTA', 'RARE', 'UAA', 'UA', 'UNP', 'UAL', 'UPS', 'URI', 'UTHR', 'UWMC', 'UNH', 'U', 'OLED', 'UHS', 'UNM', 'USFD', 'MTN', 'VLO', 'VMI', 'VVV', 'VEEV', 'VTR', 'VLTO', 'VRSN', 'VRSK', 'VZ', 'VRTX', 'VRT', 'VSTS', 'VFC', 'VTRS', 'VICI', 'VKTX', 'VNOM', 'VIRT', 'V', 'VST', 'VNT', 'VNO', 'VOYA', 'VMC', 'WPC', 'WRB', 'GWW', 'WAB', 'WBA', 'WMT', 'DIS', 'WBD', 'WM', 'WAT', 'WSO', 'W', 'WFRD', 'WBS', 'WEC', 'WFC', 'WELL', 'WEN', 'WCC', 'WST', 'WAL', 'WDC', 'WU', 'WLK', 'WEX', 'WY', 'WHR', 'WMB', 'WSM', 'WTW', 'WSC', 'WING', 'WTFC', 'WOLF', 'WWD', 'WDAY', 'WH', 'WYNN', 'XEL', 'XP', 'XPO', 'XYL', 'YETI', 'YUM', 'ZBRA', 'ZG', 'Z', 'ZBH', 'ZION', 'ZTS', 'ZM', 'ZI', 'ZS'];
+  function toPercent(value) {
+      const num = parseFloat(value);
+      return isNaN(num) ? 'N/A' : (num * 100).toFixed(2);
+    }
+	function toDecimal(value) {
+      const num = parseFloat(value);
+      return isNaN(num) ? 'N/A' : num.toFixed(2);
+    }
+	async function getPrices2(ticker) {
+	try {
+      const url = `https://api.twelvedata.com/time_series?symbol=${ticker}&interval=1day&outputsize=30&apikey=8880ca8997334c599a5c8349e9ea7b7b`;
+      const res = await fetch(url);
+      const json = await res.json();
+      if (!json.values || json.values.length < 1) return {};
+	  
+      // json.values is array with most recent first
+      const closes = json.values.map(v => parseFloat(v.close));
+      const price = closes[0];
+      const ma5 = closes.slice(0, 5).reduce((a, b) => a + b, 0) / Math.min(closes.length, 5);
+      const ma13 = closes.slice(0, 13).reduce((a, b) => a + b, 0) / Math.min(closes.length, 13);
+      return { price, ma5, ma13 };
+	  return { price, ma5, ma13 };
+	  } catch (err) {
+        console.error(`Error fetching ${ticker}:`, err);
+        return {};
+      }
+    }
+	async function fetchWithRetry(url, retries = 3, delay = 1000) {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('Fetch failed');
+        return await res.json();
+      } catch (err) {
+        if (i === retries - 1) throw err;
+        await new Promise(res => setTimeout(res, delay));
+      }
+    }
+  }
+	 async function getPrices(ticker) {
+		 try {
+		  //const proxy = 'https://corsproxy.io/?';
+		  //const proxy = 'https://thingproxy.freeboard.io/fetch/';
+		  const proxy = 'https://api.allorigins.win/raw?url=';
+		  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1mo`;
+		  const data = await fetchWithRetry(proxy + encodeURIComponent(url));
+
+		  const result = data.chart.result[0];
+		const timestamps = result.timestamp || [];
+		const closes = result.indicators.quote[0].close || [];
+
+		const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
+								  .filter(item => item.close != null)
+								  .sort((a, b) => a.date - b.date);
+
+		if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
+
+		const recent = paired.slice(-13);
+		const price = recent[recent.length - 1].close;
+
+		const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
+		const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
+
+		return { price, ma5, ma13 };
+	  } catch (err) {
+		return await getPrices2(ticker);
+        console.error(`Error fetching ${ticker}:`, err);
+        return {};
+      }
+    }
+    async function fetchEarnings(ticker) {
+      try {
+        const res = await fetch(`https://phx.unusualwhales.com/api/companies_earnings/historic/${ticker}`);
+        const json = await res.json();
+        if (!json.data || json.data.length === 0) return null;
+
+        var latest = json.data[json.data.length-1];
+		var next = latest;
+		if(!latest.post_earnings_move_3d && json.data.length > 1)
+			latest= json.data[json.data.length-2];
+			
+        return {
+          ticker: ticker,
+		  er_date: next.report_date || 'N/A',
+          report_date: latest.report_date || 'N/A',
+          expected_move_perc: toPercent(latest.expected_move_perc) || 'N/A',
+          post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 'N/A'
+        };
+      } catch (err) {
+        console.error(`Error fetching ${ticker}:`, err);
+        return null;
+      }
+    }
+	
+  
+   function updatePriceCells(ticker, priceData, postErMove1d) {
+    const row = document.getElementById(`row-${ticker}`);
+    if (!row || !priceData || !priceData.price) return;
+	
+	var BD, BU, TU, TD = false;
+	
+    row.querySelector('.price').textContent = priceData.price.toFixed(2);
+    row.querySelector('.ma5').textContent = priceData.ma5.toFixed(2);
+    row.querySelector('.ma13').textContent = priceData.ma13.toFixed(2);
+
+    // Add green highlight if MA5 > MA13
+	
+	if(postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
+		row.classList.add('highlight-green'); //BU = true;
+	if(postErMove1d > 0 && priceData.ma5 <= priceData.ma13)
+		row.classList.add('highlight-red'); //TD = true;
+	if(postErMove1d < 0 && priceData.ma5 <= priceData.ma13)
+		row.classList.add('highlight-blue'); //BD = true;
+	if(postErMove1d > 0 && priceData.ma5 >= priceData.ma13)
+		row.classList.add('highlight-orange'); //TU = true;
+
+  }
+function updateEarningsCells(ticker, earnings) {
+    const row = document.getElementById(`row-${ticker}`);
+    if (!row) return;
+    row.querySelector('.report_date').textContent = earnings.report_date;
+    row.querySelector('.implied_move').textContent = earnings.implied_move;
+    row.querySelector('.expected_move_perc').textContent = earnings.expected_move_perc;
+    row.querySelector('.post_earnings_move_1d').textContent = earnings.post_earnings_move_1d;
+  }
+  
+	function insertEmptyRow(ticker) {
+    //const tbody = document.getElementById('data-body');
+	const tbody = document.querySelector('#earningsTable tbody');
+    const row = document.createElement('tr');
+    row.setAttribute('id', `row-${ticker}`);
+    row.innerHTML = `
+      <td>${ticker}</td>
+      <td class="price">-</td>
+      <td class="ma5">-</td>
+      <td class="ma13">-</td>
+      <td class="report_date">-</td>
+      <td class="implied_move">-</td>
+      <td class="expected_move_perc">-</td>
+      <td class="post_earnings_move_1d">-</td>
+    `;
+    tbody.appendChild(row);
+  }
+  
+    async function renderTable() {
+      const tableBody = document.querySelector('#earningsTable tbody');
+
+      for (const ticker of tickers) {
+		const data = await fetchEarnings(ticker);
+	  
+        if (!data || !data.expected_move_perc || data.expected_move_perc == null) continue;
+
+		var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
+		var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
+        var straddleMoveRatioPerc = toDecimal(calcPostErMove1d/expMoveCalulated * 100);
+		if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150) continue;
+		
+		var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
+		
+		const row = `<tr id="row-${ticker}">
+          <td><a href='https://unusualwhales.com/stock/${data.ticker}/earnings/' target='_blank'>${data.ticker}</a></td>
+		  <td><a href='https://marketchameleon.com/Overview/${data.ticker}/' target='_blank'>${data.er_date}</a></td>
+		  <td class="price">-</td>
+		  <td class="ma5">-</td>
+		  <td class="ma13">-</td>
+          <td>${data.report_date}</td>
+          <td>${expMoveCalulated}</td>
+          <td>${data.post_earnings_move_1d}</td>
+		  <td>${diff}</td>
+        </tr>`;
+		tableBody.innerHTML += row;
+		
+		getPrices(ticker)
+        .then(priceData => updatePriceCells(ticker, priceData, data.post_earnings_move_1d))
+        .catch(err => console.error(`Price error for ${ticker}:`, err));
+      }
+	  // Automatically sort by report date (column index 5)
+      sortTable(5, true);
+    }
+function sortTable(columnIndex, descending = false) {
+      const table = document.getElementById("earningsTable");
+      const tbody = table.tBodies[0];
+      const rows = Array.from(tbody.rows);
+      const isNumeric = columnIndex !== 0 && columnIndex !== 1 && columnIndex !== 5;
+
+      const sortedRows = rows.sort((a, b) => {
+        const valA = a.cells[columnIndex].textContent.replace('%','');
+        const valB = b.cells[columnIndex].textContent.replace('%','');
+
+        if (isNumeric) {
+          return parseFloat(valA) - parseFloat(valB);
+        } else {
+          return valA.localeCompare(valB);
+        }
+      });
+
+      if (descending || tbody.getAttribute('data-sorted') === `${columnIndex}-asc`) {
+        sortedRows.reverse();
+        tbody.setAttribute('data-sorted', `${columnIndex}-desc`);
+      } else {
+        tbody.setAttribute('data-sorted', `${columnIndex}-asc`);
+      }
+
+      tbody.innerHTML = '';
+      sortedRows.forEach(row => tbody.appendChild(row));
+    }
+
+	renderTable();
+	
+  </script>
+</body>
+</html>
