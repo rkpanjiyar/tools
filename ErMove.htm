@@ -123,19 +123,30 @@
     }
   }
 	 async function getPrices(ticker) {
-	 try {
-      const proxyUrl = 'https://corsproxy.io/?';
-      const targetUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1mo`;
-	  
-      const json = await fetchWithRetry(proxyUrl + encodeURIComponent(targetUrl));
-	  if (!json || !json.chart || !json.chart.result || json.chart.result.length < 1)
-		return await getPrices2(ticker);
-      const closes = json.chart.result[0].indicators.quote[0].close.filter(p => p !== null);
-	  
-      const price = closes[closes.length - 1];
-      const ma5 = closes.slice(-5).reduce((a, b) => a + b, 0) / 5;
-      const ma13 = closes.slice(-13).reduce((a, b) => a + b, 0) / 13;
-      return { price, ma5, ma13 };
+		 try {
+		  //const proxy = 'https://corsproxy.io/?';
+		  //const proxy = 'https://thingproxy.freeboard.io/fetch/';
+		  const proxy = 'https://api.allorigins.win/raw?url=';
+		  const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1mo`;
+		  const data = await fetchWithRetry(proxy + encodeURIComponent(url));
+
+		  const result = data.chart.result[0];
+		const timestamps = result.timestamp || [];
+		const closes = result.indicators.quote[0].close || [];
+
+		const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
+								  .filter(item => item.close != null)
+								  .sort((a, b) => a.date - b.date);
+
+		if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
+
+		const recent = paired.slice(-13);
+		const price = recent[recent.length - 1].close;
+
+		const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
+		const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
+
+		return { price, ma5, ma13 };
 	  } catch (err) {
 		return await getPrices2(ticker);
         console.error(`Error fetching ${ticker}:`, err);
