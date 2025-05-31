@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>Russell 1000 Earnings Dashboard</title> -->
-  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #DE3163;">BD</span>, <span
-      style="color: #FFAC1C;">BU</span>, <span style="color: #6495ED;">TU</span>, <span
-      style="color: #2AAA8A;">TD</span></h2>
+  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #FB9286;">BD</span>, <span
+      style="color: #FFD580;">BU</span>, <span style="color: #A6DAF7;">TU</span>, <span
+      style="color: #B1F7A6;">TD</span></h2>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -58,19 +58,19 @@
     }
 
     .highlight-green {
-      background-color: #2AAA8A !important;
+      background-color: #B1F7A6 !important;
     }
 
     .highlight-orange {
-      background-color: #FFAC1C !important;
+      background-color: #FFD580 !important;
     }
 
     .highlight-red {
-      background-color: #DE3163 !important;
+      background-color: #FB9286 !important;
     }
 
     .highlight-blue {
-      background-color: #6495ED !important;
+      background-color: #A6DAF7 !important;
     }
   </style>
 </head>
@@ -80,13 +80,13 @@
     <thead>
       <tr>
         <th onclick="sortTable(0)">Ticker</th>
-        
+
         <th onclick="sortTable(1)">RSI</th>
         <th onclick="sortTable(2)">ErDate(Nxt)</th>
         <th onclick="sortTable(3)">ErDate(Pre)</th>
         <th onclick="sortTable(4)">Exp Move%</th>
         <th onclick="sortTable(5)">Er Move%</th>
-       <th onclick="sortTable(6)">Price</th>
+        <th onclick="sortTable(6)">Price</th>
         <th onclick="sortTable(7)">Change%</th>
         <th onclick="sortTable(8)">MA5</th>
         <th onclick="sortTable(9)">MA13</th>
@@ -109,51 +109,92 @@
       return isNaN(num) ? 'N/A' : num.toFixed(2);
     }
     function calculateRSI(closes, period = 14) {
-  if (closes.length <= period) return null;
+      if (closes.length <= period) return null;
 
-  let gains = 0;
-  let losses = 0;
+      let gains = 0;
+      let losses = 0;
 
-  // Initial average gain/loss
-  for (let i = 1; i <= period; i++) {
-    const delta = closes[i] - closes[i - 1];
-    if (delta > 0) gains += delta;
-    else losses -= delta;
-  }
+      // Initial average gain/loss
+      for (let i = 1; i <= period; i++) {
+        const delta = closes[i] - closes[i - 1];
+        if (delta > 0) gains += delta;
+        else losses -= delta;
+      }
 
-  let avgGain = gains / period;
-  let avgLoss = losses / period;
+      let avgGain = gains / period;
+      let avgLoss = losses / period;
 
-  // Apply smoothing for the rest
-  for (let i = period + 1; i < closes.length; i++) {
-    const delta = closes[i] - closes[i - 1];
-    const gain = delta > 0 ? delta : 0;
-    const loss = delta < 0 ? -delta : 0;
+      // Apply smoothing for the rest
+      for (let i = period + 1; i < closes.length; i++) {
+        const delta = closes[i] - closes[i - 1];
+        const gain = delta > 0 ? delta : 0;
+        const loss = delta < 0 ? -delta : 0;
 
-    avgGain = (avgGain * (period - 1) + gain) / period;
-    avgLoss = (avgLoss * (period - 1) + loss) / period;
-  }
+        avgGain = (avgGain * (period - 1) + gain) / period;
+        avgLoss = (avgLoss * (period - 1) + loss) / period;
+      }
 
-  const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
-  const rsi = 100 - 100 / (1 + rs);
-  return rsi;
-}
-    async function getPrices2(ticker) {
+      const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+      const rsi = 100 - 100 / (1 + rs);
+      return rsi;
+    }
+    async function getPrices3(ticker) {
       try {
-        const url = `https://api.twelvedata.com/time_series?symbol=${ticker}&interval=1day&outputsize=30&apikey=8880ca8997334c599a5c8349e9ea7b7b`;
-        const res = await fetch(url);
-        const json = await res.json();
-        if (!json.values || json.values.length < 1) return {};
+        const proxy = 'https://corsproxy.io/?';
+        //const proxy = 'https://thingproxy.freeboard.io/fetch/';
+        //const proxy = 'https://api.allorigins.win/raw?url=';
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=3mo`;
+        const data = await fetchWithRetry(proxy + encodeURIComponent(url));
 
-        // json.values is array with most recent first
-        const closes = json.values.map(v => parseFloat(v.close));
-        const price = closes[0];
-        const ma5 = closes.slice(0, 5).reduce((a, b) => a + b, 0) / Math.min(closes.length, 5);
-        const ma13 = closes.slice(0, 13).reduce((a, b) => a + b, 0) / Math.min(closes.length, 13);
+        const result = data.chart.result[0];
+        const timestamps = result.timestamp || [];
+        const closes = result.indicators.quote[0].close || [];
+
+        const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
+          .filter(item => item.close != null)
+          .sort((a, b) => a.date - b.date);
+
+        if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
+
+        const recent = paired.slice(-13);
+        const price = recent[recent.length - 1].close;
+        const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
+        const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
 
         return { price, ma5, ma13, rsi };
       } catch (err) {
+        console.error(`Error fetching ${ticker}:`, err);
+        return {};
+      }
+    }
+    async function getPrices2(ticker) {
+      try {
+        //const proxy = 'https://corsproxy.io/?';
+        const proxy = 'https://thingproxy.freeboard.io/fetch/';
+        //const proxy = 'https://api.allorigins.win/raw?url=';
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=3mo`;
+        const data = await fetchWithRetry(proxy + encodeURIComponent(url));
+
+        const result = data.chart.result[0];
+        const timestamps = result.timestamp || [];
+        const closes = result.indicators.quote[0].close || [];
+
+        const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
+          .filter(item => item.close != null)
+          .sort((a, b) => a.date - b.date);
+
+        if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
+
+        const recent = paired.slice(-13);
+        const price = recent[recent.length - 1].close;
+        const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
+        const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
+        const rsi = calculateRSI(paired.map(p => p.close));
+
+        return { price, ma5, ma13, rsi };
+      } catch (err) {
+        return await getPrices3(ticker);
         console.error(`Error fetching ${ticker}:`, err);
         return {};
       }
@@ -232,10 +273,10 @@
 
       var priceDiff = Math.abs(priceData.price - PreErPrice);
 
-      row.querySelector('.price').textContent = priceData.price.toFixed(2);
-      row.querySelector('.priceChange').textContent = (priceDiff / PreErPrice * 100).toFixed(2);
-      row.querySelector('.ma5').textContent = priceData.ma5.toFixed(2);
-      row.querySelector('.ma13').textContent = priceData.ma13.toFixed(2);
+      row.querySelector('.price').innerHTML = `<a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.price.toFixed(2)}</a>`;
+      row.querySelector('.priceChange').innerHTML = `<a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${(priceDiff / PreErPrice * 100).toFixed(2)}</a>`;
+      row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.ma5.toFixed(2)}</a>`;
+      row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.ma13.toFixed(2)}</a>`;
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
 
       // Add highlights
@@ -249,11 +290,93 @@
         row.classList.add('highlight-blue'); //TU = true;
     }
 
+    // Utility to check if today is a new business day compared to cached date
+    function isNewBusinessDay(lastDateStr) {
+      if (!lastDateStr) return true;
+      const lastDate = new Date(lastDateStr);
+      const now = new Date();
+
+      // Check if today is weekend
+      if (now.getDay() === 0 || now.getDay() === 6) return false;
+
+      // Check if last fetch was on a different business day
+      let prevBusinessDay = new Date(now);
+      if (now.getDay() === 1) { // Monday
+        prevBusinessDay.setDate(now.getDate() - 3);
+      } else if (now.getDay() > 1) {
+        prevBusinessDay.setDate(now.getDate() - 1);
+      }
+
+      // If last fetch was not today, it's a new business day
+      return (
+        lastDate.getFullYear() !== now.getFullYear() ||
+        lastDate.getMonth() !== now.getMonth() ||
+        lastDate.getDate() !== now.getDate()
+      );
+    }
+
+    // Utility to check if over an hour has passed since last fetch
+    function isOverAnHour(lastDateStr) {
+      if (!lastDateStr) return true;
+      const lastDate = new Date(lastDateStr);
+      const now = new Date();
+      return (now - lastDate) > 60 * 60 * 1000;
+    }
+
+    // Cache helpers
+    function getCache(key) {
+      try {
+        return JSON.parse(localStorage.getItem(key));
+      } catch {
+        return null;
+      }
+    }
+    function setCache(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    // Wrap fetchEarnings with caching
+    async function fetchEarningsCached(ticker) {
+      const cacheKey = `earnings_${ticker}`;
+      const cached = getCache(cacheKey);
+      if (
+        cached &&
+        cached.data &&
+        cached.fetchedAt &&
+        !isNewBusinessDay(cached.fetchedAt) &&
+        !isOverAnHour(cached.fetchedAt)
+      ) {
+        return cached.data;
+      }
+      const data = await fetchEarnings(ticker);
+      setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+      return data;
+    }
+
+    // Wrap getPrices with caching
+    async function getPricesCached(ticker) {
+      const cacheKey = `prices_${ticker}`;
+      const cached = getCache(cacheKey);
+      if (
+        cached &&
+        cached.data &&
+        cached.fetchedAt &&
+        !isNewBusinessDay(cached.fetchedAt) &&
+        !isOverAnHour(cached.fetchedAt)
+      ) {
+        return cached.data;
+      }
+      const data = await getPrices(ticker);
+      setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+      return data;
+    }
+
+    // Update renderTable to use cached fetchers
     async function renderTable() {
       const tableBody = document.querySelector('#earningsTable tbody');
 
       for (const ticker of tickers) {
-        const data = await fetchEarnings(ticker);
+        const data = await fetchEarningsCached(ticker);
 
         if (!data || !data.expected_move_perc || data.expected_move_perc == null) continue;
 
@@ -261,8 +384,7 @@
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
         if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150) continue;
-
-        var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
+        //var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
 
         const row = `<tr id="row-${ticker}">
           <td>${data.ticker}</td>
@@ -271,14 +393,14 @@
           <td>${data.report_date}</td>
           <td>${expMoveCalulated}</td>
           <td>${data.post_earnings_move_1d}</td>
-	  <td class="price">-</td>
+	        <td class="price">-</td>
           <td class="priceChange">-</td>
           <td class="ma5">-</td>
           <td class="ma13">-</td>  
         </tr>`;
         tableBody.innerHTML += row;
 
-        getPrices(ticker)
+        getPricesCached(ticker)
           .then(priceData => updatePriceCells(ticker, priceData, data.price, data.post_earnings_move_1d))
           .catch(err => console.error(`Price error for ${ticker}:`, err));
       }
