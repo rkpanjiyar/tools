@@ -177,7 +177,7 @@ function format_all_links(text, symb) {
     var l2 = `https://robinhood.com/stocks/${symb}`;
     var l3 = `https://unusualwhales.com/stock/${symb}/earnings`;
     var l4 = `https://www.barchart.com/stocks/quotes/${symb}/overview`;
-    var l5 = `https://www.tipranks.com/stocks/${symb}`;
+    var l5 = `https://www.tipranks.com/stocks/${symb}/forecast`;
     var l6 = `https://marketchameleon.com/Overview/${symb}/`;
     return `<div class="dropdown">
               <span class="dropbtn">${symb} &#9662;</span>
