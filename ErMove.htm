@@ -176,7 +176,7 @@
         //const proxy = 'https://corsproxy.io/?';
         //const proxy = 'https://thingproxy.freeboard.io/fetch/';
         const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1mo`;
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=3mo`;
         const data = await fetchWithRetry(proxy + encodeURIComponent(url));
 
         const result = data.chart.result[0];
