@@ -80,17 +80,16 @@
     <thead>
       <tr>
         <th onclick="sortTable(0)">Ticker</th>
-        <th onclick="sortTable(1)">Price</th>
-        <th onclick="sortTable(2)">Pre Er Price</th>
-        <th onclick="sortTable(3)">Price Change%</th>
-        <th onclick="sortTable(4)">MA5</th>
-        <th onclick="sortTable(5)">MA13</th>
-        <th onclick="sortTable(6)">RSI</th>
-        <th onclick="sortTable(7)">Er Date(Next)</th>
-        <th onclick="sortTable(8)">Er Date(Prev)</th>
-        <th onclick="sortTable(9)">Expected Move (%)</th>
-        <th onclick="sortTable(10)">Post-Er Move(1D) (%)</th>
-        <th onclick="sortTable(11)">P(%)</th>
+        
+        <th onclick="sortTable(1)">RSI</th>
+        <th onclick="sortTable(2)">Er Date(Next)</th>
+        <th onclick="sortTable(3)">Er Date(Prev)</th>
+        <th onclick="sortTable(4)">Expected Move (%)</th>
+        <th onclick="sortTable(5)">Post-Er Move(1D) (%)</th>
+       <th onclick="sortTable(6)">Price</th>
+        <th onclick="sortTable(7)">Price Change%</th>
+        <th onclick="sortTable(8)">MA5</th>
+        <th onclick="sortTable(9)">MA13</th>
       </tr>
     </thead>
     <tbody>
@@ -267,17 +266,17 @@
 
         const row = `<tr id="row-${ticker}">
           <td><a href='https://finviz.com/quote.ashx?t=${data.ticker}' target='_blank'>${data.ticker}</a></td>
-          <td class="price">-</td>
-          <td><a href='https://robinhood.com/stocks/${data.ticker}/' target='_blank'>${data.price}</a></td>
-          <td class="priceChange"></td>
-          <td class="ma5">-</td>
-          <td class="ma13">-</td>
+          
           <td class="rsi">-</td>
           <td><a href='https://marketchameleon.com/Overview/${data.ticker}/' target='_blank'>${data.er_date}</a></td>
           <td><a href='https://unusualwhales.com/stock/${data.ticker}/earnings/' target='_blank'>${data.report_date}</a></td>
-          <td>${expMoveCalulated}</td>
+          <td><a href='https://robinhood.com/stocks/${data.ticker}/' target='_blank'>${expMoveCalulated}</a></td>
           <td>${data.post_earnings_move_1d}</td>
-		      <td>${diff}</td>
+		    <td class="price">-</td>
+          
+          <td class="priceChange">-</td>
+          <td class="ma5">-</td>
+          <td class="ma13">-</td>  
         </tr>`;
         tableBody.innerHTML += row;
 
@@ -293,7 +292,7 @@
       const table = document.getElementById("earningsTable");
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
-      const isNumeric = columnIndex !== 0 && columnIndex !== 6 && columnIndex !== 7;
+      const isNumeric = columnIndex !== 0 && columnIndex !== 2 && columnIndex !== 3;
 
       const sortedRows = rows.sort((a, b) => {
         const valA = a.cells[columnIndex].textContent.replace('%', '');
