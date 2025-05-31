@@ -110,18 +110,33 @@
       return isNaN(num) ? 'N/A' : num.toFixed(2);
     }
     function calculateRSI(closes, period = 14) {
-      if (closes.length < period + 1) return null;
-      let gains = 0, losses = 0;
-      for (let i = 1; i <= period; i++) {
-        const delta = closes[i] - closes[i - 1];
-        if (delta >= 0) gains += delta;
-        else losses -= delta;
-      }
-      const avgGain = gains / period;
-      const avgLoss = losses / period;
-      const rs = avgGain / (avgLoss || 1e-6);
-      return 100 - 100 / (1 + rs);
+    if (closes.length <= period) return null;
+
+    let gains = 0, losses = 0;
+    for (let i = 1; i <= period; i++) {
+      const change = closes[i] - closes[i - 1];
+      if (change > 0) gains += change;
+      else if (change < 0) losses -= change;
     }
+
+    let avgGain = gains / period;
+    let avgLoss = losses / period;
+
+    for (let i = period + 1; i < closes.length; i++) {
+      const change = closes[i] - closes[i - 1];
+      if (change > 0) {
+        avgGain = (avgGain * (period - 1) + change) / period;
+        avgLoss = (avgLoss * (period - 1)) / period;
+      } else if (change < 0) {
+        avgGain = (avgGain * (period - 1)) / period;
+        avgLoss = (avgLoss * (period - 1) - change) / period;
+      }
+    }
+
+    if (avgLoss === 0) return 100;
+    const rs = avgGain / avgLoss;
+    return 100 - 100 / (1 + rs);
+  }
     async function getPrices2(ticker) {
       try {
         const url = `https://api.twelvedata.com/time_series?symbol=${ticker}&interval=1day&outputsize=30&apikey=8880ca8997334c599a5c8349e9ea7b7b`;
