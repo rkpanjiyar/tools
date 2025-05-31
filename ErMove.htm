@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>Russell 1000 Earnings Dashboard</title> -->
-  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #FB9286;">BD</span>, <span
-      style="color: #FFD580;">BU</span>, <span style="color: #A6DAF7;">TU</span>, <span
-      style="color: #B1F7A6;">TD</span></h2>
+  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #DE3163;">BD</span>, <span
+      style="color: #FFAC1C;">BU</span>, <span style="color: #6495ED;">TU</span>, <span
+      style="color: #2AAA8A;">TD</span></h2>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -138,6 +138,18 @@
       const rsi = 100 - 100 / (1 + rs);
       return rsi;
     }
+    async function fetchWithRetry(url, retries = 3, delay = 1000) {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Fetch failed');
+          return await res.json();
+        } catch (err) {
+          if (i === retries - 1) throw err;
+          await new Promise(res => setTimeout(res, delay));
+        }
+      }
+    }
     async function getPrices3(ticker) {
       try {
         const proxy = 'https://corsproxy.io/?';
@@ -195,22 +207,9 @@
         return { price, ma5, ma13, rsi };
       } catch (err) {
         return await getPrices3(ticker);
-        console.error(`Error fetching ${ticker}:`, err);
-        return {};
       }
     }
-    async function fetchWithRetry(url, retries = 3, delay = 1000) {
-      for (let i = 0; i < retries; i++) {
-        try {
-          const res = await fetch(url);
-          if (!res.ok) throw new Error('Fetch failed');
-          return await res.json();
-        } catch (err) {
-          if (i === retries - 1) throw err;
-          await new Promise(res => setTimeout(res, delay));
-        }
-      }
-    }
+
     async function getPrices(ticker) {
       try {
         //const proxy = 'https://corsproxy.io/?';
@@ -238,8 +237,6 @@
         return { price, ma5, ma13, rsi };
       } catch (err) {
         return await getPrices2(ticker);
-        console.error(`Error fetching ${ticker}:`, err);
-        return {};
       }
     }
     async function fetchEarnings(ticker) {
@@ -371,39 +368,108 @@
       return data;
     }
 
-    // Update renderTable to use cached fetchers
+    // Update renderTable to use cached fetchers in parallel with concurrency control
     async function renderTable() {
       const tableBody = document.querySelector('#earningsTable tbody');
+      tableBody.innerHTML = '';
 
-      for (const ticker of tickers) {
-        const data = await fetchEarningsCached(ticker);
+      // Concurrency limit for network requests
+      const CONCURRENCY_LIMIT = 20;
+      let index = 0;
 
-        if (!data || !data.expected_move_perc || data.expected_move_perc == null) continue;
+      // Helper to render a row immediately from cached data
+      function renderRowFromCache(ticker, data) {
+        if (!data || !data.expected_move_perc || data.expected_move_perc == null) return;
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
-        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150) continue;
-        //var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
+        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150) return;
 
         const row = `<tr id="row-${ticker}">
-          <td>${data.ticker}</td>
-          <td class="rsi">-</td>
-          <td>${data.er_date}</td>
-          <td>${data.report_date}</td>
-          <td>${expMoveCalulated}</td>
-          <td>${data.post_earnings_move_1d}</td>
-	        <td class="price">-</td>
-          <td class="priceChange">-</td>
-          <td class="ma5">-</td>
-          <td class="ma13">-</td>  
-        </tr>`;
+      <td>${data.ticker}</td>
+      <td class="rsi">-</td>
+      <td>${data.er_date}</td>
+      <td>${data.report_date}</td>
+      <td>${expMoveCalulated}</td>
+      <td>${data.post_earnings_move_1d}</td>
+      <td class="price">-</td>
+      <td class="priceChange">-</td>
+      <td class="ma5">-</td>
+      <td class="ma13">-</td>  
+    </tr>`;
         tableBody.innerHTML += row;
 
-        getPricesCached(ticker)
-          .then(priceData => updatePriceCells(ticker, priceData, data.price, data.post_earnings_move_1d))
-          .catch(err => console.error(`Price error for ${ticker}:`, err));
+        // Try to get price data from cache and update cells immediately if available
+        const priceCache = getCache(`prices_${ticker}`);
+        if (
+          priceCache &&
+          priceCache.data &&
+          priceCache.fetchedAt &&
+          !isNewBusinessDay(priceCache.fetchedAt) &&
+          !isOverAnHour(priceCache.fetchedAt)
+        ) {
+          updatePriceCells(ticker, priceCache.data, data.price, data.post_earnings_move_1d);
+        } else {
+          // Otherwise, fetch price data in background
+          getPricesCached(ticker)
+            .then(priceData => updatePriceCells(ticker, priceData, data.price, data.post_earnings_move_1d))
+            .catch(err => console.error(`Price error for ${ticker}:`, err));
+        }
       }
+
+      // Helper to process a batch of tickers (fetching only those not cached/expired)
+      async function processBatch(batch) {
+        // For each ticker, check if earnings cache is valid
+        const uncachedTickers = [];
+        const cachedData = [];
+
+        for (const ticker of batch) {
+          const cacheKey = `earnings_${ticker}`;
+          const cached = getCache(cacheKey);
+          if (
+            cached &&
+            cached.data &&
+            cached.fetchedAt &&
+            !isNewBusinessDay(cached.fetchedAt) &&
+            !isOverAnHour(cached.fetchedAt)
+          ) {
+            cachedData.push({ ticker, data: cached.data });
+          } else {
+            uncachedTickers.push(ticker);
+          }
+        }
+
+        // Render cached rows immediately
+        for (const { ticker, data } of cachedData) {
+          renderRowFromCache(ticker, data);
+        }
+
+        // Fetch uncached earnings in parallel (with concurrency limit)
+        for (let i = 0; i < uncachedTickers.length; i += CONCURRENCY_LIMIT) {
+          const subBatch = uncachedTickers.slice(i, i + CONCURRENCY_LIMIT);
+          const earningsResults = await Promise.all(
+            subBatch.map(ticker => fetchEarningsCached(ticker).catch(() => null))
+          );
+
+          for (let j = 0; j < subBatch.length; j++) {
+            const ticker = subBatch[j];
+            const data = earningsResults[j];
+            renderRowFromCache(ticker, data);
+          }
+        }
+      }
+
+      // Process all tickers in batches
+      while (index < tickers.length) {
+        const batch = tickers.slice(index, index + CONCURRENCY_LIMIT);
+        // eslint-disable-next-line no-await-in-loop
+        await processBatch(batch);
+        index += CONCURRENCY_LIMIT;
+        // Optional: small delay between batches to be gentle on APIs
+        await new Promise(res => setTimeout(res, 200));
+      }
+
       // Automatically sort by report date (column index 5)
       sortTable(5, true);
     }
