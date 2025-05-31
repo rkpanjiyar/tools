@@ -233,7 +233,7 @@
       var priceDiff = Math.abs(priceData.price - PreErPrice);
 
       row.querySelector('.price').textContent = priceData.price.toFixed(2);
-      row.querySelector('.priceChange').textContent = '<a href='https://marketchameleon.com/Overview/${ticker}/' target='_blank'>${(priceDiff / PreErPrice * 100).toFixed(2)}</a>';
+      row.querySelector('.priceChange').textContent = (priceDiff / PreErPrice * 100).toFixed(2);
       row.querySelector('.ma5').textContent = priceData.ma5.toFixed(2);
       row.querySelector('.ma13').textContent = priceData.ma13.toFixed(2);
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
