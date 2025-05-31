@@ -233,7 +233,7 @@
       var priceDiff = Math.abs(priceData.price - PreErPrice);
 
       row.querySelector('.price').textContent = priceData.price.toFixed(2);
-      row.querySelector('.priceChange').textContent = (priceDiff / PreErPrice * 100).toFixed(2);
+      row.querySelector('.priceChange').textContent = '<a href='https://marketchameleon.com/Overview/${ticker}/' target='_blank'>${(priceDiff / PreErPrice * 100).toFixed(2)}</a>';
       row.querySelector('.ma5').textContent = priceData.ma5.toFixed(2);
       row.querySelector('.ma13').textContent = priceData.ma13.toFixed(2);
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
@@ -265,15 +265,13 @@
         var diff = toDecimal(parseFloat(data.post_earnings_move_1d) - expMoveCalulated);
 
         const row = `<tr id="row-${ticker}">
-          <td><a href='https://finviz.com/quote.ashx?t=${data.ticker}' target='_blank'>${data.ticker}</a></td>
-          
+          <td>${data.ticker}</td>
           <td class="rsi">-</td>
-          <td><a href='https://marketchameleon.com/Overview/${data.ticker}/' target='_blank'>${data.er_date}</a></td>
-          <td><a href='https://unusualwhales.com/stock/${data.ticker}/earnings/' target='_blank'>${data.report_date}</a></td>
-          <td><a href='https://robinhood.com/stocks/${data.ticker}/' target='_blank'>${expMoveCalulated}</a></td>
+          <td>${data.er_date}</td>
+          <td>${data.report_date}</td>
+          <td>${expMoveCalulated}</td>
           <td>${data.post_earnings_move_1d}</td>
-		    <td class="price">-</td>
-          
+	  <td class="price">-</td>
           <td class="priceChange">-</td>
           <td class="ma5">-</td>
           <td class="ma13">-</td>  
