@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>Russell 1000 Earnings Dashboard</title> -->
-  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #6495ED;">BD</span>, <span
-      style="color: #2AAA8A;">BU</span>, <span style="color: #FFAC1C;">TU</span>, <span
-      style="color: #DE3163;">TD</span></h2>
+  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #DE3163;">BD</span>, <span
+      style="color: #FFAC1C;">BU</span>, <span style="color: #6495ED;">TU</span>, <span
+      style="color: #2AAA8A;">TD</span></h2>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -241,13 +241,13 @@
 
       // Add highlights
       if (postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
-        row.classList.add('highlight-green'); //BU = true;
+        row.classList.add('highlight-orange'); //BU = true;
       if (postErMove1d > 0 && priceData.ma5 <= priceData.ma13)
-        row.classList.add('highlight-red'); //TD = true;
+        row.classList.add('highlight-green'); //TD = true;
       if (postErMove1d < 0 && priceData.ma5 <= priceData.ma13)
-        row.classList.add('highlight-blue'); //BD = true;
+        row.classList.add('highlight-red'); //BD = true;
       if (postErMove1d > 0 && priceData.ma5 >= priceData.ma13)
-        row.classList.add('highlight-orange'); //TU = true;
+        row.classList.add('highlight-blue'); //TU = true;
     }
 
     async function renderTable() {
