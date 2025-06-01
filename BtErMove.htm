@@ -4,10 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>Russell 1000 Earnings Dashboard</title> -->
-  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #DE3163;">BD</span>, <span
+  <h2 class="page-title">&nbspRussell 1000 Earnings Dashboard <span style="color: #DE3163;">BD</span>, <span
       style="color: #FFAC1C;">BU</span>, <span style="color: #6495ED;">TU</span>, <span
       style="color: #2AAA8A;">TD</span></h2>
   <style>
+    .page-title {
+      color: #DE3163;
+    }
+
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -275,12 +279,12 @@
       try {
         const res = await fetch(`https://phx.unusualwhales.com/api/companies_earnings/historic/${ticker}`);
         const json = await res.json();
-        if (!json.data || json.data.length === 0) return null;
+        if (!json.data || json.data.length < 2) return null;
 
-        var latest = json.data[json.data.length - 1];
+        var latest = json.data.length > 2 ? json.data[json.data.length - 3] : json.data[json.data.length - 2];
         var next = latest;
-        if (!latest.post_earnings_move_3d && json.data.length > 1)
-          latest = json.data[json.data.length - 2];
+        if (!latest.post_earnings_move_3d && json.data.length > 2)
+          latest = json.data[json.data.length - 3];
 
         return {
           ticker: ticker,
