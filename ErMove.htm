@@ -89,19 +89,19 @@
     }
 
     .highlight-green {
-      background-color: #B1F7A6 !important;
+      background-color: #d6fbb1 !important;
     }
 
     .highlight-orange {
-      background-color: #FFD580 !important;
+      background-color: #f6d59d !important;
     }
 
     .highlight-red {
-      background-color: #FB9286 !important;
+      background-color: #fbc7c2 !important;
     }
 
     .highlight-blue {
-      background-color: #A6DAF7 !important;
+      background-color: #cefcfd !important;
     }
   </style>
 </head>
@@ -122,6 +122,7 @@
           <th onclick="sortTable(8)">Change%</th>
           <th onclick="sortTable(9)">MA5</th>
           <th onclick="sortTable(10)">MA13</th>
+          <th onclick="sortTable(11)">MA200</th>
         </tr>
       </thead>
       <tbody>
@@ -186,7 +187,7 @@
         const proxy = 'https://corsproxy.io/?';
         //const proxy = 'https://thingproxy.freeboard.io/fetch/';
         //const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=3mo`;
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
         const data = await fetchWithRetry(proxy + encodeURIComponent(url));
 
         const result = data.chart.result[0];
@@ -197,15 +198,14 @@
           .filter(item => item.close != null)
           .sort((a, b) => a.date - b.date);
 
-        if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
-
         const recent = paired.slice(-13);
         const price = recent[recent.length - 1].close;
         const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
         const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
+        const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
 
-        return { price, ma5, ma13, rsi };
+        return { price, ma5, ma13, ma200, rsi };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
         return {};
@@ -217,7 +217,7 @@
         //const proxy = 'https://corsproxy.io/?';
         const proxy = 'https://thingproxy.freeboard.io/fetch/';
         //const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=3mo`;
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
         const data = await fetchWithRetry(proxy + encodeURIComponent(url));
 
         const result = data.chart.result[0];
@@ -228,15 +228,14 @@
           .filter(item => item.close != null)
           .sort((a, b) => a.date - b.date);
 
-        if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
-
         const recent = paired.slice(-13);
         const price = recent[recent.length - 1].close;
         const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
         const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
+        const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
 
-        return { price, ma5, ma13, rsi };
+        return { price, ma5, ma13, ma200, rsi };
       } catch (err) {
         return await getPrices3(ticker);
       }
@@ -247,7 +246,7 @@
         //const proxy = 'https://corsproxy.io/?';
         //const proxy = 'https://thingproxy.freeboard.io/fetch/';
         const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=3mo`;
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
         const data = await fetchWithRetry(proxy + encodeURIComponent(url));
 
         const result = data.chart.result[0];
@@ -258,15 +257,14 @@
           .filter(item => item.close != null)
           .sort((a, b) => a.date - b.date);
 
-        if (paired.length < 13) throw new Error('Not enough data to calculate MA13');
-
         const recent = paired.slice(-13);
         const price = recent[recent.length - 1].close;
         const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
         const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
+        const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
 
-        return { price, ma5, ma13, rsi };
+        return { price, ma5, ma13, ma200, rsi };
       } catch (err) {
         return await getPrices2(ticker);
       }
@@ -302,13 +300,16 @@
       if (!row || !priceData || !priceData.price) return;
 
       var priceDiff = priceData.price - PreErPrice;
-
-      row.querySelector('.price').innerHTML = `<a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.price.toFixed(2)}</a>`;
+      row.querySelector('.price').innerHTML = `<a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;text-decoration:underline;${priceData.price < priceData.ma200 ? 'color:red;' : ''}">${priceData.price.toFixed(2)}</a>`;
+      //row.querySelector('.price').innerHTML = `<a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.price.toFixed(2)}</a>`;
       row.querySelector('.priceChange').innerHTML = `<a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${(priceDiff / PreErPrice * 100).toFixed(2)}</a>`;
       row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.ma5.toFixed(2)}</a>`;
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.ma13.toFixed(2)}</a>`;
-      row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
+      if (row.querySelector('.ma200')) {
+        row.querySelector('.ma200').innerHTML = `${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}`;
+      }
 
+      row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
       if (postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
         row.classList.add('highlight-orange'); //BU = true;
@@ -421,18 +422,19 @@
         if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150) return;
 
         const row = `<tr id="row-${ticker}">
-      <td>${data.ticker}</td>
-      <td class="rsi">-</td>
-      <td>${data.er_date}</td>
-      <td>${data.report_date}</td>
-      <td>${straddleCalulated}</td>
-      <td>${expMoveCalulated}</td>
-      <td>${data.post_earnings_move_1d}</td>
-      <td class="price">-</td>
-      <td class="priceChange">-</td>
-      <td class="ma5">-</td>
-      <td class="ma13">-</td>  
-    </tr>`;
+                    <td>${data.ticker}</td>
+                    <td class="rsi">-</td>
+                    <td>${data.er_date}</td>
+                    <td>${data.report_date}</td>
+                    <td>${straddleCalulated}</td>
+                    <td>${expMoveCalulated}</td>
+                    <td>${data.post_earnings_move_1d}</td>
+                    <td class="price">-</td>
+                    <td class="priceChange">-</td>
+                    <td class="ma5">-</td>
+                    <td class="ma13">-</td>
+                    <td class="ma200">-</td>
+                  </tr>`;
         tableBody.innerHTML += row;
 
         // Try to get price data from cache and update cells immediately if available
