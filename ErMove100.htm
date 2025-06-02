@@ -420,11 +420,9 @@
       const row = document.getElementById(`row-${ticker}`);
       if (!row || !priceData || !priceData.price) return;
 
-      row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.ma5.toFixed(2)}</a>`;
-      row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.ma13.toFixed(2)}</a>`;
-      if (row.querySelector('.ma200')) {
-        row.querySelector('.ma200').innerHTML = `${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}`;
-      }
+      row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;">${priceData.ma5.toFixed(2)}</a>`;
+      row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13.toFixed(2)}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;">${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}</a>`;
 
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
@@ -536,6 +534,11 @@
         if (!data || straddleMoveRatioPerc > 100 || Math.abs(data.priceChange) <= expMoveCalulated)
           return;
 
+        row.querySelector('.price').innerHTML = `<a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;text-decoration:underline;${priceData.price < priceData.ma200 ? 'color:red;' : ''}">${priceData.price.toFixed(2)}</a>`;
+        //row.querySelector('.price').innerHTML = `<a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${priceData.price.toFixed(2)}</a>`;
+        row.querySelector('.priceChange').innerHTML = `<a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;text-decoration:underline;">${(priceDiff / PreErPrice * 100).toFixed(2)}</a>`;
+
+
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
                     <td class="rsi">-</td>
@@ -544,8 +547,8 @@
                     <td>${straddleCalulated}</td>
                     <td>${expMoveCalulated}</td>
                     <td>${data.post_earnings_move_1d}</td>
-                    <td class="priceChange">${data.priceChange}</td>
-                    <td class="price">${data.price}</td>
+                    <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
+                    <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
