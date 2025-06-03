@@ -408,9 +408,11 @@
     async function fetchEarnings(ticker) {
       try {
         const res = await fetch(`https://phx.unusualwhales.com/api/companies_earnings/historic/${ticker}`);
-        const resPrice = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
+        const resPrice = await fetch(`https://phx.unusualwhales.com/api/ticker/${ticker}/price/`);
+        const resPrice2 = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
         const json = await res.json();
         const jsonPrice = await resPrice.json();
+        const jsonPrice2 = await resPrice2.json();
         if (!json.data || json.data.length === 0) return null;
 
         var latest = json.data[json.data.length - 1];
@@ -419,7 +421,7 @@
           latest = json.data[json.data.length - 2];
 
         const preErPrice = parseFloat(latest.price) || 0;
-        const latestPrice = parseFloat(jsonPrice.history[0].price) || parseFloat(jsonPrice.history[0].close_price) || 0;
+        const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) || 0;
         const priceChange = ((latestPrice - preErPrice) / preErPrice * 100).toFixed(2);
 
         return {
