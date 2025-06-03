@@ -93,15 +93,38 @@
     }
 
     .highlight-orange {
-      background-color: #f6d59d !important;
+      background-color: #FFECB3 !important;
     }
 
     .highlight-red {
-      background-color: #fbc7c2 !important;
+      background-color: #FFEBEE !important;
     }
 
     .highlight-blue {
       background-color: #cefcfd !important;
+    }
+
+    a,
+    a label,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active {
+      cursor: pointer !important;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    a:hover {
+      text-decoration: underline !important;
+    }
+
+    td a,
+    td a:link,
+    td a:visited,
+    td a:hover,
+    td a:active {
+      cursor: pointer !important;
     }
   </style>
 </head>
@@ -382,7 +405,7 @@
     async function fetchEarnings(ticker) {
       try {
         const res = await fetch(`https://phx.unusualwhales.com/api/companies_earnings/historic/${ticker}`);
-        const resPrice = await fetch(`https://phx.unusualwhales.com/api/ticker/${ticker}/price/`);
+        const resPrice = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
         const json = await res.json();
         const jsonPrice = await resPrice.json();
         if (!json.data || json.data.length === 0) return null;
@@ -393,7 +416,7 @@
           latest = json.data[json.data.length - 2];
 
         const preErPrice = parseFloat(latest.price) || 0;
-        const latestPrice = parseFloat(jsonPrice.curr) || 0;
+        const latestPrice = parseFloat(jsonPrice.history[0].price) || parseFloat(jsonPrice.history[0].close_price) || 0;
         const priceChange = ((latestPrice - preErPrice) / preErPrice * 100).toFixed(2);
 
         return {
@@ -418,7 +441,7 @@
 
       row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;">${priceData.ma5.toFixed(2)}</a>`;
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13.toFixed(2)}</a>`;
-      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;">${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}</a>`;
 
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
@@ -491,7 +514,8 @@
         return cached.data;
       }
       const data = await fetchEarnings(ticker);
-      setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+      if (data)
+        setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
       return data;
     }
 
@@ -510,7 +534,8 @@
         return cached.data;
       }
       const data = await getPrices(ticker);
-      setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+      if (data && data.price)
+        setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
       return data;
     }
 
@@ -531,7 +556,8 @@
         var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
-        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150) return;
+        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150)
+          return;
 
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
