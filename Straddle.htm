@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>Russell 1000 Earnings Dashboard</title> -->
-  <h2>&nbspRussell 1000 Earnings Dashboard <span style="color: #DE3163;">BD</span>, <span
-      style="color: #FFAC1C;">BU</span>, <span style="color: #6495ED;">TU</span>, <span
-      style="color: #2AAA8A;">TD</span></h2>
+  <h2>&nbspStraddle Pricing: Russell 1k <span style="color: #DE3163;">BD</span>, <span
+      style="color: #FFAC1C;">BU</span>,
+    <span style="color: #6495ED;">TU</span>, <span style="color: #2AAA8A;">TD</span>
+  </h2>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -181,13 +182,15 @@
           <th onclick="sortTable(2)">ErDate(Nxt)</th>
           <th onclick="sortTable(3)">ErDate(Pre)</th>
           <th onclick="sortTable(4)">Straddle%</th>
-          <th onclick="sortTable(5)">ExpMove%</th>
-          <th onclick="sortTable(6)">ErMove%</th>
-          <th onclick="sortTable(7)">Change%</th>
-          <th onclick="sortTable(8)">Price</th>
-          <th onclick="sortTable(9)">MA5</th>
-          <th onclick="sortTable(10)">MA13</th>
-          <th onclick="sortTable(11)">MA200</th>
+          <th onclick="sortTable(5)">HistMove%</th>
+          <th onclick="sortTable(6)">ExpMove%</th>
+          <th onclick="sortTable(7)">ErMove%</th>
+          <th onclick="sortTable(8)">Change%</th>
+          <th onclick="sortTable(9)">Price</th>
+          <th onclick="sortTable(10)">MA5</th>
+          <th onclick="sortTable(11)">MA13</th>
+          <th onclick="sortTable(12)">MA200</th>
+          <th onclick="sortTable(13)">P</th>
         </tr>
       </thead>
       <tbody>
@@ -456,6 +459,29 @@
 
         var latest = json.data[json.data.length - 1];
         var next = latest;
+        // Check if next earnings date is within 1 month
+        const nextDate = new Date(next.report_date);
+        nextDate.setHours(0, 0, 0, 0); // Set to start of day
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set to start of day
+        const oneMonthFromNow = new Date();
+        oneMonthFromNow.setHours(0, 0, 0, 0)
+        oneMonthFromNow.setMonth(today.getMonth() + 1);
+
+        // Skip if earnings date is not within next month
+        if (nextDate > oneMonthFromNow || nextDate < today) return null;
+
+        // Get last 4 quarters average implied move with 15% addition
+        const last4Quarters = json.data.slice(-5, -1); // Exclude the next earnings date
+        const avgHistoricMove = last4Quarters
+          .map(q => {
+            const baseMove = parseFloat(q.expected_move_perc) || 0;
+            // Add 15% to each quarter's expected move
+            return baseMove + (baseMove * 0.15);
+          })
+          .filter(move => move > 0)
+          .reduce((sum, move, i, arr) => sum + move / arr.length, 0);
+
         if (!latest.post_earnings_move_3d && json.data.length > 1)
           latest = json.data[json.data.length - 2];
 
@@ -470,6 +496,7 @@
           priceChange: priceChange || 0,
           er_date: next.report_date || 'N/A',
           report_date: latest.report_date || 'N/A',
+          avgHistoricMove: avgHistoricMove * 100 || 0,
           straddle: toPercent(next.expected_move_perc) || 0,
           expected_move_perc: toPercent(latest.expected_move_perc) || 0,
           post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0
@@ -612,8 +639,7 @@
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
         var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
-        var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
-        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150)
+        if (!data || !straddleCalulated)
           return;
 
         const row = `<tr id="row-${ticker}">
@@ -621,7 +647,8 @@
                     <td class="rsi">-</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_date}</td>
-                    <td>${straddleCalulated}</td>
+                    <td style="${data.avgHistoricMove >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
+                    <td>${data.avgHistoricMove.toFixed(2)}</td>
                     <td>${expMoveCalulated}</td>
                     <td>${data.post_earnings_move_1d}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
@@ -629,6 +656,7 @@
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
+                    <td>${(data.avgHistoricMove - straddleCalulated).toFixed(2)}</td>
                   </tr>`;
         tableBody.innerHTML += row;
 
@@ -703,7 +731,7 @@
         }
 
         // Automatically sort by report date (column index 5)
-        sortTable(5, true);
+        sortTable(2);
       } finally {
         spinner.style.display = 'none'; // Hide spinner when done or on error
       }

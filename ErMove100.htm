@@ -148,6 +148,15 @@
       animation: spin 1s linear infinite;
     }
 
+    .spinnerDone {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #2AAA8A;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
     @keyframes spin {
       0% {
         transform: rotate(0deg);
@@ -163,6 +172,9 @@
 <body>
   <div class="spinner-wrapper" id="loadingSpinner">
     <div class="spinner"></div>
+  </div>
+  <div class="spinner-wrapper" id="doneSpinner" style="display: none;">
+    <div class="spinnerDone"></div>
   </div>
   <div id="table-wrapper">
     <table id="earningsTable">
@@ -557,6 +569,8 @@
         return data;
       } finally {
         spinner.style.display = 'none';
+        const spinnerDone = document.getElementById('doneSpinner');
+        spinner.style.display = 'block';
       }
     }
 
