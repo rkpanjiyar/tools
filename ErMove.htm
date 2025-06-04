@@ -126,10 +126,40 @@
     td a:active {
       cursor: pointer !important;
     }
+
+    .spinner-wrapper {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="spinner-wrapper" id="loadingSpinner">
+    <div class="spinner"></div>
+  </div>
   <div id="table-wrapper">
     <table id="earningsTable">
       <thead>
@@ -504,45 +534,56 @@
 
     // Wrap fetchEarnings with caching
     async function fetchEarningsCached(ticker) {
+      const spinner = document.getElementById('loadingSpinner');
       const cacheKey = `earnings_${ticker}`;
       const cached = getCache(cacheKey);
-      if (
-        cached &&
-        cached.data &&
-        cached.fetchedAt &&
+
+      if (cached && cached.data && cached.fetchedAt &&
         !isNewBusinessDay(cached.fetchedAt) &&
-        !isOverAnHour(cached.fetchedAt)
-      ) {
+        !isOverAnHour(cached.fetchedAt)) {
         return cached.data;
       }
-      const data = await fetchEarnings(ticker);
-      if (data)
-        setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
-      return data;
+
+      spinner.style.display = 'block';
+      try {
+        const data = await fetchEarnings(ticker);
+        if (data) {
+          setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+        }
+        return data;
+      } finally {
+        spinner.style.display = 'none';
+      }
     }
 
-    // Wrap getPrices with caching
     async function getPricesCached(ticker) {
+      const spinner = document.getElementById('loadingSpinner');
       const cacheKey = `prices_${ticker}`;
       const cached = getCache(cacheKey);
-      if (
-        cached &&
-        cached.data &&
-        cached.data.price &&
-        cached.fetchedAt &&
+
+      if (cached && cached.data && cached.data.price && cached.fetchedAt &&
         !isNewBusinessDay(cached.fetchedAt) &&
-        !isOverAnHour(cached.fetchedAt)
-      ) {
+        !isOverAnHour(cached.fetchedAt)) {
         return cached.data;
       }
-      const data = await getPrices(ticker);
-      if (data && data.price)
-        setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
-      return data;
+
+      spinner.style.display = 'block';
+      try {
+        const data = await getPrices(ticker);
+        if (data && data.price) {
+          setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+        }
+        return data;
+      } finally {
+        spinner.style.display = 'none';
+      }
     }
 
     // Update renderTable to use cached fetchers in parallel with concurrency control
     async function renderTable() {
+      const spinner = document.getElementById('loadingSpinner');
+      spinner.style.display = 'block'; // Show spinner
+
       const tableBody = document.querySelector('#earningsTable tbody');
       tableBody.innerHTML = '';
 
@@ -639,17 +680,19 @@
       }
 
       // Process all tickers in batches
-      while (index < tickers.length) {
-        const batch = tickers.slice(index, index + CONCURRENCY_LIMIT);
-        // eslint-disable-next-line no-await-in-loop
-        await processBatch(batch);
-        index += CONCURRENCY_LIMIT;
-        // Optional: small delay between batches to be gentle on APIs
-        await new Promise(res => setTimeout(res, 200));
-      }
+      try {
+        while (index < tickers.length) {
+          const batch = tickers.slice(index, index + CONCURRENCY_LIMIT);
+          await processBatch(batch);
+          index += CONCURRENCY_LIMIT;
+          await new Promise(res => setTimeout(res, 200));
+        }
 
-      // Automatically sort by report date (column index 5)
-      sortTable(5, true);
+        // Automatically sort by report date (column index 5)
+        sortTable(5, true);
+      } finally {
+        spinner.style.display = 'none'; // Hide spinner when done or on error
+      }
     }
 
     function sortTable(columnIndex, descending = false) {
