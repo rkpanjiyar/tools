@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h2>&nbspLT_100: Russell 1k<span style="color: #DE3163;">BD</span>, <span style="color: #FFAC1C;">BU</span>,
+    <h2>&nbspLT_150_GT_100: Russell 1k<span style="color: #DE3163;">BD</span>, <span style="color: #FFAC1C;">BU</span>,
       <span style="color: #6495ED;">TU</span>, <span style="color: #2AAA8A;">TD</span>
     </h2>
     <div style="display: flex; gap: 20px; margin-right: 60px;">
       <a href="Straddle.htm" target="_blank" style="text-decoration: none; color: #DE3163;">ErRunUp</a>
       <a href="ErMove.htm" target="_blank" style="text-decoration: none; color: #FFAC1C;">GT_150</a>
-      <a href="ErMove150.htm" target="_blank" style="text-decoration: none; color: #2AAA8A;">LT_150_GT_100</a>
+      <a href="ErMove100.htm" target="_blank" style="text-decoration: none; color: #6495ED;">LT_100</a>
     </div>
   </div>
   <style>
@@ -624,7 +624,7 @@
         var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
-        if (!data || straddleMoveRatioPerc > 100 || Math.abs(data.priceChange) <= expMoveCalulated)
+        if (!data || (straddleMoveRatioPerc > 100 && straddleMoveRatioPerc < 150) || Math.abs(data.priceChange) <= expMoveCalulated)
           return;
 
         const row = `<tr id="row-${ticker}">
