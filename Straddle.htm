@@ -9,9 +9,8 @@
       <span style="color: #6495ED;">TU</span>, <span style="color: #2AAA8A;">TD</span>
     </h2>
     <div style="display: flex; gap: 20px; margin-right: 60px;">
-      <a href="ErMove.htm" target="_blank" style="text-decoration: none; color: #FFAC1C;">GT_150</a>
+      <a href="ErMove.htm" target="_blank" style="text-decoration: none; color: #FFAC1C;">GT_100</a>
       <a href="ErMove100.htm" target="_blank" style="text-decoration: none; color: #6495ED;">LT_100</a>
-      <a href="ErMove150.htm" target="_blank" style="text-decoration: none; color: #2AAA8A;">LT_150_GT_100</a>
     </div>
   </div>
   <style>
@@ -516,9 +515,9 @@
     function updatePriceCells(ticker, priceData, postErMove1d) {
       const row = document.getElementById(`row-${ticker}`);
 
-      row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;">${priceData.ma5.toFixed(2)}</a>`;
-      row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13.toFixed(2)}</a>`;
-      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}</a>`;
+      row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:inherit;">${priceData.ma5?.toFixed(2)}</a>`;
+      row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13?.toFixed(2)}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200?.toFixed(2) : '-'}</a>`;
 
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
@@ -580,7 +579,7 @@
     // Wrap fetchEarnings with caching
     async function fetchEarningsCached(ticker) {
       const spinner = document.getElementById('loadingSpinner');
-      const cacheKey = `earnings_${ticker}`;
+      const cacheKey = `Straddle_er_${ticker}`;
       const cached = getCache(cacheKey);
 
       if (cached && cached.data && cached.fetchedAt &&
@@ -605,7 +604,7 @@
 
     async function getPricesCached(ticker) {
       const spinner = document.getElementById('loadingSpinner');
-      const cacheKey = `prices_${ticker}`;
+      const cacheKey = `Straddle_$_${ticker}`;
       const cached = getCache(cacheKey);
 
       if (cached && cached.data && cached.data.price && cached.fetchedAt &&
@@ -667,7 +666,7 @@
         tableBody.innerHTML += row;
 
         // Try to get price data from cache and update cells immediately if available
-        const priceCache = getCache(`prices_${ticker}`);
+        const priceCache = getCache(`Straddle_$_${ticker}`);
         if (
           priceCache &&
           priceCache.data &&
@@ -692,7 +691,7 @@
         const cachedData = [];
 
         for (const ticker of batch) {
-          const cacheKey = `earnings_${ticker}`;
+          const cacheKey = `Straddle_er_${ticker}`;
           const cached = getCache(cacheKey);
           if (
             cached &&

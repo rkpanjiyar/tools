@@ -10,7 +10,6 @@
     <div style="display: flex; gap: 20px; margin-right: 60px;">
       <a href="Straddle.htm" target="_blank" style="text-decoration: none; color: #DE3163;">ErRunUp</a>
       <a href="ErMove100.htm" target="_blank" style="text-decoration: none; color: #6495ED;">LT_100</a>
-      <a href="ErMove150.htm" target="_blank" style="text-decoration: none; color: #2AAA8A;">LT_150_GT_100</a>
     </div>
   </div>
   <style>
@@ -553,7 +552,7 @@
     // Wrap fetchEarnings with caching
     async function fetchEarningsCached(ticker) {
       const spinner = document.getElementById('loadingSpinner');
-      const cacheKey = `earnings_${ticker}`;
+      const cacheKey = `ErMove_er_${ticker}`;
       const cached = getCache(cacheKey);
 
       if (cached && cached.data && cached.fetchedAt &&
@@ -578,7 +577,7 @@
 
     async function getPricesCached(ticker) {
       const spinner = document.getElementById('loadingSpinner');
-      const cacheKey = `prices_${ticker}`;
+      const cacheKey = `ErMove_$_${ticker}`;
       const cached = getCache(cacheKey);
 
       if (cached && cached.data && cached.data.price && cached.fetchedAt &&
@@ -619,7 +618,7 @@
         var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
-        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 150)
+        if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 100)
           return;
 
         const row = `<tr id="row-${ticker}">
@@ -639,7 +638,7 @@
         tableBody.innerHTML += row;
 
         // Try to get price data from cache and update cells immediately if available
-        const priceCache = getCache(`prices_${ticker}`);
+        const priceCache = getCache(`ErMove_$_${ticker}`);
         if (
           priceCache &&
           priceCache.data &&
@@ -664,7 +663,7 @@
         const cachedData = [];
 
         for (const ticker of batch) {
-          const cacheKey = `earnings_${ticker}`;
+          const cacheKey = `ErMove_er_${ticker}`;
           const cached = getCache(cacheKey);
           if (
             cached &&
