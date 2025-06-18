@@ -2075,11 +2075,11 @@
         if (!data || !data.expected_move_perc || data.expected_move_perc == null) return;
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
-        var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
+        var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '0';
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         if (!data || !straddleCalulated)
           return;
-
+        var p = data.avgHistoricMove && straddleCalulated > 0 ? (data.avgHistoricMove - straddleCalulated).toFixed(2) : -99;
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
                     <td class="rsi">0</td>
@@ -2094,7 +2094,7 @@
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
-                    <td>${(data.avgHistoricMove - straddleCalulated).toFixed(2)}</td>
+                    <td>${p}</td>
                   </tr>`;
         tableBody.innerHTML += row;
 
