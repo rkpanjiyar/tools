@@ -2092,7 +2092,7 @@
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
         var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
-        var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
+        var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15);        
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
         if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 100)
           return;
@@ -2102,7 +2102,7 @@
                     <td class="rsi">0</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_date}</td>
-                    <td>${straddleCalulated}</td>
+                    <td style="${expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
                     <td>${expMoveCalulated}</td>
                     <td>${data.post_earnings_move_1d}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
