@@ -1960,13 +1960,15 @@
       let textColor = 'inherit';
       if (priceData.ma5 >= priceData.ma13) {
         textColor = 'green';
-      } else if (percentDiffMa5Ma13 <= 1 && priceData.price >= priceData.ma5) {
+      } else if (percentDiffMa5Ma13 <= 2 && priceData.price >= priceData.ma5 && priceData.price >= priceData.ma13) {
         textColor = 'red';
       }
 
+      const ma200Ratio = ((priceData.price - priceData.ma200) / priceData.ma200) * 100;
+
       row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:${textColor};">${priceData.ma5?.toFixed(2)}</a>`;
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13.toFixed(2)}</a>`;
-      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${ma200Ratio ? ma200Ratio.toFixed(2) : 99}</a>`;
 
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
