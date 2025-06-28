@@ -201,10 +201,12 @@
           <th onclick="sortTable(5)">ExpMove%</th>
           <th onclick="sortTable(6)">ErMove%</th>
           <th onclick="sortTable(7)">Change%</th>
-          <th onclick="sortTable(8)">Price</th>
-          <th onclick="sortTable(9)">MA5</th>
-          <th onclick="sortTable(10)">MA13</th>
-          <th onclick="sortTable(11)">MA200</th>
+          <th onclick="sortTable(8)">H52w%</th>
+          <th onclick="sortTable(9)">H3m%</th>
+          <th onclick="sortTable(10)">Price</th>
+          <th onclick="sortTable(11)">MA5</th>
+          <th onclick="sortTable(12)">MA13</th>
+          <th onclick="sortTable(13)">MA200</th>
         </tr>
       </thead>
       <tbody>
@@ -1812,8 +1814,14 @@
         const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
         const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
+        // Calculate 52 week high (last 1 year)
+        const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
 
-        return { price, ma5, ma13, ma200, rsi };
+        // Calculate 3 month high (last ~63 trading days)
+        const last63 = paired.slice(-63);
+        const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
+
+        return { price, ma5, ma13, ma200, rsi, high52w, high3m };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
         return {};
@@ -1842,8 +1850,14 @@
         const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
         const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
+        // Calculate 52 week high (last 1 year)
+        const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
 
-        return { price, ma5, ma13, ma200, rsi };
+        // Calculate 3 month high (last ~63 trading days)
+        const last63 = paired.slice(-63);
+        const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
+
+        return { price, ma5, ma13, ma200, rsi, high52w, high3m };
       } catch (err) {
         return await getPrices3(ticker);
       }
@@ -1871,8 +1885,14 @@
         const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
         const rsi = calculateRSI(paired.map(p => p.close));
         const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
+        // Calculate 52 week high (last 1 year)
+        const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
 
-        return { price, ma5, ma13, ma200, rsi };
+        // Calculate 3 month high (last ~63 trading days)
+        const last63 = paired.slice(-63);
+        const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
+
+        return { price, ma5, ma13, ma200, rsi, high52w, high3m };
       } catch (err) {
         return await getPrices2(ticker);
       }
@@ -1924,13 +1944,20 @@
       let textColor = 'inherit';
       if (priceData.ma5 >= priceData.ma13) {
         textColor = 'green';
-      } else if (percentDiffMa5Ma13 <= 1) {
+      } else if (percentDiffMa5Ma13 <= 2 && priceData.price >= priceData.ma5 && priceData.price >= priceData.ma13) {
         textColor = 'red';
       }
+      const ma200Ratio = ((priceData.price - priceData.ma200) / priceData.ma200) * 100;
+
+      const h52w = ((priceData.price - priceData.high52w) / priceData.price) * 100;
+      const h3m = ((priceData.price - priceData.high3m) / priceData.price) * 100;
+
+      row.querySelector('.H52w').innerHTML = `${h52w?.toFixed(2)}`;
+      row.querySelector('.H3m').innerHTML = `${h3m?.toFixed(2)}`;
 
       row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:${textColor};">${priceData.ma5?.toFixed(2)}</a>`;
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13.toFixed(2)}</a>`;
-      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200.toFixed(2) : '-'}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${ma200Ratio ? ma200Ratio.toFixed(2) : 99}</a>`;
 
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
@@ -2071,6 +2098,8 @@
                     <td>${expMoveCalulated}</td>
                     <td>${data.post_earnings_move_1d}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
+                    <td class="H52w">-</td>
+                    <td class="H3m">-</td>
                     <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
