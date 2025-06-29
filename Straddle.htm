@@ -12,6 +12,7 @@
       <span style="color: #6495ED;">TU</span>, <span style="color: #2AAA8A;">TD</span>
     </h2>
     <div style="display: flex; gap: 20px; margin-right: 60px;">
+      <button id="themeToggle" class="theme-toggle">🌙&nbsp☀️</button>
       <a href="ErMove.htm" target="_blank" style="text-decoration: none; color: #FFAC1C;">GT_100</a>
       <a href="ErMove100.htm" target="_blank" style="text-decoration: none; color: #6495ED;">LT_100</a>
     </div>
@@ -21,13 +22,42 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #ffffff;
-      color: #000000;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    :root {
+      --background-color: #ffffff;
+      --text-color: #333333;
+    }
+
+    [data-theme="dark"] {
+      --background-color: #333333;
+      --text-color: #ffffff;
     }
 
     .light-theme {
       background-color: #ffffff;
       color: #000000;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      margin-right: 8px;
+      padding: 8px 8px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    [data-theme="dark"] .theme-toggle span:first-child {
+      display: none;
+    }
+
+    [data-theme="light"] .theme-toggle span:last-child {
+      display: none;
     }
 
     th,
@@ -172,6 +202,11 @@
       100% {
         transform: rotate(360deg);
       }
+    }
+
+    .row-selected {
+      outline: 2px solid #1976d2 !important;
+      background-color: #e3f2fd !important;
     }
   </style>
 </head>
@@ -1736,7 +1771,19 @@
       'ZTO',
       'ZTS'
     ];
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.dataset.theme = document.body.dataset.theme === 'dark'
+        ? 'light'
+        : 'dark';
 
+      // Optional: Save preference to localStorage
+      localStorage.setItem('theme', document.body.dataset.theme);
+    });
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.dataset.theme = savedTheme;
     function toPercent(value) {
       const num = parseFloat(value);
       return isNaN(num) ? 'N/A' : (num * 100).toFixed(2);
@@ -1744,6 +1791,17 @@
     function toDecimal(value) {
       const num = parseFloat(value);
       return isNaN(num) ? 'N/A' : num.toFixed(2);
+    }
+    // Add this function in your script section
+    function enableRowHighlighting() {
+      document.querySelectorAll('#earningsTable tbody tr').forEach(row => {
+        row.onclick = function () {
+          // Remove highlight from all rows
+          document.querySelectorAll('#earningsTable tbody tr').forEach(r => r.classList.remove('row-selected'));
+          // Add highlight to clicked row
+          this.classList.add('row-selected');
+        };
+      });
     }
     function calculateRSI(closes, period = 14) {
       if (closes.length <= period) return null;
@@ -1944,15 +2002,13 @@
       let textColor = 'inherit';
       if (priceData.ma5 >= priceData.ma13) {
         textColor = 'green';
-      } else if (percentDiffMa5Ma13 <= 2 && priceData.price >= priceData.ma5 && priceData.price >= priceData.ma13) {
+      } else if (percentDiffMa5Ma13 <= 1) {
         textColor = 'red';
       }
-      
-      const ma200Ratio = ((priceData.price - priceData.ma200) / priceData.ma200) * 100;
-      
+
       row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:${textColor};">${priceData.ma5?.toFixed(2)}</a>`;
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13?.toFixed(2)}</a>`;
-      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${ma200Ratio ? ma200Ratio.toFixed(2) : 99}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200?.toFixed(2) : '-'}</a>`;
 
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
@@ -2077,17 +2133,17 @@
         if (!data || !data.expected_move_perc || data.expected_move_perc == null) return;
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
-        var straddleCalulated = parseFloat(data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : 0);
-        var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15);
+        var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
+        var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         if (!data || !straddleCalulated)
           return;
-        var p = data.avgHistoricMove && straddleCalulated > 0 ? (data.avgHistoricMove - straddleCalulated).toFixed(2) : -99;
+
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
                     <td class="rsi">0</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_date}</td>
-                    <td style="${(parseFloat(data.avgHistoricMove) >= straddleCalulated || parseFloat(expMoveCalulated) >= straddleCalulated) ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
+                    <td style="${data.avgHistoricMove >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
                     <td>${data.avgHistoricMove?.toFixed(2)}</td>
                     <td>${expMoveCalulated}</td>
                     <td>${data.post_earnings_move_1d}</td>
@@ -2096,10 +2152,10 @@
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
-                    <td>${p}</td>
+                    <td>${(data.avgHistoricMove - straddleCalulated).toFixed(2)}</td>
                   </tr>`;
         tableBody.innerHTML += row;
-
+        enableRowHighlighting();
         // Try to get price data from cache and update cells immediately if available
         const priceCache = getCache(`Straddle_$_${ticker}`);
         if (
@@ -2172,6 +2228,7 @@
 
         // Automatically sort by report date (column index 5)
         sortTable(2);
+        enableRowHighlighting();
       } finally {
         spinner.style.display = 'none'; // Hide spinner when done or on error
       }

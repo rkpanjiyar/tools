@@ -179,6 +179,11 @@
             transform: rotate(360deg);
           }
         }
+
+        .row-selected {
+          outline: 2px solid #1976d2 !important;
+          background-color: #e3f2fd !important;
+        }
       </style>
 </head>
 
@@ -1750,6 +1755,17 @@
       const num = parseFloat(value);
       return isNaN(num) ? 'N/A' : num.toFixed(2);
     }
+    // Add this function in your script section
+    function enableRowHighlighting() {
+      document.querySelectorAll('#earningsTable tbody tr').forEach(row => {
+        row.onclick = function () {
+          // Remove highlight from all rows
+          document.querySelectorAll('#earningsTable tbody tr').forEach(r => r.classList.remove('row-selected'));
+          // Add highlight to clicked row
+          this.classList.add('row-selected');
+        };
+      });
+    }
     function calculateRSI(closes, period = 14) {
       if (closes.length <= period) return null;
 
@@ -2106,7 +2122,7 @@
                     <td class="ma13">-</td>
                   </tr>`;
         tableBody.innerHTML += row;
-
+        enableRowHighlighting();
         // Try to get price data from cache and update cells immediately if available
         const priceCache = getCache(`ErMove100_$_${ticker}`);
         if (
@@ -2179,6 +2195,7 @@
 
         // Automatically sort by report date (column index 5)
         sortTable(5, true);
+        enableRowHighlighting();
       } finally {
         spinner.style.display = 'none'; // Hide spinner when done or on error
       }
