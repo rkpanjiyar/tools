@@ -1980,8 +1980,8 @@
 
       const ma200Ratio = ((priceData.price - priceData.ma200) / priceData.ma200) * 100;
 
-      const h52w = ((priceData.price - priceData.high52w) / priceData.price) * 100;
-      const h3m = ((priceData.price - priceData.high3m) / priceData.price) * 100;
+      const h52w = ((priceData.price - priceData.high52w) / priceData.high52w) * 100;
+      const h3m = ((priceData.price - priceData.high3m) / priceData.high3m) * 100;
 
       row.querySelector('.H52w').innerHTML = `${h52w?.toFixed(2)}`;
       row.querySelector('.H3m').innerHTML = `${h3m?.toFixed(2)}`;
