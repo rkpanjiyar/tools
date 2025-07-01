@@ -1958,7 +1958,7 @@
         const nextDate = new Date(next.report_date);
         nextDate.setHours(0, 0, 0, 0); // Set to start of day
         const today = new Date();
-        today.setDate(today.getDate() + 1); // Add one day
+        today.setDate(today.getDate() - 1); // minus one day
         today.setHours(0, 0, 0, 0); // Set to start of day
         const oneMonthFromNow = new Date();
         oneMonthFromNow.setHours(0, 0, 0, 0)
