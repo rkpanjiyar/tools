@@ -1958,13 +1958,14 @@
         const nextDate = new Date(next.report_date);
         nextDate.setHours(0, 0, 0, 0); // Set to start of day
         const today = new Date();
+        today.setDate(today.getDate() + 1); // Add one day
         today.setHours(0, 0, 0, 0); // Set to start of day
         const oneMonthFromNow = new Date();
         oneMonthFromNow.setHours(0, 0, 0, 0)
         oneMonthFromNow.setMonth(today.getMonth() + 1);
 
         // Skip if earnings date is not within next month
-        if (nextDate > oneMonthFromNow || nextDate < today) return null;
+        if (nextDate >= oneMonthFromNow || nextDate < today) return null;
 
         // Get last 4 quarters average implied move with 15% addition
         const last4Quarters = json.data.slice(-5, -1); // Exclude the next earnings date
