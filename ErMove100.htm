@@ -1846,34 +1846,33 @@
 
     async function getPrices2(ticker) {
       try {
-        //const proxy = 'https://corsproxy.io/?';
         const proxy = 'https://thingproxy.freeboard.io/fetch/';
-        //const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
-        const data = await fetchWithRetry(proxy + encodeURIComponent(url));
+        const url = `https://phx.unusualwhales.com/api/gex/${ticker}?timespan=1y`;
+        const data = await fetchWithRetry(url);
 
-        const result = data.chart.result[0];
-        const timestamps = result.timestamp || [];
-        const closes = result.indicators.quote[0].close || [];
+        // Handle new endpoint schema
+        if (data && Array.isArray(data.data)) {
+          // Sort by date ascending
+          const paired = data.data
+            .map(item => ({
+              date: new Date(item.date),
+              close: parseFloat(item.close)
+            }))
+            .filter(item => !isNaN(item.close))
+            .sort((a, b) => a.date - b.date);
 
-        const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
-          .filter(item => item.close != null)
-          .sort((a, b) => a.date - b.date);
+          const recent = paired.slice(-13);
+          const price = recent.length ? recent[recent.length - 1].close : 0;
+          const ma5 = recent.length >= 5 ? recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5 : 0;
+          const ma13 = recent.length === 13 ? recent.reduce((sum, p) => sum + p.close, 0) / 13 : 0;
+          const rsi = calculateRSI(paired.map(p => p.close));
+          const ma200 = paired.length >= 200 ? paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200 : 0;
+          const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
+          const last63 = paired.slice(-63);
+          const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
 
-        const recent = paired.slice(-13);
-        const price = recent[recent.length - 1].close;
-        const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
-        const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
-        const rsi = calculateRSI(paired.map(p => p.close));
-        const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
-        // Calculate 52 week high (last 1 year)
-        const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
-
-        // Calculate 3 month high (last ~63 trading days)
-        const last63 = paired.slice(-63);
-        const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
-
-        return { price, ma5, ma13, ma200, rsi, high52w, high3m };
+          return { price, ma5, ma13, ma200, rsi, high52w, high3m };
+        }
       } catch (err) {
         return await getPrices3(ticker);
       }
@@ -1881,34 +1880,33 @@
 
     async function getPrices(ticker) {
       try {
-        //const proxy = 'https://corsproxy.io/?';
-        //const proxy = 'https://thingproxy.freeboard.io/fetch/';
         const proxy = 'https://api.allorigins.win/raw?url=';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
-        const data = await fetchWithRetry(proxy + encodeURIComponent(url));
+        const url = `https://phx.unusualwhales.com/api/gex/${ticker}?timespan=1y`;
+        const data = await fetchWithRetry(url);
 
-        const result = data.chart.result[0];
-        const timestamps = result.timestamp || [];
-        const closes = result.indicators.quote[0].close || [];
+        // Handle new endpoint schema
+        if (data && Array.isArray(data.data)) {
+          // Sort by date ascending
+          const paired = data.data
+            .map(item => ({
+              date: new Date(item.date),
+              close: parseFloat(item.close)
+            }))
+            .filter(item => !isNaN(item.close))
+            .sort((a, b) => a.date - b.date);
 
-        const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
-          .filter(item => item.close != null)
-          .sort((a, b) => a.date - b.date);
+          const recent = paired.slice(-13);
+          const price = recent.length ? recent[recent.length - 1].close : 0;
+          const ma5 = recent.length >= 5 ? recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5 : 0;
+          const ma13 = recent.length === 13 ? recent.reduce((sum, p) => sum + p.close, 0) / 13 : 0;
+          const rsi = calculateRSI(paired.map(p => p.close));
+          const ma200 = paired.length >= 200 ? paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200 : 0;
+          const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
+          const last63 = paired.slice(-63);
+          const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
 
-        const recent = paired.slice(-13);
-        const price = recent[recent.length - 1].close;
-        const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
-        const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
-        const rsi = calculateRSI(paired.map(p => p.close));
-        const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
-        // Calculate 52 week high (last 1 year)
-        const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
-
-        // Calculate 3 month high (last ~63 trading days)
-        const last63 = paired.slice(-63);
-        const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
-
-        return { price, ma5, ma13, ma200, rsi, high52w, high3m };
+          return { price, ma5, ma13, ma200, rsi, high52w, high3m };
+        }
       } catch (err) {
         return await getPrices2(ticker);
       }
