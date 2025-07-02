@@ -2144,7 +2144,7 @@
         if (!data || !data.expected_move_perc || data.expected_move_perc == null) return;
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
-        var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : '-';
+        var straddleCalulated = data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : 0;
         var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + calcPostErMove1d * 0.15);
         if (!data || !straddleCalulated)
           return;
@@ -2154,7 +2154,7 @@
                     <td class="rsi">0</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_date}</td>
-                    <td style="${data.avgHistoricMove >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
+                    <td style="${straddleCalulated > 0 && data.avgHistoricMove >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
                     <td>${data.avgHistoricMove?.toFixed(2)}</td>
                     <td>${expMoveCalulated}</td>
                     <td>${data.post_earnings_move_1d}</td>
@@ -2163,7 +2163,7 @@
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
-                    <td>${(data.avgHistoricMove && straddleCalulated ? data.avgHistoricMove - straddleCalulated : -99).toFixed(2)}</td>
+                    <td>${(data.avgHistoricMove && straddleCalulated > 0 ? data.avgHistoricMove - straddleCalulated : -99).toFixed(2)}</td>
                   </tr>`;
         tableBody.innerHTML += row;
         enableRowHighlighting();
