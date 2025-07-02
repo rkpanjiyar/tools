@@ -12,7 +12,7 @@
       <span style="color: #6495ED;">TU</span>, <span style="color: #2AAA8A;">TD</span>
     </h2>
     <div style="display: flex; gap: 20px; margin-right: 60px;">
-      <button id="themeToggle" class="theme-toggle">🌙&nbsp☀️</button>
+    <!--  <button id="themeToggle" class="theme-toggle">🌙&nbsp☀️</button> -->
       <a href="ErMove.htm" target="_blank" style="text-decoration: none; color: #FFAC1C;">GT_100</a>
       <a href="ErMove100.htm" target="_blank" style="text-decoration: none; color: #6495ED;">LT_100</a>
     </div>
@@ -2163,7 +2163,7 @@
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
-                    <td>${(data.avgHistoricMove - straddleCalulated).toFixed(2)}</td>
+                    <td>${(data.avgHistoricMove && straddleCalulated ? data.avgHistoricMove - straddleCalulated : -99).toFixed(2)}</td>
                   </tr>`;
         tableBody.innerHTML += row;
         enableRowHighlighting();
