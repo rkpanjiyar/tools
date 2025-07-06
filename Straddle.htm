@@ -868,7 +868,7 @@
                     <td>${ticker}</td>
                     <td class="rsi">0</td>
                     <td>${data.er_date}</td>
-                    <td>${(expMoveCalulated && straddleCalulated > 0 ? (straddleCalulated - expMoveCalulated) / expMoveCalulated : -99).toFixed(2)}</td>
+                    <td>${(expMoveCalulated && straddleCalulated > 0 ? parseFloat((straddleCalulated - expMoveCalulated) / expMoveCalulated) : -99).toFixed(2)}</td>
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
                     
                     <td>${expMoveCalulated.toFixed(2)}</td>
