@@ -964,7 +964,7 @@
       const table = document.getElementById("earningsTable");
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
-      const isNumeric = columnIndex !== 0 && columnIndex !== 2 && columnIndex !== 3;
+      const isNumeric = columnIndex !== 0 && columnIndex !== 2;
 
       const sortedRows = rows.sort((a, b) => {
         const valA = a.cells[columnIndex].textContent.replace('%', '');
