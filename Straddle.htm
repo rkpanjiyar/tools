@@ -864,11 +864,12 @@
           return;
         //<td>${data.avgHistoricMove?.toFixed(2)}</td>
         expMoveCalulated = expMoveCalulated && expMoveCalulated != "N/A" && expMoveCalulated != 0 ? expMoveCalulated : data.avgHistoricMove;
+        var p = parseFloat((expMoveCalulated && straddleCalulated && expMoveCalulated > 0 && straddleCalulated > 0 ? parseFloat(((straddleCalulated - expMoveCalulated) / expMoveCalulated) * 100) : 999).toFixed(2));
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
                     <td class="rsi">0</td>
                     <td>${data.er_date}</td>
-                    <td>${(expMoveCalulated && straddleCalulated > 0 ? parseFloat((straddleCalulated - expMoveCalulated) / expMoveCalulated) : -99).toFixed(2)}</td>
+                    <td>${p}</td>
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
                     
                     <td>${expMoveCalulated.toFixed(2)}</td>
