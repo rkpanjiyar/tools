@@ -2163,7 +2163,7 @@
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                     <td class="ma200">-</td>
-                    <td>${(data.avgHistoricMove && straddleCalulated > 0 ? data.avgHistoricMove - straddleCalulated : -99).toFixed(2)}</td>
+                    <td>${(expMoveCalulated && straddleCalulated > 0 ? expMoveCalulated - straddleCalulated : -99).toFixed(2)}</td>
                   </tr>`;
         tableBody.innerHTML += row;
         enableRowHighlighting();
