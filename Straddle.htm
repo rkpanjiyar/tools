@@ -699,6 +699,7 @@
         const preErPrice = parseFloat(latest.price) || 0;
         const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) || 0;
         const priceChange = ((latestPrice - preErPrice) / preErPrice * 100).toFixed(2);
+        const reportTime = next.report_time == 'unknown' || next.report_time == '' || !next.report_time ? '-' : next.report_time == 'premarket' ? 'PM' : next.report_time == 'postmarket' ? 'AH' : next.report_time;
 
         return {
           ticker: ticker,
@@ -711,7 +712,7 @@
           straddle: toPercent(next.expected_move_perc) || 0,
           expected_move_perc: toPercent(latest.expected_move_perc) || 0,
           post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0,
-          report_time: latest.report_time == 'unknown' || latest.report_time == '' || !latest.report_time ? '-' : latest.report_time
+          report_time: reportTime
         };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
@@ -852,7 +853,7 @@
       tableBody.innerHTML = '';
 
       // Concurrency limit for network requests
-      const CONCURRENCY_LIMIT = 40;
+      const CONCURRENCY_LIMIT = 100;
       let index = 0;
 
       // Helper to render a row immediately from cached data
