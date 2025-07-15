@@ -232,9 +232,9 @@
           <th onclick="sortTable(7)">ErMove%</th>
           <th onclick="sortTable(8)">Change%</th>
           <th onclick="sortTable(9)">Price</th>
+          <th onclick="sortTable(12)">MA200</th>
           <th onclick="sortTable(10)">MA5</th>
           <th onclick="sortTable(11)">MA13</th>
-          <th onclick="sortTable(12)">MA200</th>
         </tr>
       </thead>
       <tbody>
@@ -853,7 +853,7 @@
       tableBody.innerHTML = '';
 
       // Concurrency limit for network requests
-      const CONCURRENCY_LIMIT = 100;
+      const CONCURRENCY_LIMIT = 80;
       let index = 0;
 
       // Helper to render a row immediately from cached data
@@ -874,15 +874,14 @@
                     <td>${data.er_date}</td>
                     <td>${data.report_time}</td>
                     <td>${p}</td>
-                    <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}">${straddleCalulated}</td>
-                    
+                    <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
                     <td>${expMoveCalulated.toFixed(2)}</td>
                     <td>${data.post_earnings_move_1d}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
                     <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
+                    <td class="ma200">-</td>
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
-                    <td class="ma200">-</td>
                   </tr>`;
         tableBody.innerHTML += row;
         enableRowHighlighting();
