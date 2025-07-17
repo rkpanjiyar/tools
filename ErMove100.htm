@@ -642,7 +642,7 @@
           latest = json.data[json.data.length - 2];
 
         const preErPrice = parseFloat(latest.price) || 0;
-        const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) || 0;
+        const latestPrice = parseFloat(jsonPrice.curr) || jsonPrice2.history.length > 0 ? parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) : 0;
         const priceChange = ((latestPrice - preErPrice) / preErPrice * 100).toFixed(2);
 
         return {
