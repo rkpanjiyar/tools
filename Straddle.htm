@@ -862,11 +862,11 @@
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
         var straddleCalulated = parseFloat(data.straddle && data.straddle != "N/A" && data.straddle != 0 ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : 0);
-        var expMoveCalulated = parseFloat(toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15));
+        var expMoveCalulated = parseFloat(data.expected_move_perc && data.expected_move_perc != 0 && data.expected_move_perc != 'N/A' ? toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15) : 0);
         if (!data || !straddleCalulated)
           return;
         //<td>${data.avgHistoricMove?.toFixed(2)}</td>
-        expMoveCalulated = expMoveCalulated && expMoveCalulated != "N/A" && expMoveCalulated != 0 ? expMoveCalulated : data.avgHistoricMove;
+        expMoveCalulated = parseFloat(expMoveCalulated && expMoveCalulated != "N/A" && expMoveCalulated != 0 ? expMoveCalulated : data.avgHistoricMove);
         var p = parseFloat((expMoveCalulated && straddleCalulated && expMoveCalulated > 0 && straddleCalulated > 0 ? parseFloat(((straddleCalulated - expMoveCalulated) / expMoveCalulated) * 100) : 999).toFixed(2));
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
@@ -875,8 +875,8 @@
                     <td>${data.report_time}</td>
                     <td>${p}</td>
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
-                    <td>${expMoveCalulated.toFixed(2)}</td>
-                    <td>${data.post_earnings_move_1d}</td>
+                    <td>${expMoveCalulated}</td>
+                    <td>${parseFloat(data.post_earnings_move_1d && data.post_earnings_move_1d != 0 && data.post_earnings_move_1d != 'N/A' ? data.post_earnings_move_1d : 0)}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
                     <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
                     <td class="ma200">-</td>
