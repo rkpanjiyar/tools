@@ -847,7 +847,7 @@
 
         var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
         var straddleCalulated = parseFloat(data.straddle && data.straddle != "N/A" ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : 0);
-        var expMoveCalulated = toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15);
+        var expMoveCalulated = data.expected_move_perc && data.expected_move_perc != 0 ? toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15) : 0;
         var straddleMoveRatioPerc = toDecimal(calcPostErMove1d / expMoveCalulated * 100);
         if (!data || expMoveCalulated > calcPostErMove1d || straddleMoveRatioPerc < 100)
           return;
@@ -861,7 +861,7 @@
                     <td>${p}</td>
                     <td style="${parseFloat(expMoveCalulated) >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
                     <td>${expMoveCalulated}</td>
-                    <td>${data.post_earnings_move_1d}</td>
+                    <td>${data.post_earnings_move_1d && data.post_earnings_move_1d != 0 ? data.post_earnings_move_1d : 0}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
                     <td class="H52w">-</td>
                     <td class="H3m">-</td>
