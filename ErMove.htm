@@ -854,7 +854,7 @@
           return;
         var postMove = parseFloat(data.post_earnings_move_1d && data.post_earnings_move_1d != 0 && data.post_earnings_move_1d != 'N/A' ? data.post_earnings_move_1d : 0);
         var p = parseFloat((expMoveCalulated && straddleCalulated && expMoveCalulated > 0 && straddleCalulated > 0 ? parseFloat(((straddleCalulated - expMoveCalulated) / expMoveCalulated) * 100) : 999).toFixed(2));
-        var s = parseFloat(postMove != 0 && expMoveCalulated != 0 ? parseFloat(((postMove-expMoveCalulated)/expMoveCalulated)*100) : 0);
+        var s = parseFloat(postMove != 0 && expMoveCalulated != 0 ? parseFloat(((postMove-expMoveCalulated)/expMoveCalulated)*100).toFixed(2) : 0);
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
                     <td class="rsi">0</td>
