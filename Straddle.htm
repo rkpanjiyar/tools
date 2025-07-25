@@ -231,8 +231,8 @@
           <th onclick="sortTable(6)">HistMove%</th>
           <th onclick="sortTable(7)">ErMove%</th>
           <th onclick="sortTable(8)">Change%</th>
+          <th onclick="sortTable(12)">MA200%</th>
           <th onclick="sortTable(9)">Price</th>
-          <th onclick="sortTable(12)">MA200</th>
           <th onclick="sortTable(10)">MA5</th>
           <th onclick="sortTable(11)">MA13</th>
         </tr>
@@ -878,8 +878,8 @@
                     <td>${expMoveCalulated}</td>
                     <td>${parseFloat(data.post_earnings_move_1d && data.post_earnings_move_1d != 0 && data.post_earnings_move_1d != 'N/A' ? data.post_earnings_move_1d : 0)}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
-                    <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
                     <td class="ma200">-</td>
+                    <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                   </tr>`;
