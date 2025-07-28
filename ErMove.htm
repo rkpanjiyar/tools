@@ -205,14 +205,14 @@
       <thead>
         <tr>
           <th onclick="sortTable(0)">Ticker</th>
-          <th onclick="sortTable(1)">Rsi</th>
-          <th onclick="sortTable(2)">ErDt(Nxt)</th>
-          <th onclick="sortTable(3)">ErDt(Pre)</th>
-          <th onclick="sortTable(4)">P</th>
-          <th onclick="sortTable(5)">Straddle%</th>
-          <th onclick="sortTable(6)">ExpMove%</th>
-          <th onclick="sortTable(7)">ErMove%</th>
-          <th onclick="sortTable(8)">Surp%</th>
+          <th onclick="sortTable(1)">ErDt(Nxt)</th>
+          <th onclick="sortTable(2)">ErDt(Pre)</th>
+          <th onclick="sortTable(3)">Rsi</th>
+          <th onclick="sortTable(4)">Surp%</th>
+          <th onclick="sortTable(5)">P</th>
+          <th onclick="sortTable(6)">Straddle%</th>
+          <th onclick="sortTable(7)">ExpMove%</th>
+          <th onclick="sortTable(8)">ErMove%</th>
           <th onclick="sortTable(9)">Change%</th>
           <th onclick="sortTable(10)">H52w%</th>
           <th onclick="sortTable(11)">H3m%</th>
@@ -857,14 +857,14 @@
         var s = parseFloat(postMove != 0 && expMoveCalulated != 0 ? parseFloat(((Math.abs(postMove)-Math.abs(expMoveCalulated))/Math.abs(expMoveCalulated))*100).toFixed(2) : 0);
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
-                    <td class="rsi">0</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_date}</td>
+                    <td class="rsi">0</td>
+                    <td>${s}</td>
                     <td>${p}</td>
                     <td style="${expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
                     <td>${expMoveCalulated}</td>
                     <td>${postMove}</td>
-                    <td>${s}</td>
                     <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${parseFloat(data.priceChange)}</a></td>
                     <td class="H52w">-</td>
                     <td class="H3m">-</td>
