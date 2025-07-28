@@ -223,9 +223,9 @@
       <thead>
         <tr>
           <th onclick="sortTable(0)">Ticker</th>
-          <th onclick="sortTable(1)">Rsi</th>
-          <th onclick="sortTable(2)">ErDate(Nxt)</th>
-          <th onclick="sortTable(3)">PM/AH</th>
+          <th onclick="sortTable(1)">ErDate(Nxt)</th>
+          <th onclick="sortTable(2)">PM/AH</th>
+          <th onclick="sortTable(3)">Rsi</th>
           <th onclick="sortTable(4)">P</th>
           <th onclick="sortTable(5)">Straddle%</th>
           <th onclick="sortTable(6)">HistMove%</th>
@@ -870,9 +870,9 @@
         var p = parseFloat((expMoveCalulated && straddleCalulated && expMoveCalulated > 0 && straddleCalulated > 0 ? parseFloat(((straddleCalulated - expMoveCalulated) / expMoveCalulated) * 100) : 999).toFixed(2));
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
-                    <td class="rsi">0</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_time}</td>
+                    <td class="rsi">0</td>
                     <td>${p}</td>
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
                     <td>${expMoveCalulated}</td>
