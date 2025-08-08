@@ -223,18 +223,19 @@
       <thead>
         <tr>
           <th onclick="sortTable(0)">Ticker</th>
-          <th onclick="sortTable(1)">ErDate(Nxt)</th>
-          <th onclick="sortTable(2)">PM/AH</th>
-          <th onclick="sortTable(3)">Rsi</th>
-          <th onclick="sortTable(4)">P</th>
-          <th onclick="sortTable(5)">Straddle%</th>
-          <th onclick="sortTable(6)">HistMove%</th>
-          <th onclick="sortTable(7)">ErMove%</th>
-          <th onclick="sortTable(8)">Change%</th>
-          <th onclick="sortTable(9)">MA200%</th>
-          <th onclick="sortTable(10)">Price</th>
-          <th onclick="sortTable(11)">MA5</th>
-          <th onclick="sortTable(12)">MA13</th>
+          <th onclick="sortTable(1)">Rsi</th>
+          <th onclick="sortTable(2)">IvRank</th>
+          <th onclick="sortTable(3)">ErDate(Nxt)</th>
+          <th onclick="sortTable(4)">PM/AH</th>
+          <th onclick="sortTable(5)">P</th>
+          <th onclick="sortTable(6)">Straddle%</th>
+          <th onclick="sortTable(7)">HistMove%</th>
+          <th onclick="sortTable(8)">ErMove%</th>
+          <th onclick="sortTable(9)">Change%</th>
+          <th onclick="sortTable(10)">MA200%</th>
+          <th onclick="sortTable(11)">Price</th>
+          <th onclick="sortTable(12)">MA5</th>
+          <th onclick="sortTable(13)">MA13</th>
         </tr>
       </thead>
       <tbody>
@@ -662,9 +663,11 @@
         const res = await fetch(`https://phx.unusualwhales.com/api/companies_earnings/historic/${ticker}`);
         const resPrice = await fetch(`https://phx.unusualwhales.com/api/ticker/${ticker}/price/`);
         const resPrice2 = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
+        const resIvData = await fetch(`https://phx.unusualwhales.com/api/volatility/${ticker}/stats`);
         const json = await res.json();
         const jsonPrice = await resPrice.json();
         const jsonPrice2 = await resPrice2.json();
+        const jsonIvData = await resIvData.json();
         if (!json.data || json.data.length === 0) return null;
 
         var latest = json.data[json.data.length - 1];
@@ -696,6 +699,7 @@
         if (!latest.post_earnings_move_3d && json.data.length > 1)
           latest = json.data[json.data.length - 2];
 
+        const ivRank = jsonIvData && jsonIvData.data ? parseFloat(jsonIvData.data.iv_rank) || 999 : 999;
         const preErPrice = parseFloat(latest.price) || 0;
         const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice.prev) || (jsonPrice2.history.length > 0 ? parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) : 0);
         const priceChange = ((latestPrice - preErPrice) / preErPrice * 100).toFixed(2);
@@ -712,7 +716,8 @@
           straddle: toPercent(next.expected_move_perc) || 0,
           expected_move_perc: toPercent(latest.expected_move_perc) || 0,
           post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0,
-          report_time: reportTime
+          report_time: reportTime,
+          iv_rank: ivRank
         };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
@@ -870,9 +875,10 @@
         var p = parseFloat((expMoveCalulated && straddleCalulated && expMoveCalulated > 0 && straddleCalulated > 0 ? parseFloat(((straddleCalulated - expMoveCalulated) / expMoveCalulated) * 100) : 999).toFixed(2));
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
+                    <td class="rsi">0</td>
+                    <td>${parseFloat(data.iv_rank.toFixed(2))}</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_time}</td>
-                    <td class="rsi">0</td>
                     <td>${p}</td>
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
                     <td>${expMoveCalulated}</td>
@@ -967,7 +973,7 @@
       const table = document.getElementById("earningsTable");
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
-      const isNumeric = columnIndex !== 0 && columnIndex !== 2 && columnIndex !== 3;
+      const isNumeric = columnIndex !== 0 && columnIndex !== 3;
 
       const sortedRows = rows.sort((a, b) => {
         const valA = a.cells[columnIndex].textContent.replace('%', '');
