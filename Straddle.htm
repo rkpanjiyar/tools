@@ -876,7 +876,7 @@
         const row = `<tr id="row-${ticker}">
                     <td>${ticker}</td>
                     <td class="rsi">0</td>
-                    <td>${parseFloat(data.iv_rank.toFixed(2))}</td>
+                    <td>${parseFloat(data.iv_rank?.toFixed(2))}</td>
                     <td>${data.er_date}</td>
                     <td>${data.report_time}</td>
                     <td>${p}</td>
@@ -1001,5 +1001,6 @@
 
   </script>
 </body>
+
 
 </html>
