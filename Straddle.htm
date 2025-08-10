@@ -232,10 +232,11 @@
           <th onclick="sortTable(7)">HistMove%</th>
           <th onclick="sortTable(8)">ErMove%</th>
           <th onclick="sortTable(9)">Change%</th>
-          <th onclick="sortTable(10)">MA200%</th>
-          <th onclick="sortTable(11)">Price</th>
-          <th onclick="sortTable(12)">MA5</th>
-          <th onclick="sortTable(13)">MA13</th>
+          <th onclick="sortTable(10)">5D%</th>
+          <th onclick="sortTable(11)">MA200%</th>
+          <th onclick="sortTable(12)">Price</th>
+          <th onclick="sortTable(13)">MA5</th>
+          <th onclick="sortTable(14)">MA13</th>
         </tr>
       </thead>
       <tbody>
@@ -652,7 +653,17 @@
           const last63 = paired.slice(-63);
           const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
 
-          return { price, ma5, ma13, ma200, rsi, high52w, high3m };
+          // Calculate last 5-day percentage change in price
+          let pctChange5d = 0;
+          if (paired.length >= 5) {
+            const close5dAgo = paired[paired.length - 5].close;
+            const latestClose = paired[paired.length - 1].close;
+            if (close5dAgo !== 0) {
+              pctChange5d = ((latestClose - close5dAgo) / close5dAgo) * 100;
+            }
+          }
+
+          return { price, ma5, ma13, ma200, rsi, high52w, high3m, pctChange5d };
         }
       } catch (err) {
         return await getPrices2(ticker);
@@ -742,7 +753,7 @@
       row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:${textColor};">${priceData.ma5?.toFixed(2)}</a>`;
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13?.toFixed(2)}</a>`;
       row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200?.toFixed(2) : '-'}</a>`;
-
+      row.querySelector('.pctChange5d').innerHTML = `${priceData.pctChange5d?.toFixed(2)}`;
       row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
       if (postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
@@ -883,9 +894,10 @@
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
                     <td>${expMoveCalulated}</td>
                     <td>${parseFloat(data.post_earnings_move_1d && data.post_earnings_move_1d != 0 && data.post_earnings_move_1d != 'N/A' ? data.post_earnings_move_1d : 0)}</td>
-                    <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${data.priceChange}</a></td>
+                    <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${parseFloat(data.priceChange)}</a></td>
+                    <td class="pctChange5d">0</td>
                     <td class="ma200">-</td>
-                    <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${data.price}</a></td>
+                    <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${parseFloat(data.price?.toFixed(2))}</a></td>
                     <td class="ma5">-</td>
                     <td class="ma13">-</td>
                   </tr>`;
