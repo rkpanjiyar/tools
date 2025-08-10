@@ -976,14 +976,22 @@
       const table = document.getElementById("earningsTable");
       const tbody = table.tBodies[0];
       const rows = Array.from(tbody.rows);
-      const isNumeric = columnIndex !== 0 && columnIndex !== 2 && columnIndex !== 3;
+
+      // Detect column type
+      const isDate = columnIndex === 1 || columnIndex === 2; // ErDate(Nxt)
+      const isNumeric = columnIndex !== 0 && columnIndex !== 1 && columnIndex !== 2;
 
       const sortedRows = rows.sort((a, b) => {
-        const valA = a.cells[columnIndex].textContent.replace('%', '');
-        const valB = b.cells[columnIndex].textContent.replace('%', '');
+        const valA = a.cells[columnIndex].textContent.trim();
+        const valB = b.cells[columnIndex].textContent.trim();
 
-        if (isNumeric) {
-          return parseFloat(valA) - parseFloat(valB);
+        if (isDate) {
+          // Try to parse as date (supports formats like YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY)
+          const dateA = Date.parse(valA.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$1-$2')) || Date.parse(valA);
+          const dateB = Date.parse(valB.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$1-$2')) || Date.parse(valB);
+          return dateA - dateB;
+        } else if (isNumeric) {
+          return parseFloat(valA.replace('%', '')) - parseFloat(valB.replace('%', ''));
         } else {
           return valA.localeCompare(valB);
         }
