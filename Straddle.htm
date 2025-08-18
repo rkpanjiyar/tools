@@ -754,7 +754,7 @@
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13?.toFixed(2)}</a>`;
       row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200?.toFixed(2) : '-'}</a>`;
       row.querySelector('.pctChange5d').innerHTML = `${priceData.pctChange5d?.toFixed(2)}`;
-      row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
+      row.querySelector('.rsi').textContent = parseFloat(priceData.rsi.toFixed(2)) || 0;
       // Add highlights
       if (postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
         row.classList.add('highlight-orange'); //BU = true;
@@ -1021,6 +1021,7 @@
 
   </script>
 </body>
+
 
 
 </html>
