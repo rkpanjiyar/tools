@@ -884,7 +884,7 @@
                     <td>${data.report_date}</td>
                     <td class="rsi">0</td>
                     <td>${parseFloat(data.iv_rank.toFixed(2))}</td>
-                    <td style="${data.beta && data.beta > 1.29 ? 'color:green;' : 'color:inherit;'}>${data.beta ? parseFloat(data.beta.toFixed(2)) : 0}</td>
+                    <td style="${data.beta && data.beta > 1.29 ? 'color:green;' : 'color:inherit;'}">${data.beta ? parseFloat(data.beta.toFixed(2)) : 0}</td>
                     <td>${s}</td>
                     <td>${p}</td>
                     <td style="${expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
