@@ -226,17 +226,18 @@
           <th onclick="sortTable(1)">Rsi</th>
           <th onclick="sortTable(2)">IvRank</th>
           <th onclick="sortTable(3)">ErDate(Nxt)</th>
-          <th onclick="sortTable(4)">PM/AH</th>
-          <th onclick="sortTable(5)">P</th>
-          <th onclick="sortTable(6)">Straddle%</th>
-          <th onclick="sortTable(7)">HistMove%</th>
-          <th onclick="sortTable(8)">ErMove%</th>
-          <th onclick="sortTable(9)">Change%</th>
-          <th onclick="sortTable(10)">5D%</th>
-          <th onclick="sortTable(11)">MA200%</th>
-          <th onclick="sortTable(12)">Price</th>
-          <th onclick="sortTable(13)">MA5</th>
-          <th onclick="sortTable(14)">MA13</th>
+          <th onclick="sortTable(4)">Beta</th>
+          <th onclick="sortTable(5)">PM/AH</th>
+          <th onclick="sortTable(6)">P</th>
+          <th onclick="sortTable(7)">Straddle%</th>
+          <th onclick="sortTable(8)">HistMove%</th>
+          <th onclick="sortTable(9)">ErMove%</th>
+          <th onclick="sortTable(10)">Change%</th>
+          <th onclick="sortTable(11)">5D%</th>
+          <th onclick="sortTable(12)">MA200%</th>
+          <th onclick="sortTable(13)">Price</th>
+          <th onclick="sortTable(14)">MA5</th>
+          <th onclick="sortTable(15)">MA13</th>
         </tr>
       </thead>
       <tbody>
@@ -675,10 +676,13 @@
         const resPrice = await fetch(`https://phx.unusualwhales.com/api/ticker/${ticker}/price/`);
         const resPrice2 = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
         const resIvData = await fetch(`https://phx.unusualwhales.com/api/volatility/${ticker}/stats`);
+        const resStats = await fetch(`https://phx.unusualwhales.com/api/stock/${ticker}/fundamental/daily_stats`);
+
         const json = await res.json();
         const jsonPrice = await resPrice.json();
         const jsonPrice2 = await resPrice2.json();
         const jsonIvData = await resIvData.json();
+        const jsonStats = await resStats.json();
         if (!json.data || json.data.length === 0) return null;
 
         var latest = json.data[json.data.length - 1];
@@ -710,6 +714,7 @@
         if (!latest.post_earnings_move_3d && json.data.length > 1)
           latest = json.data[json.data.length - 2];
 
+        const beta = jsonStats && jsonStats.data ? parseFloat(jsonStats.data.beta) || 0 : 0;
         const ivRank = jsonIvData && jsonIvData.data ? parseFloat(jsonIvData.data.iv_rank) || 999 : 999;
         const preErPrice = parseFloat(latest.price) || 0;
         const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice.prev) || (jsonPrice2.history.length > 0 ? parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) : 0);
@@ -728,7 +733,8 @@
           expected_move_perc: toPercent(latest.expected_move_perc) || 0,
           post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0,
           report_time: reportTime,
-          iv_rank: ivRank
+          iv_rank: ivRank,
+          beta: beta
         };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
@@ -754,7 +760,7 @@
       row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13?.toFixed(2)}</a>`;
       row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200?.toFixed(2) : '-'}</a>`;
       row.querySelector('.pctChange5d').innerHTML = `${priceData.pctChange5d?.toFixed(2)}`;
-      row.querySelector('.rsi').textContent = parseFloat(priceData.rsi.toFixed(2)) || 0;
+      row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
       // Add highlights
       if (postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
         row.classList.add('highlight-orange'); //BU = true;
@@ -889,6 +895,7 @@
                     <td class="rsi">0</td>
                     <td>${parseFloat(data.iv_rank?.toFixed(2))}</td>
                     <td>${data.er_date}</td>
+                    <td style="${data.beta && data.beta > 1.29 ? 'color:green;' : 'color:inherit;'}>${data.beta ? parseFloat(data.beta.toFixed(2)) : 0}</td>
                     <td>${data.report_time}</td>
                     <td>${p}</td>
                     <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
@@ -1021,7 +1028,6 @@
 
   </script>
 </body>
-
 
 
 </html>

@@ -209,19 +209,20 @@
           <th onclick="sortTable(2)">ErDt(Pre)</th>
           <th onclick="sortTable(3)">Rsi</th>
           <th onclick="sortTable(4)">IvRank</th>
-          <th onclick="sortTable(5)">Surp%</th>
-          <th onclick="sortTable(6)">P</th>
-          <th onclick="sortTable(7)">Straddle%</th>
-          <th onclick="sortTable(8)">ExpMove%</th>
-          <th onclick="sortTable(9)">ErMove%</th>
-          <th onclick="sortTable(10)">Change%</th>
-          <th onclick="sortTable(11)">H52w%</th>
-          <th onclick="sortTable(12)">H3m%</th>
-          <th onclick="sortTable(13)">5D%</th>
-          <th onclick="sortTable(14)">MA200%</th>
-          <th onclick="sortTable(15)">Price</th>
-          <th onclick="sortTable(16)">MA5</th>
-          <th onclick="sortTable(17)">MA13</th>
+          <th onclick="sortTable(5)">Beta</th>
+          <th onclick="sortTable(6)">Surp%</th>
+          <th onclick="sortTable(7)">P</th>
+          <th onclick="sortTable(8)">Straddle%</th>
+          <th onclick="sortTable(9)">ExpMove%</th>
+          <th onclick="sortTable(10)">ErMove%</th>
+          <th onclick="sortTable(11)">Change%</th>
+          <th onclick="sortTable(12)">H52w%</th>
+          <th onclick="sortTable(13)">H3m%</th>
+          <th onclick="sortTable(14)">5D%</th>
+          <th onclick="sortTable(15)">MA200%</th>
+          <th onclick="sortTable(16)">Price</th>
+          <th onclick="sortTable(17)">MA5</th>
+          <th onclick="sortTable(18)">MA13</th>
         </tr>
       </thead>
       <tbody>
@@ -680,10 +681,13 @@
         const resPrice = await fetch(`https://phx.unusualwhales.com/api/ticker/${ticker}/price/`);
         const resPrice2 = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
         const resIvData = await fetch(`https://phx.unusualwhales.com/api/volatility/${ticker}/stats`);
+        const resStats = await fetch(`https://phx.unusualwhales.com/api/stock/${ticker}/fundamental/daily_stats`);
+
         const json = await res.json();
         const jsonPrice = await resPrice.json();
         const jsonPrice2 = await resPrice2.json();
         const jsonIvData = await resIvData.json();
+        const jsonStats = await resStats.json();
         if (!json.data || json.data.length === 0) return null;
 
         var latest = json.data[json.data.length - 1];
@@ -691,6 +695,7 @@
         if (!latest.post_earnings_move_3d && json.data.length > 1)
           latest = json.data[json.data.length - 2];
 
+        const beta = jsonStats && jsonStats.data ? parseFloat(jsonStats.data.beta) || 0 : 0;
         const ivRank = jsonIvData && jsonIvData.data ? parseFloat(jsonIvData.data.iv_rank) || 999 : 999;
         const preErPrice = parseFloat(latest.price) || 0;
         const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice.prev) || (jsonPrice2.history.length > 0 ? parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) : 0);
@@ -706,7 +711,8 @@
           straddle: toPercent(next.expected_move_perc) || 0,
           expected_move_perc: toPercent(latest.expected_move_perc) || 0,
           post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0,
-          iv_rank: ivRank
+          iv_rank: ivRank,
+          beta: beta
         };
       } catch (err) {
         console.error(`Error fetching ${ticker}:`, err);
@@ -878,6 +884,7 @@
                     <td>${data.report_date}</td>
                     <td class="rsi">0</td>
                     <td>${parseFloat(data.iv_rank.toFixed(2))}</td>
+                    <td style="${data.beta && data.beta > 1.29 ? 'color:green;' : 'color:inherit;'}>${data.beta ? parseFloat(data.beta.toFixed(2)) : 0}</td>
                     <td>${s}</td>
                     <td>${p}</td>
                     <td style="${expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
@@ -1012,6 +1019,5 @@
 
   </script>
 </body>
-
 
 </html>
