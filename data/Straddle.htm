@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Straddle: ER Run Up</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>&nbspStraddle Pricing &nbsp<span style="color: #DE3163;">BD</span>, <span style="color: #FFAC1C;">BU</span>,
+      <span style="color: #6495ED;">TU</span>, <span style="color: #2AAA8A;">TD</span>
+    </h2>
+    <div style="display: flex; gap: 20px; margin-right: 60px;">
+      <button id="themeToggle" class="theme-toggle" style="display: none;">🌙&nbsp☀️</button>
+      <a href="ErMove.htm" target="_blank" style="text-decoration: none; color: #FFAC1C;">GT_100</a>
+      <a href="ErMove100.htm" target="_blank" style="text-decoration: none; color: #6495ED;">LT_100</a>
+    </div>
+  </div>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    :root {
+      --background-color: #ffffff;
+      --text-color: #333333;
+    }
+
+    [data-theme="dark"] {
+      --background-color: #333333;
+      --text-color: #ffffff;
+    }
+
+    .light-theme {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      margin-right: 8px;
+      padding: 8px 8px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    [data-theme="dark"] .theme-toggle span:first-child {
+      display: none;
+    }
+
+    [data-theme="light"] .theme-toggle span:last-child {
+      display: none;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #333;
+      color: white;
+    }
+
+    .light-theme th {
+      background-color: #eee;
+      color: black;
+    }
+
+    .toggle-btn {
+      padding: 10px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: #444;
+      color: white;
+    }
+
+    .light-theme .toggle-btn {
+      background-color: #ccc;
+      color: black;
+    }
+
+    /* Use GPU acceleration for animations */
+    .animated {
+      transform: translateZ(0);
+      will-change: transform;
+    }
+
+    /* Optimize table rendering */
+    #table-wrapper {
+      contain: content;
+      height: 90vh;
+      overflow-y: auto;
+    }
+
+    /* Prevent layout shifts */
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background-color: #333;
+      color: white;
+    }
+
+    .light-theme thead th {
+      background-color: #eee;
+      color: black;
+    }
+
+    #earningsTable {
+      max-height: 80vh;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    .highlight-green {
+      background-color: #d6fbb1 !important;
+    }
+
+    .highlight-orange {
+      background-color: #FFECB3 !important;
+    }
+
+    .highlight-red {
+      background-color: #FFEBEE !important;
+    }
+
+    .highlight-blue {
+      background-color: #cefcfd !important;
+    }
+
+    a,
+    a label,
+    a:link,
+    a:visited,
+    a:hover,
+    a:active {
+      cursor: pointer !important;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    a:hover {
+      text-decoration: underline !important;
+    }
+
+    td a,
+    td a:link,
+    td a:visited,
+    td a:hover,
+    td a:active {
+      cursor: pointer !important;
+    }
+
+    .spinner-wrapper {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .spinner {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .spinnerDone {
+      width: 30px;
+      height: 30px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #2AAA8A;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .row-selected {
+      outline: 2px solid #1976d2 !important;
+      background-color: #e3f2fd !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="spinner-wrapper" id="loadingSpinner">
+    <div class="spinner"></div>
+  </div>
+  <div class="spinner-wrapper" id="doneSpinner" style="display: none;">
+    <div class="spinnerDone"></div>
+  </div>
+  <div id="table-wrapper">
+    <table id="earningsTable">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">Ticker</th>
+          <th onclick="sortTable(1)">Rsi</th>
+          <th onclick="sortTable(2)">IvRank</th>
+          <th onclick="sortTable(3)">Beta</th>
+          <th onclick="sortTable(4)">ErDate(Nxt)</th>
+          <th onclick="sortTable(5)">PM/AH</th>
+          <th onclick="sortTable(6)">P</th>
+          <th onclick="sortTable(7)">Straddle%</th>
+          <th onclick="sortTable(8)">HistMove%</th>
+          <th onclick="sortTable(9)">ErMove%</th>
+          <th onclick="sortTable(10)">Change%</th>
+          <th onclick="sortTable(11)">5D%</th>
+          <th onclick="sortTable(12)">MA200%</th>
+          <th onclick="sortTable(13)">Price</th>
+          <th onclick="sortTable(14)">MA5</th>
+          <th onclick="sortTable(15)">MA13</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Data will be injected here -->
+      </tbody>
+    </table>
+  </div>
+  <script>
+    const tickers = [
+      'A', 'AA', 'AAL', 'AAMI', 'AAOI', 'AAON', 'AAP', 'AAPL', 'AAT', 'ABBV', 'ABCB', 'ABCL',
+      'ABCM', 'ABEO', 'ABG', 'ABM', 'ABNB', 'ABOS', 'ABR', 'ABSI', 'ABT', 'ABUS', 'ACA', 'ACAD',
+      'ACCO', 'ACDC', 'ACEL', 'ACGL', 'ACHC', 'ACHR', 'ACI', 'ACIC', 'ACIW', 'ACLS', 'ACLX', 'ACM',
+      'ACMR', 'ACN', 'ACNB', 'ACRE', 'ACT', 'ACTG', 'ACU', 'ACVA', 'ADAP', 'ADBE', 'ADC', 'ADCT',
+      'ADEA', 'ADI', 'ADM', 'ADMA', 'ADMP', 'ADN', 'ADNT', 'ADP', 'ADPT', 'ADRO', 'ADS', 'ADSK',
+      'ADT', 'ADTN', 'ADUS', 'ADV', 'ADVM', 'ADVWW', 'ADXN', 'ADY', 'AE', 'AEE', 'AEHR', 'AEIS',
+      'AEM', 'AEO', 'AEP', 'AES', 'AESI', 'AEVA', 'AEY', 'AFCG', 'AFG', 'AFL', 'AFRM', 'AFS',
+      'AFYA', 'AG', 'AGCO', 'AGEN', 'AGI', 'AGIO', 'AGL', 'AGLE', 'AGM', 'AGNC', 'AGO', 'AGR',
+      'AGRI', 'AGRO', 'AGS', 'AGTI', 'AGX', 'AGYS', 'AHCO', 'AHG', 'AHH', 'AHI', 'AI', 'AIG',
+      'AIHS', 'AIN', 'AINC', 'AIO', 'AIP', 'AIR', 'AIRE', 'AIRG', 'AIRI', 'AIRR', 'AIRT', 'AIT',
+      'AIV', 'AIZ', 'AJG', 'AKAM', 'AKBA', 'AKRO', 'AKTS', 'AL', 'ALAB', 'ALB', 'ALBO', 'ALC',
+      'ALCO', 'ALDX', 'ALE', 'ALEC', 'ALEX', 'ALG', 'ALGM', 'ALGN', 'ALGS', 'ALGT', 'ALHC', 'ALIT',
+      'ALK', 'ALKS', 'ALKT', 'ALL', 'ALLE', 'ALLO', 'ALLY', 'ALMS', 'ALNT', 'ALNY', 'ALPN', 'ALR',
+      'ALRM', 'ALRS', 'ALSN', 'ALTA', 'ALTG', 'ALTR', 'ALTU', 'ALV', 'ALVR', 'ALX', 'ALXO', 'ALXN',
+      'AM', 'AMAL', 'AMAT', 'AMBA', 'AMBC', 'AMBP', 'AMC', 'AMCR', 'AMCX', 'AMD', 'AME', 'AMED',
+      'AMG', 'AMGN', 'AMH', 'AMK', 'AMKR', 'AML', 'AMLP', 'AMN', 'AMP', 'AMPH', 'AMPL', 'AMPS',
+      'AMR', 'AMRC', 'AMRK', 'AMRX', 'AMS', 'AMSC', 'AMSF', 'AMT', 'AMTB', 'AMTM', 'AMWD', 'AMX',
+      'AMZN', 'AN', 'ANAB', 'ANAT', 'ANDE', 'ANDV', 'ANET', 'ANF', 'ANGI', 'ANGO', 'ANIK', 'ANIP',
+      'ANN', 'ANNX', 'ANSS', 'ANTM', 'AON', 'AORT', 'AOS', 'AOSL', 'APA', 'APAM', 'APD', 'APG',
+      'APGE', 'APH', 'APLD', 'APLE', 'APLS', 'APLT', 'APO', 'APOG', 'APP', 'APPF', 'APPH', 'APPN',
+      'APPS', 'APTV', 'AQST', 'AR', 'ARAY', 'ARCC', 'ARCB', 'ARCT', 'ARCO', 'ARDT', 'ARDX', 'ARE',
+      'ARES', 'ARGD', 'ARGX', 'ARI', 'ARIS', 'ARKO', 'ARLO', 'ARLP', 'ARM', 'ARMK', 'ARNC', 'AROC',
+      'AROW', 'ARQT', 'ARR', 'ARRY', 'ARVN', 'ARW', 'ARWR', 'AS', 'ASAI', 'ASAN', 'ASB', 'ASC',
+      'ASGN', 'ASH', 'ASIX', 'ASLE', 'ASMB', 'ASML', 'ASO', 'ASPN', 'ASPS', 'ASR', 'ASTC', 'ASTH',
+      'ASTL', 'ASTS', 'ASUR', 'ATAT', 'ATEC', 'ATEN', 'ATEX', 'ATGE', 'ATI', 'ATKR', 'ATLC', 'ATMU',
+      'ATNI', 'ATO', 'ATR', 'ATRA', 'ATRC', 'ATRO', 'ATSG', 'ATUS', 'ATXS', 'ATYR', 'AU', 'AUB',
+      'AUPH', 'AUR', 'AURA', 'AVA', 'AVAV', 'AVB', 'AVBP', 'AVD', 'AVDL', 'AVDX', 'AVGO', 'AVIR',
+      'AVNS', 'AVNT', 'AVNW', 'AVO', 'AVPT', 'AVT', 'AVTR', 'AVXL', 'AVY', 'AWF', 'AWK', 'AWI',
+      'AWR', 'AX', 'AXGN', 'AXL', 'AXON', 'AXP', 'AXS', 'AXSM', 'AXTA', 'AY', 'AYI', 'AZO',
+      'AZTA', 'AZZ', 'B', 'BA', 'BABA', 'BAC', 'BAH', 'BALL', 'BAM', 'BANC', 'BAND', 'BANF',
+      'BANR', 'BASE', 'BATRA', 'BATRK', 'BAX', 'BBAI', 'BBIO', 'BBSI', 'BBW', 'BBWI', 'BBY', 'BC',
+      'BCAX', 'BCBP', 'BCC', 'BCML', 'BCO', 'BCPC', 'BCRX', 'BDC', 'BDN', 'BDX', 'BE', 'BEAM',
+      'BEKE', 'BELFB', 'BEN', 'BEPC', 'BFAM', 'BFH', 'BFS', 'BFST', 'BG', 'BGC',
+      'BGS', 'BHB', 'BHE', 'BHF', 'BHR', 'BHVN', 'BIGC', 'BIIB', 'BILI', 'BILL', 'BIO', 'BIPC',
+      'BIRK', 'BJ', 'BJRI', 'BK', 'BKD', 'BKE', 'BKH', 'BKNG', 'BKR', 'BKU', 'BL', 'BLBD',
+      'BLD', 'BLDE', 'BLDR', 'BLFS', 'BLFY', 'BLK', 'BLKB', 'BLMN', 'BLND', 'BLNK', 'BLPH', 'BLRX',
+      'BLU', 'BLYB', 'BMBL', 'BMEA', 'BMI', 'BMRC', 'BMRN', 'BMY', 'BNL', 'BNS', 'BOC', 'BOH',
+      'BOKF', 'BOOM', 'BOOT', 'BORR', 'BOX', 'BPMC', 'BPOP', 'BR', 'BRBR', 'BRCC', 'BRC', 'BRCD',
+      'BRFS', 'BRKL', 'BRKR', 'BRO', 'BROS', 'BRSP', 'BRX', 'BRY', 'BRZE', 'BSRR', 'BSX',
+      'BSY', 'BTBT', 'BTDR', 'BTSG', 'BTU', 'BUR', 'BURL', 'BUSE', 'BV', 'BVS', 'BWA', 'BWB',
+      'BWIN', 'BWMN', 'BWXT', 'BX', 'BXC', 'BXMT', 'BXP', 'BY', 'BYD', 'BYND', 'BYON', 'BYRN',
+      'BZH', 'C', 'CABA', 'CAC', 'CACC', 'CACI', 'CADE', 'CAG', 'CAH', 'CAKE', 'CAL', 'CALM',
+      'CALX', 'CAMT', 'CAPR', 'CAR', 'CARE', 'CARG', 'CARR', 'CARS', 'CART', 'CASH', 'CASS', 'CASY',
+      'CAT', 'CATX', 'CATY', 'CAVA', 'CB', 'CBA', 'CBAN', 'CBL', 'CBLL', 'CBAY', 'CBOE', 'CBRE',
+      'CBRL', 'CBSH', 'CBT', 'CBU', 'CBZ', 'CC', 'CCB', 'CCBG', 'CCCC', 'CCCS', 'CCI', 'CCJ',
+      'CCK', 'CCL', 'CCNE', 'CCO', 'CCOI', 'CCP', 'CCR', 'CCRN', 'CDAY', 'CDE', 'CDLX', 'CDNA',
+      'CDNS', 'CDP', 'CDRE', 'CDTX', 'CDW', 'CDXS', 'CE', 'CECO', 'CEG', 'CELC', 'CELH', 'CENT',
+      'CENTA', 'CENX', 'CERS', 'CERT', 'CEVA', 'CF', 'CFFN', 'CFG', 'CFLT', 'CFR', 'CG', 'CGEM',
+      'CGNX', 'CGON', 'CHCI', 'CHCO', 'CHCT', 'CHD', 'CHDN', 'CHEF', 'CHE', 'CHGG', 'CHH', 'CHKP',
+      'CHRD', 'CHRS', 'CHRW', 'CHS', 'CHTR', 'CHWY', 'CHX', 'CI', 'CIEN', 'CIFR', 'CIM', 'CINF',
+      'CIO', 'CIVB', 'CIVI', 'CIX', 'CJT', 'CL', 'CLAR', 'CLBT', 'CLDT', 'CLDX', 'CLEU', 'CLF',
+      'CLFD', 'CLH', 'CLMT', 'CLNE', 'CLOV', 'CLPR', 'CLS', 'CLSK', 'CLVT', 'CLW', 'CLX', 'CM',
+      'CMA', 'CMBM', 'CMCL', 'CMCO', 'CMCSA', 'CME', 'CMI', 'CMG', 'CMPO', 'CMPR', 'CMPX', 'CMRE',
+      'CMS', 'CMTG', 'CNA', 'CNC', 'CNCP', 'CNDT', 'CNF', 'CNH', 'CNI', 'CNK', 'CNM', 'CNMD',
+      'CNNE', 'CNO', 'CNOB', 'CNP', 'CNQ', 'CNR', 'CNS', 'CNTA', 'CNX', 'CNXC', 'CNXN', 'COCO',
+      'COF', 'COGT', 'COHR', 'COHU', 'COIN', 'COKE', 'COLB', 'COLD', 'COLL', 'COLM', 'COMM', 'COMP',
+      'CON', 'COO', 'COOP', 'COP', 'COR', 'CORT', 'CORZ', 'COST', 'COTY', 'COUR', 'CPAY', 'CPB',
+      'CPF', 'CPK', 'CPNG', 'CPRI', 'CPRT', 'CPRX', 'CPS', 'CPT', 'CR', 'CRBP', 'CRBU', 'CRC',
+      'CRCT', 'CRDO', 'CRGX', 'CRGY', 'CRH', 'CRI', 'CRK', 'CRM', 'CRMD', 'CRNC', 'CRNX', 'CROX',
+      'CRS', 'CRSP', 'CRSR', 'CRUS', 'CRVL', 'CRWD', 'CRWV', 'CSCO', 'CSGP', 'CSGS', 'CSL', 'CSLT',
+      'CSOD', 'CSPR', 'CSQ', 'CSS', 'CSTE', 'CSU', 'CSV', 'CSW', 'CSWI', 'CSX', 'CTAS', 'CTBI',
+      'CTKB', 'CTLP', 'CTO', 'CTOS', 'CTRA', 'CTRE', 'CTRI', 'CTS', 'CTSH', 'CTVA', 'CTXR', 'CUBE',
+      'CUBI', 'CUK', 'CUZ', 'CVAC', 'CVBF', 'CVCO', 'CVGW', 'CVI', 'CVLG', 'CVLT', 'CVNA', 'CVRX',
+      'CVS', 'CVX', 'CW', 'CWAN', 'CWBC', 'CWCO', 'CWE.A', 'CWEN', 'CWH', 'CWK', 'CWST', 'CWT',
+      'CXM', 'CXT', 'CXW', 'CYBR', 'CYH', 'CYRX', 'CYTK', 'CZT', 'CZNC', 'CZR', 'D', 'DAKT',
+      'DAL', 'DAN', 'DAR', 'DASH', 'DAVE', 'DAWN', 'DAY', 'DBD', 'DBI', 'DBRG', 'DBX', 'DCGO',
+      'DCI', 'DCO', 'DCOM', 'DD', 'DDD', 'DDOG', 'DE', 'DEA', 'DECK', 'DEI', 'DELL', 'DEMZ',
+      'DENN', 'DFH', 'DFIN', 'DG', 'DGICA', 'DGII', 'DGX', 'DH', 'DHC', 'DHI', 'DHR', 'DHT',
+      'DIA', 'DIN', 'DINO', 'DIOD', 'DIS', 'DISCK', 'DJT', 'DK', 'DKL', 'DKNG', 'DKS', 'DLA',
+      'DLB', 'DLPH', 'DLR', 'DLTR', 'DLX', 'DM', 'DMRC', 'DMLP', 'DNB', 'DNLI', 'DNOW', 'DNN',
+      'DNUT', 'DO', 'DOC', 'DOCN', 'DOCS', 'DOCU', 'DOLE', 'DOMA', 'DOMO', 'DOOR', 'DORM', 'DOV',
+      'DOW', 'DOX', 'DPZ', 'DRD', 'DRH', 'DRI', 'DRS', 'DRVN', 'DSGN', 'DSGR', 'DSGX', 'DSP',
+      'DT', 'DTE', 'DTM', 'DTRE', 'DUK', 'DUOL', 'DV', 'DVA', 'DVAX', 'DVN', 'DX', 'DXC',
+      'DXCM', 'DXPE', 'DY', 'DYN', 'EA', 'EAF', 'EAT', 'EB', 'EBAY', 'EBC', 'ECL', 'ECOM',
+      'ECPG', 'ECVT', 'ED', 'EDIT', 'EDU', 'EE', 'EEFT', 'EFC', 'EFSC', 'EFX', 'EG', 'EGBN',
+      'EGHT', 'EGP', 'EGY', 'EH', 'EHAB', 'EHC', 'EHTH', 'EIG', 'EIX', 'EL', 'ELAN', 'ELF',
+      'ELME', 'ELS', 'ELV', 'ELVN', 'EMBC', 'EME', 'EMN', 'EMR', 'ENB', 'ENFN', 'ENPH', 'ENR',
+      'ENS', 'ENSG', 'ENTA', 'ENTG', 'ENVA', 'ENVX', 'EOG', 'EOLS', 'EOSE', 'EPAC', 'EPAM', 'EPC',
+      'EPM', 'EPR', 'EPRT', 'EQBK', 'EQH', 'EQIX', 'EQNR', 'EQR', 'EQT', 'ERAS', 'ERIC', 'ERIE',
+      'ERJ', 'ES', 'ESAB', 'ESE', 'ESGR', 'ESI', 'ESNT', 'ESPR', 'ESRT', 'ESS', 'ESTC', 'ET',
+      'ETH', 'ETHA', 'ETHE', 'ETN', 'ETNB', 'ETOR', 'ETR', 'ETSY', 'ETWO', 'EU', 'EUFN', 'EVBG',
+      'EVC', 'EVCM', 'EVER', 'EVGO', 'EVH', 'EVLV', 'EVR', 'EVRG', 'EVTC', 'EW', 'EWBC', 'EWC',
+      'EWCZ', 'EWG', 'EWJ', 'EWU', 'EWW', 'EWY', 'EWZ', 'EXAS', 'EXC', 'EXE', 'EXEL', 'EXLS',
+      'EXP', 'EXPD', 'EXPE', 'EXPI', 'EXPO', 'EXR', 'EXTR', 'EYE', 'EYPT', 'EZU', 'F', 'FA',
+      'FAF', 'FAMI', 'FANG', 'FARO', 'FAST', 'FATE', 'FBIN', 'FBK', 'FBNC', 'FBP', 'FBRT', 'FC',
+      'FCBC', 'FCF', 'FCFS', 'FCN', 'FCNCA', 'FCPT', 'FCX', 'FDMT', 'FDP', 'FDS', 'FDX', 'FE',
+      'FELE', 'FELP', 'FERG', 'FET', 'FEZ', 'FFBC', 'FFIC', 'FFIN', 'FFIV', 'FFWM', 'FG', 'FHB',
+      'FHN', 'FI', 'FIBK', 'FICO', 'FIGS', 'FINV', 'FIP', 'FIS', 'FISI', 'FITB', 'FIVE', 'FIVN',
+      'FIX', 'FIZZ', 'FL', 'FLG', 'FLGT', 'FLNC', 'FLNG', 'FLO', 'FLR', 'FLS', 'FLUT', 'FLWS',
+      'FLYW', 'FMAO', 'FMBH', 'FMC', 'FMNB', 'FN', 'FNB', 'FND', 'FNF', 'FNGR', 'FNHC', 'FNKO',
+      'FNLC', 'FOCS', 'FOLD', 'FOR', 'FORM', 'FORR', 'FOUR', 'FOX', 'FOXA', 'FOXF', 'FPI', 'FR',
+      'FRBA', 'FRGE', 'FRHC', 'FRPT', 'FRSH', 'FRST', 'FRT', 'FSBC', 'FSLR', 'FSLY', 'FSS', 'FTAI',
+      'FTDR', 'FTI', 'FTNT', 'FTRE', 'FTV', 'FUBO', 'FUL', 'FULC', 'FULT', 'FUN', 'FUTU', 'FVRR',
+      'FWONA', 'FWONK', 'FWRD', 'FWRG', 'FXI', 'FYBR', 'G', 'GAB', 'GABC', 'GAIA', 'GAL', 'GALT',
+      'GAN', 'GAPA', 'GAP', 'GASXF', 'GATX', 'GBCI', 'GBDC', 'GBIO', 'GBNY', 'GBTG', 'GBTC', 'GBX',
+      'GCBC', 'GCI', 'GCMG', 'GCO', 'GCT', 'GD', 'GDDY', 'GDEN', 'GDOT', 'GDYN', 'GE', 'GEF',
+      'GEHC', 'GEL', 'GEN', 'GENI', 'GEO', 'GERN', 'GETY', 'GEV', 'GFF', 'GFS', 'GGG', 'GH',
+      'GHM', 'GIC', 'GIII', 'GILD', 'GIS', 'GKOS', 'GL', 'GLBE', 'GLDD', 'GLNG', 'GLOB', 'GLPI',
+      'GLRE', 'GLUE', 'GLW', 'GM', 'GMAB', 'GME', 'GMED', 'GMRE', 'GMS', 'GNE', 'GNK', 'GNL',
+      'GNRC', 'GNTX', 'GNTY', 'GNW', 'GO', 'GOGL', 'GOGO', 'GOLF', 'GOOD', 'GOOG', 'GOOGL', 'GOOS',
+      'GPK', 'GPN', 'GPOR', 'GPRE', 'GPRO', 'GRAB', 'GRAL', 'GRBK', 'GRC', 'GRFS', 'GRMN', 'GRND',
+      'GRNT', 'GRPN', 'GRWG', 'GS', 'GSAT', 'GSBC', 'GSHD', 'GT', 'GTES', 'GTLB', 'GTLS', 'GTM',
+      'GTN', 'GTX', 'GTY', 'GVA', 'GWRE', 'GWW', 'GXO', 'H', 'HAE', 'HAFC', 'HAIN', 'HAL',
+      'HALO', 'HAS', 'HASI', 'HAYW', 'HBAN', 'HBCP', 'HBI', 'HBNC', 'HBT', 'HCA', 'HCAT', 'HCC',
+      'HCI', 'HCKT', 'HCSG', 'HD', 'HDB', 'HDSN', 'HE', 'HEI', 'HELE', 'HES', 'HESM', 'HEXO',
+      'HFWA', 'HG', 'HGV', 'HHH', 'HI', 'HIG', 'HII', 'HIMS', 'HIPO', 'HIW', 'HL', 'HLF',
+      'HLI', 'HLIO', 'HLIT', 'HLMN', 'HLNE', 'HLT', 'HLX', 'HMN', 'HMST', 'HNI', 'HNRG', 'HNST',
+      'HOFT', 'HOG', 'HOLX', 'HOMB', 'HON', 'HONE', 'HOOD', 'HOPE', 'HOUS', 'HP', 'HPE', 'HPQ',
+      'HPP', 'HQY', 'HR', 'HRB', 'HRI', 'HRL', 'HRMY', 'HRS', 'HSBC', 'HSC', 'HSIC', 'HSII',
+      'HST', 'HSTM', 'HSY', 'HTA', 'HTBK', 'HTH', 'HTLD', 'HTO', 'HTZ', 'HUBB', 'HUBG', 'HUBS',
+      'HUM', 'HUMA', 'HUN', 'HURN', 'HUT', 'HVT', 'HWM', 'HXL', 'HY', 'HYLN', 'HZO', 'IAC',
+      'IART', 'IAS', 'IBBP', 'IBCP', 'IBKR', 'IBM', 'IBN', 'IBOC', 'IBN', 'IBP', 'IBRX', 'IBTA', 'ICE',
+      'ICFI', 'ICHR', 'ICL', 'ICLN', 'ICLR', 'ICUI', 'IDA', 'IDCC', 'IDT', 'IDYA', 'IDXX', 'IE',
+      'IESC', 'IEX', 'IFF', 'IGMS', 'IGT', 'IGV', 'IHI', 'IHS', 'IIIN', 'IIIV', 'IIPR', 'ILMN',
+      'ILPT', 'IMAX', 'IMCR', 'IMGN', 'IMKTA', 'IMNM', 'IMO', 'IMVT', 'IMXI', 'INBK', 'INBX', 'INCY',
+      'INDA', 'INDI', 'INDV', 'INFA', 'INFY', 'INGM', 'INGN', 'INGR', 'INMD', 'INN', 'INO', 'INOD', 'INSE',
+      'INSM', 'INSP', 'INSW', 'INTA', 'INTC', 'INTU', 'INVA', 'INVH', 'INVX', 'IONQ', 'IONS', 'IOSP',
+      'IOT', 'IOVA', 'IP', 'IPAR', 'IPG', 'IPGP', 'IPI', 'IPSC', 'IQ', 'IQV', 'IR', 'IRDM',
+      'IREN', 'IRM', 'IRMD', 'IRON', 'IRT', 'IRTC', 'IRWD', 'ISG', 'ISPC', 'ISRG', 'IT', 'ITA',
+      'ITB', 'ITCI', 'ITGR', 'ITOS', 'ITRI', 'ITT', 'ITW', 'IVT', 'IVV', 'IVZ', 'IWM', 'IWO',
+      'IXUS', 'IYR', 'IYT', 'IYW', 'J', 'JACK', 'JAKK', 'JAMF', 'JANX', 'JAZZ', 'JBL', 'JBLU',
+      'JBGS', 'JBHT', 'JBI', 'JBIO', 'JBSS', 'JBTM', 'JCI', 'JD', 'JEF', 'JELD', 'JHG', 'JJSF',
+      'JKHY', 'JLL', 'JMSB', 'JNJ', 'JNK', 'JNPR', 'JOBY', 'JOE', 'JPM', 'JRVR', 'JXN', 'K',
+      'KAI', 'KALU', 'KALV', 'KAR', 'KBH', 'KBR', 'KC', 'KD', 'KDP', 'KE', 'KELYA', 'KEX',
+      'KEY', 'KEYS', 'KFG', 'KFRC', 'KFY', 'KGC', 'KHC', 'KIDS', 'KIM', 'KIND', 'KKR', 'KLAC',
+      'KLC', 'KLG', 'KLIC', 'KMB', 'KMI', 'KMPR', 'KMT', 'KMX', 'KN', 'KNF', 'KNSA', 'KNSL',
+      'KNTK', 'KNX', 'KO', 'KOD', 'KODK', 'KOP', 'KOS', 'KR', 'KRC', 'KREF', 'KRG', 'KROS',
+      'KRYS', 'KSS', 'KTB', 'KTOS', 'KURA', 'KVUE', 'KVYO', 'KW', 'KWR', 'KYMR', 'L', 'LAB',
+      'LAD', 'LADR', 'LAMR', 'LAND', 'LASR', 'LAUR', 'LAW', 'LAZ', 'LAZR', 'LBRDA', 'LBRDK', 'LBRT',
+      'LBTYA', 'LBTYK', 'LC', 'LCAP', 'LCII', 'LCID', 'LCNB', 'LDOS', 'LEA', 'LECO', 'LEG', 'LEGN',
+      'LEN', 'LENZ', 'LESL', 'LEU', 'LFST', 'LFUS', 'LGIH', 'LGND', 'LH', 'LHX', 'LI', 'LII',
+      'LILA', 'LILAK', 'LIN', 'LINC', 'LIND', 'LINE', 'LION', 'LITE', 'LIVN', 'LKFN', 'LKQ', 'LLY',
+      'LLYVA', 'LLYVK', 'LMAT', 'LMB', 'LMND', 'LMNR', 'LMT', 'LNC', 'LNG', 'LNN', 'LNT', 'LNTH',
+      'LNW', 'LOB', 'LOCO', 'LOGI', 'LOAR', 'LOPE', 'LOVE', 'LOW', 'LPL', 'LPLA', 'LPG', 'LPRO',
+      'LPX', 'LQDA', 'LQDT', 'LRCX', 'LRMR', 'LRN', 'LSCC', 'LSPD', 'LSTR', 'LTC', 'LTH', 'LU',
+      'LULU', 'LUMN', 'LUNG', 'LUNR', 'LUV', 'LVS', 'LVWR', 'LW', 'LWLG', 'LX', 'LXFR', 'LXP',
+      'LXU', 'LYB', 'LYFT', 'LYG', 'LYTS', 'LYV', 'LZ', 'LZB', 'M', 'MA', 'MAA', 'MAC',
+      'MAG', 'MAN', 'MANH', 'MANU', 'MAR', 'MARA', 'MAS', 'MASI', 'MASS', 'MAT', 'MATV', 'MATW',
+      'MATX', 'MAX', 'MAXN', 'MBB', 'MBIN', 'MBLY', 'MC', 'MCB', 'MCBS', 'MCD', 'MCFT', 'MCHP',
+      'MCK', 'MCO', 'MCRI', 'MCS', 'MCW', 'MCY', 'MD', 'MDB', 'MDGL', 'MDLZ', 'MDT', 'MDU',
+      'MDXG', 'MDY', 'MED', 'MEDP', 'MEG', 'MEI', 'MELI', 'MEOH', 'MESO', 'MET', 'META', 'MFG',
+      'MGA', 'MGEE', 'MGM', 'MGNI', 'MGNX', 'MGPI', 'MGTX', 'MGY', 'MHO', 'MHK', 'MHP', 'MIDD',
+      'MIR', 'MIRM', 'MITK', 'MKC', 'MKL', 'MKSI', 'MKTX', 'MLI', 'MLKN', 'MLM', 'MLNK', 'MLR',
+      'MLYS', 'MMC', 'MMM', 'MMS', 'MMSI', 'MNKD', 'MNMD', 'MNRO', 'MNST', 'MNTK', 'MO', 'MOD',
+      'MODG', 'MODV', 'MOFG', 'MOH', 'MOMO', 'MORN', 'MOS', 'MOV', 'MP', 'MPB', 'MPC',
+      'MPLX', 'MPW', 'MPWR', 'MQ', 'MRC', 'MRCY', 'MRK', 'MRNA', 'MRSN', 'MRTN', 'MRVI', 'MRVL',
+      'MRX', 'MS', 'MSA', 'MSBI', 'MSCI', 'MSEX', 'MSFT', 'MSGE', 'MSGS', 'MSI', 'MSM', 'MSTR',
+      'MT', 'MTB', 'MTCH', 'MTD', 'MTDR', 'MTG', 'MTH', 'MTN', 'MTRN', 'MTSI', 'MTSR', 'MTUM',
+      'MTW', 'MTX', 'MTZ', 'MU', 'MUB', 'MUR', 'MUSA', 'MVBF', 'MVIS', 'MVST', 'MWA', 'MXCT',
+      'MXL', 'MYE', 'MYGN', 'MYPS', 'MYRG', 'NABL', 'NAAS', 'NAT', 'NATL', 'NAVI', 'NBBK', 'NBHC',
+      'NBIX', 'NBR', 'NBTB', 'NCLH', 'NCMI', 'NCNO', 'NDAQ', 'NDSN', 'NE', 'NECB', 'NEE', 'NEM',
+      'NEO', 'NEOG', 'NET', 'NEU', 'NEWT', 'NEXT', 'NFBK', 'NFE', 'NFG', 'NFLX', 'NG', 'NGNE',
+      'NGVC', 'NGVT', 'NHC', 'NHI', 'NI', 'NIC', 'NJR', 'NKE', 'NKTX', 'NLOP', 'NLY', 'NMIH',
+      'NMRA', 'NMRK', 'NN', 'NNE', 'NNI', 'NNN', 'NNOX', 'NOC', 'NOG', 'NOK', 'NOV', 'NOVT',
+      'NOW', 'NPKI', 'NPO', 'NRC', 'NRDS', 'NRG', 'NRGV', 'NRIX', 'NSA', 'NSC', 'NSIT', 'NSP',
+      'NSSC', 'NTAP', 'NTB', 'NTCT', 'NTGR', 'NTLA', 'NTNX', 'NTR', 'NTRA', 'NTRS', 'NTST', 'NU',
+      'NUE', 'NUS', 'NUVB', 'NUVL', 'NVAX', 'NVCR', 'NVDA', 'NVEE', 'NVGS', 'NVMI', 'NVO', 'NVS',
+      'NVST', 'NVT', 'NVTS', 'NWBI', 'NWE', 'NWL', 'NWN', 'NWPX', 'NWS', 'NWSA', 'NX', 'NXE',
+      'NXPI', 'NXRT', 'NXST', 'NXT', 'NYMT', 'NYT', 'O', 'OABI', 'OBDC', 'OBK', 'OC', 'OCFC',
+      'OCGN', 'OCUL', 'ODD', 'ODFL', 'ODP', 'OEC', 'OFG', 'OFIX', 'OGE', 'OGN', 'OGS', 'OHI',
+      'OIH', 'OI', 'OII', 'OIS', 'OKE', 'OKLO', 'OKTA', 'OLED', 'OLLI', 'OLO', 'OLMA', 'OLN',
+      'OLP', 'OLPX', 'OMC', 'OMCL', 'OMER', 'OMF', 'OMI', 'ON', 'ONB', 'ONEW', 'ONIT', 'ONON',
+      'ONTF', 'ONTO', 'OOMA', 'OPCH', 'OPK', 'OPRA', 'OPRX', 'ORA', 'ORC', 'ORCL', 'ORGO', 'ORI',
+      'ORIC', 'ORLY', 'OSBC', 'OSCR', 'OSI', 'OSIS', 'OSK', 'OSPN', 'OSUR', 'OSW', 'OTIS', 'OTTR',
+      'OUST', 'OUT', 'OVV', 'OWL', 'OXM', 'OXY', 'OZK', 'P', 'PAA', 'PAAS', 'PAC', 'PACB',
+      'PACK', 'PACS', 'PAG', 'PAGP', 'PAGS', 'PAHC', 'PANL', 'PANW', 'PAR', 'PARA', 'PARAA', 'PARR',
+      'PATH', 'PATK', 'PAX', 'PAYC', 'PAYO', 'PAYS', 'PAYX', 'PB', 'PBA', 'PBF', 'PBI', 'PBPB',
+      'PBR', 'PCAR', 'PCG', 'PCH', 'PCOR', 'PCRX', 'PCT', 'PCTY', 'PCVX', 'PD', 'PDD', 'PDFS',
+      'PDM', 'PEB', 'PEBO', 'PECO', 'PEG', 'PEGA', 'PENG', 'PEN', 'PENN', 'PEP', 'PEPG', 'PFE',
+      'PFG', 'PFGC', 'PFS', 'PFSI', 'PG', 'PGC', 'PGEN', 'PGNY', 'PGR', 'PGRE', 'PGY', 'PH',
+      'PHAT', 'PHIN', 'PHLT', 'PHM', 'PHR', 'PI', 'PII', 'PINC', 'PINS', 'PIPR', 'PJT', 'PK',
+      'PKE', 'PKG', 'PKST', 'PL', 'PLAB', 'PLAY', 'PLD', 'PLL', 'PLMR', 'PLNT', 'PLRX', 'PLSE',
+      'PLTK', 'PLTR', 'PLUG', 'PLUS', 'PLXS', 'PLYM', 'PM', 'PMT', 'PNC', 'PNFP', 'PNR', 'PNTG',
+      'PNW', 'PODD', 'POOL', 'POR', 'POST', 'POWI', 'POWL', 'POWW', 'PPC', 'PPG', 'PPL', 'PPTA',
+      'PR', 'PRA', 'PRAA', 'PRAX', 'PRCH', 'PRCT', 'PRDO', 'PRG', 'PRGO', 'PRGS', 'PRI', 'PRIM',
+      'PRK', 'PRKS', 'PRLB', 'PRM', 'PRMB', 'PRME', 'PRO', 'PROK', 'PRSU', 'PRTA', 'PRTH', 'PRU',
+      'PRVA', 'PSA', 'PSEC', 'PSFE', 'PSMT', 'PSN', 'PSNY', 'PSTG', 'PSTL', 'PSX', 'PTC', 'PTCT',
+      'PTEN', 'PTGX', 'PTLO', 'PTON', 'PUBM', 'PUMP', 'PVH', 'PWP', 'PWR', 'PX', 'PYPL', 'PZZA',
+      'QBTS', 'QCOM', 'QDEL', 'QFIN', 'QGEN', 'QLYS', 'QNST', 'QQQ', 'QRVO', 'QS', 'QSI', 'QSR',
+      'QTRX', 'QTTB', 'QTWO', 'QUBT', 'QXO', 'QYLD', 'R', 'RACE', 'RAMP', 'RARE', 'RBA', 'RBBN',
+      'RBC', 'RBLX', 'RBRK', 'RC', 'RCAT', 'RCEL', 'RCL', 'RCKT', 'RCUS', 'RDDT', 'RDN', 'RDNT',
+      'RDUS', 'RDVT', 'RDW', 'RDWR', 'REAL', 'REAX', 'REFI', 'REG', 'REGN', 'RELY', 'REPL', 'REPX',
+      'RES', 'REVG', 'REX', 'REXR', 'REYN', 'REZI', 'RF', 'RGA', 'RGEN', 'RGLD', 'RGNX', 'RGP',
+      'RGR', 'RGTI', 'RH', 'RHI', 'RHP', 'RICK', 'RIG', 'RIGL', 'RIO', 'RIOT', 'RITM', 'RIVN',
+      'RJF', 'RKLB', 'RKT', 'RL', 'RLAY', 'RLI', 'RLJ', 'RLX', 'RM', 'RMAX', 'RMBS', 'RMD',
+      'RMNI', 'RMR', 'RNA', 'RNG', 'RNR', 'RNST', 'RNW', 'ROAD', 'ROCK', 'ROG', 'ROIV', 'ROK',
+      'ROL', 'ROOT', 'ROP', 'ROST', 'ROKU', 'RPM', 'RPRX', 'RRC', 'RRR', 'RRX', 'RS', 'RSG',
+      'RSI', 'RSP', 'RTX', 'RUM', 'RUN', 'RUSHA', 'RVLV', 'RVMD', 'RVTY', 'RWT', 'RXO', 'RXRX',
+      'RXST', 'RY', 'RYAM', 'RYAN', 'RYI', 'RYN', 'RYTM', 'S', 'SA', 'SABR', 'SAFE', 'SAFT', 'SAGE',
+      'SAH', 'SAIA', 'SAIC', 'SAIL', 'SAM', 'SANA', 'SAN', 'SAND', 'SANM', 'SAP', 'SARO', 'SATS',
+      'SAVA', 'SB', 'SBAC', 'SBCF', 'SBGI', 'SBH', 'SBRA', 'SBSI', 'SBUX', 'SCCO', 'SCHD', 'SCHG',
+      'SCHK', 'SCHL', 'SCHW', 'SCI', 'SCL', 'SCPH', 'SCS', 'SCSC', 'SCVL', 'SD', 'SDGR', 'SDRL',
+      'SE', 'SEAT', 'SEE', 'SEG', 'SEI', 'SEIC', 'SEM', 'SEMR', 'SEPN', 'SERV', 'SEZL', 'SF',
+      'SFBS', 'SFD', 'SFIX', 'SFL', 'SFM', 'SFNC', 'SFST', 'SG', 'SGHC', 'SGI', 'SGML', 'SGOL',
+      'SH', 'SHAK', 'SHBI', 'SHC', 'SHCO', 'SHEL', 'SHEN', 'SHLS', 'SHO', 'SHOO', 'SHOP', 'SHW',
+      'SIBN', 'SIG', 'SIGA', 'SIGI', 'SILA', 'SIL', 'SIRI', 'SITC', 'SITE', 'SITM', 'SJM', 'SKIN',
+      'SKT', 'SKWD', 'SKX', 'SKY', 'SKYT', 'SKYW', 'SLAB', 'SLB', 'SLDP', 'SLG', 'SLGN', 'SLM',
+      'SLNO', 'SLP', 'SLQT', 'SLVM', 'SM', 'SMBC', 'SMBK', 'SMCI', 'SMG', 'SMMT', 'SMP', 'SMPL',
+      'SMR', 'SMRT', 'SMTC', 'SN', 'SNA', 'SNBR', 'SNCY', 'SNDK', 'SNDR', 'SNDX', 'SNEX', 'SNOW',
+      'SNPS', 'SNV', 'SNX', 'SO', 'SOC', 'SOFI', 'SOLV', 'SON', 'SONO', 'SONY', 'SOUN', 'SOXL',
+      'SOXX', 'SPB', 'SPFI', 'SPG', 'SPGI', 'SPHR', 'SPNS', 'SPNT', 'SPOK', 'SPOT', 'SPR', 'SPRY',
+      'SPSC', 'SPT', 'SPTN', 'SPXC', 'SPXL', 'SPY', 'SR', 'SRAD', 'SRCE', 'SRDX', 'SRE', 'SRI',
+      'SRPT', 'SRRK', 'SSB', 'SSD', 'SSNC', 'SSP', 'SSRM', 'SSTI', 'SSTK', 'ST', 'STAA', 'STAG',
+      'STC', 'STE', 'STEM', 'STEP', 'STGW', 'STHO', 'STKL', 'STLD', 'STNE', 'STNG', 'STOK', 'STR',
+      'STRA', 'STRL', 'STRO', 'STT', 'STWD', 'STX', 'STZ', 'SU', 'SUI', 'SUN', 'SUNS', 'SUPN',
+      'SUZ', 'SVC', 'SVRA', 'SVV', 'SW', 'SWBI', 'SWK', 'SWKS', 'SWX', 'SWTX', 'SXC', 'SXI',
+      'SXT', 'SYBT', 'SYF', 'SYK', 'SYM', 'SYNA', 'SYRE', 'SYY', 'T', 'TAC', 'TAL', 'TALK',
+      'TALO', 'TAP', 'TARS', 'TBBK', 'TBCH', 'TBI', 'TBPH', 'TCBI', 'TCBK', 'TCMD', 'TCX', 'TDC',
+      'TDG', 'TDOC', 'TDS', 'TDUP', 'TDW', 'TDY', 'TEAD', 'TEAM', 'TECH', 'TECK', 'TEL', 'TEM',
+      'TENB', 'TER', 'TERN', 'TEX', 'TFC', 'TFI', 'TG', 'TGI', 'TGLS', 'TGNA', 'TGT', 'TGTX',
+      'TH', 'THC', 'THFF', 'THG', 'THO', 'THR', 'THRD', 'THRM', 'THRY', 'THS', 'TIGO', 'TIGR',
+      'TILE', 'TIPT', 'TITN', 'TJX', 'TK', 'TKO', 'TKR', 'TLN', 'TLRY', 'TLT', 'TM', 'TMC',
+      'TMCI', 'TMDX', 'TME', 'TMHC', 'TMO', 'TMP', 'TMUS', 'TNC', 'TNDM', 'TNET', 'TNGX', 'TNK',
+      'TNL', 'TNYA', 'TOL', 'TOST', 'TOWN', 'TPB', 'TPC', 'TPG', 'TPH', 'TPIC', 'TPL', 'TPR',
+      'TQQQ', 'TR', 'TRC', 'TRDA', 'TREE', 'TREX', 'TRGP', 'TRI', 'TRIP', 'TRMB', 'TRMK', 'TRML',
+      'TRN', 'TRNO', 'TRNS', 'TROW', 'TROX', 'TRS', 'TRST', 'TRTX', 'TRU', 'TRUE', 'TRUP', 'TRV',
+      'TS', 'TSCO', 'TSEM', 'TSHA', 'TSLA', 'TSM', 'TSN', 'TT', 'TTAN', 'TTC', 'TTD', 'TTEC',
+      'TTEK', 'TTGT', 'TTI', 'TTMI', 'TTWO', 'TVTX', 'TW', 'TWI', 'TWLO', 'TWO', 'TWST', 'TXG',
+      'TXN', 'TXNM', 'TXRH', 'TXT', 'TYL', 'TYRA', 'U', 'UA', 'UAA', 'UAL', 'UBER', 'UBSI',
+      'UBS', 'UCB', 'UCTT', 'UDMY', 'UDR', 'UE', 'UEC', 'UFCS', 'UFPI', 'UFPT', 'UGI', 'UHAL',
+      'UHS', 'UHT', 'UI', 'UIS', 'ULCC', 'ULTA', 'UMBF', 'UMH', 'UMC', 'UNF', 'UNFI', 'UNH',
+      'UNIT', 'UNM', 'UNP', 'UNTY', 'UPBD', 'UPRO', 'UPS', 'UPST', 'UPWK', 'URBN', 'URGN', 'URI',
+      'USAR', 'USB', 'USFD', 'USLM', 'USNA', 'USO', 'USPH', 'UTHR', 'UTI', 'UTL', 'UTZ', 'UUUU',
+      'UVE', 'UVSP', 'UVV', 'UWMC', 'V', 'VAC', 'VAL', 'VALE', 'VC', 'VCEL', 'VCTR', 'VCYT',
+      'VDNT', 'VECO', 'VEEV', 'VEL', 'VERA', 'VERV', 'VERX', 'VET', 'VFC', 'VFS', 'VG', 'VGK',
+      'VIAV', 'VICI', 'VICR', 'VIK', 'VIR', 'VIRT', 'VIST', 'VITL', 'VKTX', 'VLTO', 'VLO', 'VLY',
+      'VMC', 'VMD', 'VMEO', 'VMI', 'VNDA', 'VNO', 'VNOM', 'VNQ', 'VOYA', 'VPG', 'VRA', 'VRNA',
+      'VRDN', 'VRE', 'VREX', 'VRNS', 'VRNT', 'VRRM', 'VRSK', 'VRSN', 'VRT', 'VRTX', 'VSAT', 'VSCO',
+      'VSEC', 'VSH', 'VST', 'VSTS', 'VTEX', 'VTMX', 'VTOL', 'VTR', 'VTRS', 'VVV', 'VVX', 'VWO',
+      'VYGR', 'VYX', 'VZ', 'W', 'WAB', 'WABC', 'WAF', 'WAFD', 'WAL', 'WASH', 'WAT', 'WAY',
+      'WBA', 'WBD', 'WBS', 'WCC', 'WCN', 'WD', 'WDC', 'WDAY', 'WDFC', 'WDS', 'WEAV', 'WEC',
+      'WELL', 'WEN', 'WERN', 'WES', 'WEX', 'WFC', 'WFRD', 'WGO', 'WGS', 'WH', 'WHD', 'WHR', 'WIT',
+      'WILD', 'WING', 'WIX', 'WKC', 'WLDN', 'WLK', 'WLY', 'WM', 'WMB', 'WMK', 'WMS', 'WMT',
+      'WNC', 'WNS', 'WOLF', 'WOOF', 'WOR', 'WOW', 'WPC', 'WPM', 'WRB', 'WRBY', 'WRD', 'WS',
+      'WSBC', 'WSBF', 'WSC', 'WSFS', 'WSM', 'WSO', 'WSR', 'WST', 'WT', 'WTBA', 'WTFC', 'WTI',
+      'WTRG', 'WTS', 'WTTR', 'WTW', 'WU', 'WULF', 'WVE', 'WWD', 'WWW', 'WY', 'WYNN', 'X',
+      'XENE', 'XERS', 'XFOR', 'XHB', 'XHR', 'XLB', 'XLC', 'XLE', 'XLF', 'XLI', 'XLK', 'XLP',
+      'XLU', 'XLV', 'XLY', 'XMTR', 'XNCR', 'XOM', 'XP', 'XPEL', 'XPER', 'XPEV', 'XPO', 'XPOF',
+      'XPRO', 'XRAY', 'XRX', 'XYL', 'XYZ', 'YELP', 'YETI', 'YEXT', 'YMAB', 'YORW', 'YOU', 'YUM',
+      'Z', 'ZBH', 'ZBRA', 'ZD', 'ZETA', 'ZEUS', 'ZG', 'ZI', 'ZIM', 'ZIMV', 'ZION', 'ZIP',
+      'ZM', 'ZNTL', 'ZS', 'ZTO', 'ZTS', 'ZUMZ', 'ZVRA', 'ZWS', 'ZYME', 'ZYXI'
+    ];
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.dataset.theme = document.body.dataset.theme === 'dark'
+        ? 'light'
+        : 'dark';
+
+      // Optional: Save preference to localStorage
+      localStorage.setItem('theme', document.body.dataset.theme);
+    });
+
+    // Load saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.dataset.theme = savedTheme;
+    function toPercent(value) {
+      const num = parseFloat(value);
+      return isNaN(num) ? 0 : (num * 100).toFixed(2);
+    }
+    function toDecimal(value) {
+      const num = parseFloat(value);
+      return isNaN(num) ? 0 : num.toFixed(2);
+    }
+    // Add this function in your script section
+    function enableRowHighlighting() {
+      document.querySelectorAll('#earningsTable tbody tr').forEach(row => {
+        row.onclick = function () {
+          // Remove highlight from all rows
+          document.querySelectorAll('#earningsTable tbody tr').forEach(r => r.classList.remove('row-selected'));
+          // Add highlight to clicked row
+          this.classList.add('row-selected');
+        };
+      });
+    }
+    function calculateRSI(closes, period = 14) {
+      if (closes.length <= period) return null;
+
+      let gains = 0;
+      let losses = 0;
+
+      // Initial average gain/loss
+      for (let i = 1; i <= period; i++) {
+        const delta = closes[i] - closes[i - 1];
+        if (delta > 0) gains += delta;
+        else losses -= delta;
+      }
+
+      let avgGain = gains / period;
+      let avgLoss = losses / period;
+
+      // Apply smoothing for the rest
+      for (let i = period + 1; i < closes.length; i++) {
+        const delta = closes[i] - closes[i - 1];
+        const gain = delta > 0 ? delta : 0;
+        const loss = delta < 0 ? -delta : 0;
+
+        avgGain = (avgGain * (period - 1) + gain) / period;
+        avgLoss = (avgLoss * (period - 1) + loss) / period;
+      }
+
+      const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+      const rsi = 100 - 100 / (1 + rs);
+      return rsi;
+    }
+    async function fetchWithRetry(url, retries = 3, delay = 1000) {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error('Fetch failed');
+          return await res.json();
+        } catch (err) {
+          if (i === retries - 1) throw err;
+          await new Promise(res => setTimeout(res, delay));
+        }
+      }
+    }
+    async function getPrices3(ticker) {
+      try {
+        const proxy = 'https://corsproxy.io/?';
+        //const proxy = 'https://thingproxy.freeboard.io/fetch/';
+        //const proxy = 'https://api.allorigins.win/raw?url=';
+        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}?interval=1d&range=1y`;
+        const data = await fetchWithRetry(proxy + encodeURIComponent(url));
+
+        const result = data.chart.result[0];
+        const timestamps = result.timestamp || [];
+        const closes = result.indicators.quote[0].close || [];
+
+        const paired = timestamps.map((ts, i) => ({ date: new Date(ts * 1000), close: closes[i] }))
+          .filter(item => item.close != null)
+          .sort((a, b) => a.date - b.date);
+
+        const recent = paired.slice(-13);
+        const price = recent[recent.length - 1].close;
+        const ma5 = recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5;
+        const ma13 = recent.reduce((sum, p) => sum + p.close, 0) / 13;
+        const rsi = calculateRSI(paired.map(p => p.close));
+        const ma200 = paired.length < 200 ? 0 : paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200;
+
+        return { price, ma5, ma13, ma200, rsi };
+      } catch (err) {
+        console.error(`Error fetching ${ticker}:`, err);
+        return {};
+      }
+    }
+
+    async function getPrices2(ticker) {
+      try {
+        const proxy = 'https://thingproxy.freeboard.io/fetch/';
+        const url = `https://phx.unusualwhales.com/api/gex/${ticker}?timespan=1y`;
+        const data = await fetchWithRetry(url);
+
+        // Handle new endpoint schema
+        if (data && Array.isArray(data.data)) {
+          // Sort by date ascending
+          const paired = data.data
+            .map(item => ({
+              date: new Date(item.date),
+              close: parseFloat(item.close)
+            }))
+            .filter(item => !isNaN(item.close))
+            .sort((a, b) => a.date - b.date);
+
+          const recent = paired.slice(-13);
+          const price = recent.length ? recent[recent.length - 1].close : 0;
+          const ma5 = recent.length >= 5 ? recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5 : 0;
+          const ma13 = recent.length === 13 ? recent.reduce((sum, p) => sum + p.close, 0) / 13 : 0;
+          const rsi = calculateRSI(paired.map(p => p.close));
+          const ma200 = paired.length >= 200 ? paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200 : 0;
+          const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
+          const last63 = paired.slice(-63);
+          const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
+
+          return { price, ma5, ma13, ma200, rsi, high52w, high3m };
+        }
+      } catch (err) {
+        return await getPrices3(ticker);
+      }
+    }
+
+    async function getPrices(ticker) {
+      try {
+        const proxy = 'https://api.allorigins.win/raw?url=';
+        const url = `https://phx.unusualwhales.com/api/gex/${ticker}?timespan=1y`;
+        const data = await fetchWithRetry(url);
+
+        // Handle new endpoint schema
+        if (data && Array.isArray(data.data)) {
+          // Sort by date ascending
+          const paired = data.data
+            .map(item => ({
+              date: new Date(item.date),
+              close: parseFloat(item.close)
+            }))
+            .filter(item => !isNaN(item.close))
+            .sort((a, b) => a.date - b.date);
+
+          const recent = paired.slice(-13);
+          const price = recent.length ? recent[recent.length - 1].close : 0;
+          const ma5 = recent.length >= 5 ? recent.slice(-5).reduce((sum, p) => sum + p.close, 0) / 5 : 0;
+          const ma13 = recent.length === 13 ? recent.reduce((sum, p) => sum + p.close, 0) / 13 : 0;
+          const rsi = calculateRSI(paired.map(p => p.close));
+          const ma200 = paired.length >= 200 ? paired.slice(-200).reduce((sum, p) => sum + p.close, 0) / 200 : 0;
+          const high52w = paired.length > 0 ? Math.max(...paired.map(p => p.close)) : 0;
+          const last63 = paired.slice(-63);
+          const high3m = last63.length > 0 ? Math.max(...last63.map(p => p.close)) : 0;
+
+          // Calculate last 5-day percentage change in price
+          let pctChange5d = 0;
+          if (paired.length >= 5) {
+            const close5dAgo = paired[paired.length - 5].close;
+            const latestClose = paired[paired.length - 1].close;
+            if (close5dAgo !== 0) {
+              pctChange5d = ((latestClose - close5dAgo) / close5dAgo) * 100;
+            }
+          }
+
+          return { price, ma5, ma13, ma200, rsi, high52w, high3m, pctChange5d };
+        }
+      } catch (err) {
+        return await getPrices2(ticker);
+      }
+    }
+    async function fetchEarnings(ticker) {
+      try {
+        const res = await fetch(`https://phx.unusualwhales.com/api/companies_earnings/historic/${ticker}`);
+        const resPrice = await fetch(`https://phx.unusualwhales.com/api/ticker/${ticker}/price/`);
+        const resPrice2 = await fetch(`https://phx.unusualwhales.com/api/companies/${ticker}/get_historical_prices?limit=1`);
+        const resIvData = await fetch(`https://phx.unusualwhales.com/api/volatility/${ticker}/stats`);
+        const resStats = await fetch(`https://phx.unusualwhales.com/api/stock/${ticker}/fundamental/daily_stats`);
+
+        const json = await res.json();
+        const jsonPrice = await resPrice.json();
+        const jsonPrice2 = await resPrice2.json();
+        const jsonIvData = await resIvData.json();
+        const jsonStats = await resStats.json();
+        if (!json.data || json.data.length === 0) return null;
+
+        var latest = json.data[json.data.length - 1];
+        var next = latest;
+        // Check if next earnings date is within 1 month
+        const nextDate = new Date(next.report_date);
+        nextDate.setHours(0, 0, 0, 0); // Set to start of day
+        const today = new Date();
+        const oneMonthFromNow = new Date();
+        oneMonthFromNow.setHours(0, 0, 0, 0)
+        oneMonthFromNow.setMonth(today.getMonth() + 1);
+        today.setDate(today.getDate() - 1); // minus one day
+        today.setHours(0, 0, 0, 0); // Set to start of day
+
+        // Skip if earnings date is not within next month
+        if (nextDate >= oneMonthFromNow || nextDate < today) return null;
+
+        // Get last 4 quarters average implied move with 15% addition
+        const last4Quarters = json.data.slice(-5, -1); // Exclude the next earnings date
+        const avgHistoricMove = last4Quarters
+          .map(q => {
+            const baseMove = parseFloat(q.expected_move_perc) || 0;
+            // Add 15% to each quarter's expected move
+            return baseMove + (baseMove * 0.15);
+          })
+          .filter(move => move > 0)
+          .reduce((sum, move, i, arr) => sum + move / arr.length, 0);
+
+        if (!latest.post_earnings_move_3d && json.data.length > 1)
+          latest = json.data[json.data.length - 2];
+
+        const beta = jsonStats && jsonStats.data ? parseFloat(jsonStats.data.beta) || 0 : 0;
+        const ivRank = jsonIvData && jsonIvData.data ? parseFloat(jsonIvData.data.iv_rank) || 999 : 999;
+        const preErPrice = parseFloat(latest.price) || 0;
+        const latestPrice = parseFloat(jsonPrice.curr) || parseFloat(jsonPrice.prev) || (jsonPrice2.history.length > 0 ? parseFloat(jsonPrice2.history[0].price) || parseFloat(jsonPrice2.history[0].close_price) : 0);
+        const priceChange = ((latestPrice - preErPrice) / preErPrice * 100).toFixed(2);
+        const reportTime = next.report_time == 'unknown' || next.report_time == '' || !next.report_time ? '-' : next.report_time == 'premarket' ? 'PM' : next.report_time == 'postmarket' ? 'AH' : next.report_time;
+
+        return {
+          ticker: ticker,
+          preErPrice: preErPrice || 0,
+          price: latestPrice || 0,
+          priceChange: priceChange || 0,
+          er_date: next.report_date || 'N/A',
+          report_date: latest.report_date || 'N/A',
+          avgHistoricMove: avgHistoricMove * 100 || 0,
+          straddle: toPercent(next.expected_move_perc) || 0,
+          expected_move_perc: toPercent(latest.expected_move_perc) || 0,
+          post_earnings_move_1d: toPercent(latest.post_earnings_move_1d) || 0,
+          report_time: reportTime,
+          iv_rank: ivRank,
+          beta: beta
+        };
+      } catch (err) {
+        console.error(`Error fetching ${ticker}:`, err);
+        return null;
+      }
+    }
+
+    function updatePriceCells(ticker, priceData, postErMove1d) {
+      const row = document.getElementById(`row-${ticker}`);
+
+      // Calculate ratio between MA5 and MA13
+      const ratioMa5Ma13 = priceData.ma5 / priceData.ma13;
+      const percentDiffMa5Ma13 = Math.abs((ratioMa5Ma13 - 1) * 100);
+      // Determine text color based on conditions
+      let textColor = 'inherit';
+      if (priceData.ma5 >= priceData.ma13) {
+        textColor = 'green';
+      } else if (percentDiffMa5Ma13 <= 1) {
+        textColor = 'red';
+      }
+
+      row.querySelector('.ma5').innerHTML = `<a href="https://marketchameleon.com/Overview/${ticker}" target="_blank" style="color:${textColor};">${priceData.ma5?.toFixed(2)}</a>`;
+      row.querySelector('.ma13').innerHTML = `<a href="https://www.tipranks.com/stocks/${ticker}/forecast" target="_blank" style="color:inherit;">${priceData.ma13?.toFixed(2)}</a>`;
+      row.querySelector('.ma200').innerHTML = `<a href="https://www.barchart.com/stocks/quotes/${ticker}/overview" target="_blank" style="color:inherit;${priceData.price < priceData.ma200 ? 'color:red;' : 'color:green'}">${priceData.ma200 !== null ? priceData.ma200?.toFixed(2) : '-'}</a>`;
+      row.querySelector('.pctChange5d').innerHTML = `${priceData.pctChange5d?.toFixed(2)}`;
+      row.querySelector('.rsi').textContent = priceData.rsi.toFixed(2);
+      // Add highlights
+      if (postErMove1d < 0 && priceData.ma5 >= priceData.ma13)
+        row.classList.add('highlight-orange'); //BU = true;
+      if (postErMove1d > 0 && priceData.ma5 <= priceData.ma13)
+        row.classList.add('highlight-green'); //TD = true;
+      if (postErMove1d < 0 && priceData.ma5 <= priceData.ma13)
+        row.classList.add('highlight-red'); //BD = true;
+      if (postErMove1d > 0 && priceData.ma5 >= priceData.ma13)
+        row.classList.add('highlight-blue'); //TU = true;
+    }
+
+    // Utility to check if today is a new business day compared to cached date
+    function isNewBusinessDay(lastDateStr) {
+      if (!lastDateStr) return true;
+      const lastDate = new Date(lastDateStr);
+      const now = new Date();
+
+      // Check if today is weekend
+      if (now.getDay() === 0 || now.getDay() === 6) return false;
+
+      // Check if last fetch was on a different business day
+      let prevBusinessDay = new Date(now);
+      if (now.getDay() === 1) { // Monday
+        prevBusinessDay.setDate(now.getDate() - 3);
+      } else if (now.getDay() > 1) {
+        prevBusinessDay.setDate(now.getDate() - 1);
+      }
+
+      // If last fetch was not today, it's a new business day
+      return (
+        lastDate.getFullYear() !== now.getFullYear() ||
+        lastDate.getMonth() !== now.getMonth() ||
+        lastDate.getDate() !== now.getDate()
+      );
+    }
+
+    // Utility to check if over an hour has passed since last fetch
+    function isOverAnHour(lastDateStr) {
+      if (!lastDateStr) return true;
+      const lastDate = new Date(lastDateStr);
+      const now = new Date();
+      return (now - lastDate) > 60 * 60 * 1000;
+    }
+
+    // Cache helpers
+    function getCache(key) {
+      try {
+        return JSON.parse(localStorage.getItem(key));
+      } catch {
+        return null;
+      }
+    }
+    function setCache(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    // Wrap fetchEarnings with caching
+    async function fetchEarningsCached(ticker) {
+      const spinner = document.getElementById('loadingSpinner');
+      const cacheKey = `Straddle_er_${ticker}`;
+      const cached = getCache(cacheKey);
+
+      if (cached && cached.data && cached.fetchedAt &&
+        !isNewBusinessDay(cached.fetchedAt) &&
+        !isOverAnHour(cached.fetchedAt)) {
+        return cached.data;
+      }
+
+      spinner.style.display = 'block';
+      try {
+        const data = await fetchEarnings(ticker);
+        if (data) {
+          setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+        }
+        return data;
+      } finally {
+        spinner.style.display = 'none';
+        const spinnerDone = document.getElementById('doneSpinner');
+        spinner.style.display = 'block';
+      }
+    }
+
+    async function getPricesCached(ticker) {
+      const spinner = document.getElementById('loadingSpinner');
+      const cacheKey = `Straddle_$_${ticker}`;
+      const cached = getCache(cacheKey);
+
+      if (cached && cached.data && cached.data.price && cached.fetchedAt &&
+        !isNewBusinessDay(cached.fetchedAt) &&
+        !isOverAnHour(cached.fetchedAt)) {
+        return cached.data;
+      }
+
+      spinner.style.display = 'block';
+      try {
+        const data = await getPrices(ticker);
+        if (data && data.price) {
+          setCache(cacheKey, { data, fetchedAt: new Date().toISOString() });
+        }
+        return data;
+      } finally {
+        spinner.style.display = 'none';
+      }
+    }
+
+    // Update renderTable to use cached fetchers in parallel with concurrency control
+    async function renderTable() {
+      const spinner = document.getElementById('loadingSpinner');
+      spinner.style.display = 'block'; // Show spinner
+
+      const tableBody = document.querySelector('#earningsTable tbody');
+      tableBody.innerHTML = '';
+
+      // Concurrency limit for network requests
+      const CONCURRENCY_LIMIT = 80;
+      let index = 0;
+
+      // Helper to render a row immediately from cached data
+      function renderRowFromCache(ticker, data) {
+        if (!data || !data.expected_move_perc || data.expected_move_perc == null) return;
+
+        var calcPostErMove1d = Math.abs(data.post_earnings_move_1d);
+        var straddleCalulated = parseFloat(data.straddle && data.straddle != "N/A" && data.straddle != 0 ? toDecimal(parseFloat(data.straddle) + parseFloat(data.straddle) * 0.15) : 0);
+        var expMoveCalulated = parseFloat(data.expected_move_perc && data.expected_move_perc != 0 && data.expected_move_perc != 'N/A' ? toDecimal(parseFloat(data.expected_move_perc) + parseFloat(data.expected_move_perc) * 0.15) : 0);
+        if (!data || !straddleCalulated)
+          return;
+        //<td>${data.avgHistoricMove?.toFixed(2)}</td>
+        expMoveCalulated = parseFloat(expMoveCalulated && expMoveCalulated != "N/A" && expMoveCalulated != 0 ? expMoveCalulated : data.avgHistoricMove);
+        var p = parseFloat((expMoveCalulated && straddleCalulated && expMoveCalulated > 0 && straddleCalulated > 0 ? parseFloat(((straddleCalulated - expMoveCalulated) / expMoveCalulated) * 100) : 999).toFixed(2));
+        const row = `<tr id="row-${ticker}">
+                    <td>${ticker}</td>
+                    <td class="rsi">0</td>
+                    <td>${parseFloat(data.iv_rank?.toFixed(2))}</td>
+                    <td style="${data.beta > 1.29 ? 'color:green;' : 'color:inherit;'}>${parseFloat(data.beta.toFixed(2))}</td>
+                    <td>${data.er_date}</td>
+                    <td>${data.report_time}</td>
+                    <td>${p}</td>
+                    <td style="${straddleCalulated > 0 && expMoveCalulated >= straddleCalulated ? 'color:green;' : 'color:red'}"><a href="https://unusualwhales.com/stock/${ticker}/earnings" target="_blank" style="color:inherit;">${straddleCalulated}</a></td>
+                    <td>${expMoveCalulated}</td>
+                    <td>${parseFloat(data.post_earnings_move_1d && data.post_earnings_move_1d != 0 && data.post_earnings_move_1d != 'N/A' ? data.post_earnings_move_1d : 0)}</td>
+                    <td class="priceChange"><a href="https://robinhood.com/stocks/${ticker}" target="_blank" style="color:inherit;">${parseFloat(data.priceChange)}</a></td>
+                    <td class="pctChange5d">0</td>
+                    <td class="ma200">-</td>
+                    <td class="price"><a href="https://finviz.com/quote.ashx?t=${ticker}" target="_blank" style="color:inherit;}">${parseFloat(data.price?.toFixed(2))}</a></td>
+                    <td class="ma5">-</td>
+                    <td class="ma13">-</td>
+                  </tr>`;
+        tableBody.innerHTML += row;
+        enableRowHighlighting();
+        // Try to get price data from cache and update cells immediately if available
+        const priceCache = getCache(`Straddle_$_${ticker}`);
+        if (
+          priceCache &&
+          priceCache.data &&
+          priceCache.price &&
+          priceCache.fetchedAt &&
+          !isNewBusinessDay(priceCache.fetchedAt) &&
+          !isOverAnHour(priceCache.fetchedAt)
+        ) {
+          updatePriceCells(ticker, priceCache.data, data.post_earnings_move_1d);
+        } else {
+          // Otherwise, fetch price data in background
+          getPricesCached(ticker)
+            .then(priceData => updatePriceCells(ticker, priceData, data.post_earnings_move_1d))
+            .catch(err => console.error(`Price error for ${ticker}:`, err));
+        }
+      }
+
+      // Helper to process a batch of tickers (fetching only those not cached/expired)
+      async function processBatch(batch) {
+        // For each ticker, check if earnings cache is valid
+        const uncachedTickers = [];
+        const cachedData = [];
+
+        for (const ticker of batch) {
+          const cacheKey = `Straddle_er_${ticker}`;
+          const cached = getCache(cacheKey);
+          if (
+            cached &&
+            cached.data &&
+            cached.fetchedAt &&
+            !isNewBusinessDay(cached.fetchedAt) &&
+            !isOverAnHour(cached.fetchedAt)
+          ) {
+            cachedData.push({ ticker, data: cached.data });
+          } else {
+            uncachedTickers.push(ticker);
+          }
+        }
+
+        // Render cached rows immediately
+        for (const { ticker, data } of cachedData) {
+          renderRowFromCache(ticker, data);
+        }
+
+        // Fetch uncached earnings in parallel (with concurrency limit)
+        for (let i = 0; i < uncachedTickers.length; i += CONCURRENCY_LIMIT) {
+          const subBatch = uncachedTickers.slice(i, i + CONCURRENCY_LIMIT);
+          const earningsResults = await Promise.all(
+            subBatch.map(ticker => fetchEarningsCached(ticker).catch(() => null))
+          );
+
+          for (let j = 0; j < subBatch.length; j++) {
+            const ticker = subBatch[j];
+            const data = earningsResults[j];
+            renderRowFromCache(ticker, data);
+          }
+        }
+      }
+
+      // Process all tickers in batches
+      try {
+        while (index < tickers.length) {
+          const batch = tickers.slice(index, index + CONCURRENCY_LIMIT);
+          await processBatch(batch);
+          index += CONCURRENCY_LIMIT;
+          await new Promise(res => setTimeout(res, 200));
+        }
+
+        // Automatically sort by report date (column index 5)
+        sortTable(2);
+        enableRowHighlighting();
+      } finally {
+        spinner.style.display = 'none'; // Hide spinner when done or on error
+      }
+    }
+
+    function sortTable(columnIndex, descending = false) {
+      const table = document.getElementById("earningsTable");
+      const tbody = table.tBodies[0];
+      const rows = Array.from(tbody.rows);
+
+      // Detect column type
+      const isDate = columnIndex === 4; // ErDate(Nxt)
+      const isNumeric = columnIndex !== 0 && columnIndex !== 4;
+
+      const sortedRows = rows.sort((a, b) => {
+        const valA = a.cells[columnIndex].textContent.trim();
+        const valB = b.cells[columnIndex].textContent.trim();
+
+        if (isDate) {
+          // Try to parse as date (supports formats like YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY)
+          const dateA = Date.parse(valA.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$1-$2')) || Date.parse(valA);
+          const dateB = Date.parse(valB.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$1-$2')) || Date.parse(valB);
+          return dateA - dateB;
+        } else if (isNumeric) {
+          return parseFloat(valA.replace('%', '')) - parseFloat(valB.replace('%', ''));
+        } else {
+          return valA.localeCompare(valB);
+        }
+      });
+
+      if (descending || tbody.getAttribute('data-sorted') === `${columnIndex}-asc`) {
+        sortedRows.reverse();
+        tbody.setAttribute('data-sorted', `${columnIndex}-desc`);
+      } else {
+        tbody.setAttribute('data-sorted', `${columnIndex}-asc`);
+      }
+
+      tbody.innerHTML = '';
+      sortedRows.forEach(row => tbody.appendChild(row));
+    }
+
+    renderTable();
+
+  </script>
+</body>
+
+
+</html>
